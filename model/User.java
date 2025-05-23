@@ -1,9 +1,9 @@
 import java.sql.Date;
 
 public class User {
-    private int userID;
-    private String userName;
-    private String password;
+    private int userId;
+    private String username;
+    private String passwordHash;
     private String email;
     private String phone;
     private String role;
@@ -11,11 +11,11 @@ public class User {
     private Date createdAt;
     private Date updatedAt;
 
-    public User(int userID, String userName, String password, String email, String phone, String role, String status,
-            Date createdAt, Date updatedAt) {
-        this.userID = userID;
-        this.userName = userName;
-        this.password = password;
+    public User(int userId, String username, String passwordHash, String email, String phone, String role,
+            String status, Date createdAt, Date updatedAt) {
+        this.userId = userId;
+        this.username = username;
+        this.passwordHash = passwordHash;
         this.email = email;
         this.phone = phone;
         this.role = role;
@@ -24,28 +24,28 @@ public class User {
         this.updatedAt = updatedAt;
     }
 
-    public int getUserID() {
-        return userID;
+    public int getUserId() {
+        return userId;
     }
 
-    public void setUserID(int userID) {
-        this.userID = userID;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
-    public String getUserName() {
-        return userName;
+    public String getUsername() {
+        return username;
     }
 
-    public void setUserName(String userName) {
-        this.userName = userName;
+    public void setUsername(String username) {
+        this.username = username;
     }
 
-    public String getPassword() {
-        return password;
+    public String getPasswordHash() {
+        return passwordHash;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
     }
 
     public String getEmail() {
@@ -95,5 +95,4 @@ public class User {
     public void setUpdatedAt(Date updatedAt) {
         this.updatedAt = updatedAt;
     }
-
 }
