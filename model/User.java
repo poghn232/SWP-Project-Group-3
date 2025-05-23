@@ -1,7 +1,5 @@
 import java.sql.Date;
 
-import javax.print.DocFlavor.STRING;
-
 public class User {
     private int userID;
     private String userName;
@@ -12,7 +10,7 @@ public class User {
     private String status;
     private Date createdAt;
     private Date updatedAt;
-    
+
     public User(int userID, String userName, String password, String email, String phone, String role, String status,
             Date createdAt, Date updatedAt) {
         this.userID = userID;
@@ -98,5 +96,4 @@ public class User {
         this.updatedAt = updatedAt;
     }
 
-    
 }
