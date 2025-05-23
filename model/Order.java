@@ -12,6 +12,19 @@ public class Order {
     private int tableId;
     private BigDecimal totalAmount;
 
+    public Order(int orderId, int customerId, Date orderTime, String deliveryAddress, String status, String paymentStatus,
+            int shipperId, int tableId, BigDecimal totalAmount) {
+        this.orderId = orderId;
+        this.customerId = customerId;
+        this.orderTime = orderTime;
+        this.deliveryAddress = deliveryAddress;
+        this.status = status;
+        this.paymentStatus = paymentStatus;
+        this.shipperId = shipperId;
+        this.tableId = tableId;
+        this.totalAmount = totalAmount;
+    }
+
     public int getOrderId() {
         return orderId;
     }
