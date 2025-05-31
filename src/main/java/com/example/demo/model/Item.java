@@ -1,7 +1,15 @@
 package com.example.demo.model;
 
+import jakarta.persistence.*;
+
+@Entity
+@Table(name = "items")
 public class Item {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int itemId;
+
     private String name;
     private String description;
     private double price;
@@ -9,8 +17,11 @@ public class Item {
     private String imageUrl;
     private boolean isAvailable;
 
+    // Constructors
+    public Item() {}
+
     public Item(int itemId, String name, String description, double price, String category, String imageUrl,
-            boolean isAvailable) {
+                boolean isAvailable) {
         this.itemId = itemId;
         this.name = name;
         this.description = description;
@@ -19,6 +30,7 @@ public class Item {
         this.imageUrl = imageUrl;
         this.isAvailable = isAvailable;
     }
+
 
     public int getItemId() {
         return itemId;

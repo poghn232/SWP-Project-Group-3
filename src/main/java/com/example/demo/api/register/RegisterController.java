@@ -20,7 +20,7 @@ public class RegisterController {
                              @RequestParam String confirmPassword,
                              RedirectAttributes redirectAttributes) {
         if (!password.equals(confirmPassword)) {
-            redirectAttributes.getFlashAttributes("error", "Mật khẩu xác nhận không trùng. Vui lòng thử lại");
+           redirectAttributes.addFlashAttribute("error", "Mật khẩu xác nhận không trùng. Vui lòng thử lại");
         }
         return "";
     }
