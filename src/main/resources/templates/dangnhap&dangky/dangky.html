@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"> <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Đăng Ký Tài Khoản Mới</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .register-card {
+            background-color: #ffffff;
+            padding: 2.5rem;
+            border-radius: 0.75rem;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+            width: 100%;
+            max-width: 500px;
+            box-sizing: border-box;
+        }
+        h2 {
+            text-align: center;
+            color: #343a40;
+            margin-bottom: 2rem;
+            font-weight: 600;
+        }
+        .form-label {
+            font-weight: 500;
+            color: #495057;
+        }
+        /* Thêm viền đỏ khi có lỗi */
+        .form-control.is-invalid {
+            border-color: #dc3545;
+            padding-right: calc(1.5em + 0.75rem);
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right calc(0.375em + 0.1875rem) center;
+            background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+        }
+        .form-control:focus {
+            border-color: #80bdff;
+            box-shadow: 0 0 0 0.25rem rgba(0, 123, 255, 0.25);
+        }
+        .btn-primary {
+            border-radius: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            font-size: 1.1rem;
+            font-weight: 600;
+            background-color: #007bff;
+            border-color: #007bff;
+            transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #004085;
+            box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+        }
+        .text-muted {
+            font-size: 0.875em;
+            color: #6c757d !important;
+        }
+        .link-secondary {
+            color: #6c757d !important;
+            text-decoration: none;
+        }
+        .link-secondary:hover {
+            text-decoration: underline;
+        }
+        /* Style cho thông báo lỗi */
+        .text-danger {
+            font-size: 0.875em;
+            margin-top: 0.25rem;
+        }
+    </style>
+</head>
+<body>
+<div class="register-card">
+    <h2>Đăng Ký Tài Khoản</h2>
+    <form th:action="@{/register}" th:object="${registerDto}" method="post">
+        <div th:if="${#fields.hasGlobalErrors()}" class="alert alert-danger" role="alert">
+            <p th:each="err : ${#fields.globalErrors()}" th:text="${err}"></p>
+        </div>
+
+        <div class="mb-3">
+            <label for="username" class="form-label">Tên đăng nhập</label>
+            <input type="text" class="form-control"
+                   th:field="*{userName}"
+                   th:classappend="${#fields.hasErrors('userName')} ? 'is-invalid' : ''"
+                   placeholder="Nhập tên đăng nhập của bạn"
+                   minlength="8" maxlength="30" required>
+            <div class="form-text text-muted">Từ 8 đến 30 ký tự.</div>
+            <div class="text-danger" th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"></div>
+        </div>
+
+        <div class="mb-3">
+            <label for="email" class="form-label">Địa chỉ Email</label>
+            <input type="email" class="form-control"
+                   th:field="*{email}"
+                   th:classappend="${#fields.hasErrors('email')} ? 'is-invalid' : ''"
+                   placeholder="Nhập địa chỉ email của bạn" required>
+            <div class="form-text text-muted">Ví dụ: ten@example.com</div>
+            <div class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+        </div>
+
+        <div class="mb-3">
+            <label for="phone" class="form-label">Số điện thoại</label>
+            <input type="tel" class="form-control"
+                   th:field="*{phone}"
+                   th:classappend="${#fields.hasErrors('phone')} ? 'is-invalid' : ''"
+                   pattern="[0-9]{10,11}"
+                   placeholder="Nhập số điện thoại của bạn" required>
+            <div class="form-text text-muted">10 hoặc 11 chữ số, ví dụ: 0912345678.</div>
+            <div class="text-danger" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></div>
+        </div>
+
+        <div class="mb-3">
+            <label for="password" class="form-label">Mật khẩu</label>
+            <input type="password" class="form-control" id="password" name="password"
+                   th:classappend="${#fields.hasErrors('password')} ? 'is-invalid' : ''"
+                   minlength="8"
+                   placeholder="Nhập mật khẩu của bạn" required>
+            <div class="form-text text-muted">Ít nhất 8 ký tự.</div>
+            <div class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+        </div>
+
+        <div class="mb-4">
+            <label for="confirmPassword" class="form-label">Xác nhận mật khẩu</label>
+            <input type="password" class="form-control" id="confirmPassword" name="confirmPassword"
+                   th:classappend="${#fields.hasErrors('confirmPassword')} ? 'is-invalid' : ''"
+                   placeholder="Nhập lại mật khẩu" required>
+            <div class="text-danger" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></div>
+        </div>
+
+        <button type="submit" class="btn btn-primary w-100">Đăng Ký</button>
+    </form>
+
+    <div class="text-center mt-4">
+        Bạn đã có tài khoản? <a href="/login" class="link-secondary">Đăng nhập ngay</a>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
+
+<script>
+    // JavaScript để kiểm tra khớp mật khẩu client-side
+    const passwordField = document.getElementById('password');
+    const confirmPasswordField = document.getElementById('confirmPassword');
+    // Vẫn giữ script này để kiểm tra real-time trên client
+    // Lưu ý: Thêm/xóa class 'is-invalid' để hiển thị/ẩn viền đỏ
+    function validatePasswordMatch() {
+        if (passwordField.value !== confirmPasswordField.value) {
+            confirmPasswordField.setCustomValidity("Mật khẩu xác nhận không khớp!");
+            confirmPasswordField.classList.add('is-invalid');
+            // Có thể thêm một div error ở đây nếu muốn hiển thị lỗi JavaScript
+            // Thay vì dựa hoàn toàn vào lỗi của Thymeleaf sau khi server gửi về
+        } else {
+            confirmPasswordField.setCustomValidity('');
+            confirmPasswordField.classList.remove('is-invalid');
+        }
+        // Cũng kiểm tra khi mật khẩu ban đầu thay đổi
+        if (passwordField.value === confirmPasswordField.value && confirmPasswordField.value !== '') {
+             passwordField.classList.remove('is-invalid');
+             confirmPasswordField.classList.remove('is-invalid');
+        }
+    }
+
+    // Gán sự kiện
+    passwordField.addEventListener('input', validatePasswordMatch); // dùng 'input' để bắt ngay khi gõ
+    confirmPasswordField.addEventListener('input', validatePasswordMatch); // dùng 'input' để bắt ngay khi gõ
+</script>
+</body>
+</html>

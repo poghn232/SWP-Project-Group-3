@@ -1,100 +1,69 @@
+// src/main/java/com/example/demo/model/User.java
+
 package com.example.demo.model;
 
-import java.sql.Date;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.Setter;
+import java.time.LocalDateTime;
 
+@Getter
+@Setter
+@Entity
+@AllArgsConstructor
+@Table(name = "users")
 public class User {
-    private int userId;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "user_id")
+    private Long userId;
+
+    @Column(name = "username", nullable = false, unique = true, length = 50)
     private String username;
+
+    @Column(name = "password_hash", nullable = false, length = 255)
     private String passwordHash;
+
+    @Column(name = "email", nullable = false, unique = true, length = 100)
     private String email;
+
+    @Column(name = "phone", length = 20)
     private String phone;
+
+    @Column(name = "role", length = 20, columnDefinition = "VARCHAR(20) DEFAULT 'USER'")
     private String role;
+
+    @Column(name = "status", length = 20, columnDefinition = "VARCHAR(20) DEFAULT 'ACTIVE'")
     private String status;
-    private Date createdAt;
-    private Date updatedAt;
 
-    public User(int userId, String username, String passwordHash, String email, String phone, String role,
-            String status, Date createdAt, Date updatedAt) {
-        this.userId = userId;
+    @Column(name = "created_at", updatable = false)
+    private LocalDateTime createdAt;
+
+    @Column(name = "updated_at")
+    private LocalDateTime updatedAt;
+
+
+    public User(){
+        this.createdAt = LocalDateTime.now();
+        this.role = "USER";
+        this.status = "ACTIVE";
+    }
+
+    // Constructor tiện lợi cho việc đăng ký ban đầu
+    public User(String username, String passwordHash, String email, String phone) {
         this.username = username;
         this.passwordHash = passwordHash;
         this.email = email;
         this.phone = phone;
-        this.role = role;
-        this.status = status;
-        this.createdAt = createdAt;
-        this.updatedAt = updatedAt;
-    }
-
-    public int getUserId() {
-        return userId;
-    }
-
-    public void setUserId(int userId) {
-        this.userId = userId;
-    }
-
-    public String getUsername() {
-        return username;
-    }
-
-    public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPasswordHash() {
-        return passwordHash;
-    }
-
-    public void setPasswordHash(String passwordHash) {
-        this.passwordHash = passwordHash;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public String getPhone() {
-        return phone;
-    }
-
-    public void setPhone(String phone) {
-        this.phone = phone;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
-    public Date getCreatedAt() {
-        return createdAt;
-    }
-
-    public void setCreatedAt(Date createdAt) {
-        this.createdAt = createdAt;
-    }
-
-    public Date getUpdatedAt() {
-        return updatedAt;
-    }
-
-    public void setUpdatedAt(Date updatedAt) {
-        this.updatedAt = updatedAt;
+        this.createdAt = LocalDateTime.now(); // Tự động set khi tạo
+        this.role = "USER"; // Mặc định là USER
+        this.status = "ACTIVE"; // Mặc định là ACTIVE
     }
 }

@@ -14,7 +14,7 @@ public class DishPageController {
     @Autowired
     private ItemRepository itemRepository;
 
-    @GetMapping("/")
+    @GetMapping("/list")
     public String viewItems(Model model) {
         model.addAttribute("items", itemRepository.findAll());
         return "views/list"; // Tương ứng WEB-INF/views/list.jsp
