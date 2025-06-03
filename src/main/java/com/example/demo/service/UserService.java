@@ -1,9 +1,10 @@
 package com.example.demo.service;
 
-import com.example.demo.api.register.UserRegisterDto;
+import com.example.demo.api.dto.UserRegisterDto;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,5 +49,16 @@ public class UserService {
                                 registerDto.getPhone());
 
         return userRepository.save(newUser);
+    }
+
+    public User authenticate(String inputUsername, String inputPassword) {
+
+        User user = userRepository.findByUsername(inputUsername);
+
+        if (!passwordEncoder.matches(inputPassword, user.getPasswordHash())) {
+            throw new BadCredentialsException("Tài khoản hoặc mật khẩu không chính xác");
+        }
+
+        return user;
     }
 }
