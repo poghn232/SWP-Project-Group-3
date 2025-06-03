@@ -89,7 +89,7 @@
             <p th:each="err : ${#fields.globalErrors()}" th:text="${err}"></p>
         </div>
 
-        <div class="mb-3">
+        <div class="mb-3" id="username">
             <label for="username" class="form-label">Tên đăng nhập</label>
             <input type="text" class="form-control"
                    th:field="*{userName}"
@@ -100,7 +100,7 @@
             <div class="text-danger" th:if="${#fields.hasErrors('userName')}" th:errors="*{userName}"></div>
         </div>
 
-        <div class="mb-3">
+        <div class="mb-3" id="email">
             <label for="email" class="form-label">Địa chỉ Email</label>
             <input type="email" class="form-control"
                    th:field="*{email}"
@@ -110,14 +110,14 @@
             <div class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
         </div>
 
-        <div class="mb-3">
+        <div class="mb-3" id="phone">
             <label for="phone" class="form-label">Số điện thoại</label>
             <input type="tel" class="form-control"
                    th:field="*{phone}"
                    th:classappend="${#fields.hasErrors('phone')} ? 'is-invalid' : ''"
                    pattern="[0-9]{10,11}"
                    placeholder="Nhập số điện thoại của bạn" required>
-            <div class="form-text text-muted">10 hoặc 11 chữ số, ví dụ: 0912345678.</div>
+            <div class="form-text text-muted">10 chữ số, ví dụ: 0912345678.</div>
             <div class="text-danger" th:if="${#fields.hasErrors('phone')}" th:errors="*{phone}"></div>
         </div>
 
@@ -139,7 +139,7 @@
             <div class="text-danger" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></div>
         </div>
 
-        <button type="submit" class="btn btn-primary w-100">Đăng Ký</button>
+        <button type="submit" class="btn btn-primary w-100" >Đăng Ký</button>
     </form>
 
     <div class="text-center mt-4">

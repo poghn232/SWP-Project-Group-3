@@ -23,8 +23,8 @@ public class RegisterController {
     // create new model when the web is loaded the first time
     @GetMapping("/register")
     public String showRegisterForm(Model model) {
-        if(model.containsAttribute(registerDto)){
-            model.addAttribute(registerDto);
+        if(!model.containsAttribute(registerDto)){
+            model.addAttribute(registerDto, new UserRegisterDto());
         }
         return renderRegisterPage;
     }
@@ -46,6 +46,9 @@ public class RegisterController {
         }
         if (!registerDto.isPasswordMatched()) {
             bindingResult.rejectValue("confirmPassword", "error.registerDto.confirmPassword", "Mật khẩu xác nhận sai. Vui lòng thử lại");
+        }
+        if(registerRepository.findByPhone(registerDto.getPhone()) != null) {
+            bindingResult.rejectValue("phone", "error.registerDto.phone", "Đã tồn tại số điện thoại. Vui lòng thử lại");
         }
         if (bindingResult.hasErrors()) {
             return renderRegisterPage;
@@ -69,6 +72,6 @@ public class RegisterController {
         if (!model.containsAttribute(successRegistered)) {
             model.addAttribute(successRegistered, "Đăng ký thành công!");
         }
-        return "dangky-thanhcong";
+        return "dangnhap&dangky/dangky-thanhcong";
     }
 }

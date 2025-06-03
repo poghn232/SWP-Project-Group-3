@@ -17,13 +17,13 @@ import java.time.LocalDateTime;
 @Setter
 @Entity
 @AllArgsConstructor
-@Table(name = "users")
+@Table(name = "User")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "user_id")
-    private Long userId;
+    private Integer userId;
 
     @Column(name = "username", nullable = false, unique = true, length = 50)
     private String username;
@@ -52,8 +52,8 @@ public class User {
 
     public User(){
         this.createdAt = LocalDateTime.now();
-        this.role = "USER";
-        this.status = "ACTIVE";
+        this.role = "customer";
+        this.status = "active";
     }
 
     // Constructor tiện lợi cho việc đăng ký ban đầu
@@ -63,7 +63,7 @@ public class User {
         this.email = email;
         this.phone = phone;
         this.createdAt = LocalDateTime.now(); // Tự động set khi tạo
-        this.role = "USER"; // Mặc định là USER
-        this.status = "ACTIVE"; // Mặc định là ACTIVE
+        this.role = "customer";
+        this.status = "active";
     }
 }
