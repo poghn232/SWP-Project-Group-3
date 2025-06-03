@@ -1,6 +1,7 @@
-package com.example.demo.api.register;
+package com.example.demo.controller;
 
-import com.example.demo.model.User;
+import com.example.demo.api.register.UserRegisterDto;
+import com.example.demo.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -18,12 +19,12 @@ public class RegisterController {
     private final String successRegistered = "dangkyThanhcong";
 
     @Autowired
-    private RegisterRepository registerRepository;
+    private UserService userService;
 
     // create new model when the web is loaded the first time
     @GetMapping("/register")
     public String showRegisterForm(Model model) {
-        if(!model.containsAttribute(registerDto)){
+        if (!model.containsAttribute(registerDto)) {
             model.addAttribute(registerDto, new UserRegisterDto());
         }
         return renderRegisterPage;
@@ -34,39 +35,34 @@ public class RegisterController {
                              BindingResult bindingResult,
                              RedirectAttributes redirectAttributes) {
 
-        // validation
         if (bindingResult.hasErrors()) {
             return renderRegisterPage;
         }
-        if (registerRepository.findByEmail(registerDto.getEmail()) != null) {
-            bindingResult.rejectValue("email", "error.registerDto.email", "Đã tồn tại email. Vui lòng thử lại");
-        } 
-        if (registerRepository.findByUsername(registerDto.getUserName()) != null){
-            bindingResult.rejectValue("userName","error.registerDto.userName", "Đã tồn tại tên. Vui lòng thử lại");
-        }
-        if (!registerDto.isPasswordMatched()) {
-            bindingResult.rejectValue("confirmPassword", "error.registerDto.confirmPassword", "Mật khẩu xác nhận sai. Vui lòng thử lại");
-        }
-        if(registerRepository.findByPhone(registerDto.getPhone()) != null) {
-            bindingResult.rejectValue("phone", "error.registerDto.phone", "Đã tồn tại số điện thoại. Vui lòng thử lại");
-        }
-        if (bindingResult.hasErrors()) {
-            return renderRegisterPage;
-        }
-        
-        //add registered User
-        else {
-            User newUser = new User(registerDto.getUserName(),
-                                    // TODO: MÃ HÓA MẬT KHẨU TRƯỚC KHI LƯU!
-                                    registerDto.getPassword(), 
-                                    registerDto.getEmail(), 
-                                    registerDto.getPhone());
-            registerRepository.save(newUser);
-            redirectAttributes.addFlashAttribute(successRegistered, "Đăng ký thành công!");
 
+        if (!registerDto.isPasswordMatched()) {
+            bindingResult.rejectValue("confirmPassword", "passwordMismatch", "Mật khẩu xác nhận không khớp");
+            return renderRegisterPage;
+        }
+
+        //call service
+        try {
+            userService.registerNewUser(registerDto);
+            redirectAttributes.addFlashAttribute(successRegistered, "Đăng ký thành công!");
             return "redirect:/dangky-thanhcong";
+        } catch (IllegalArgumentException e) {
+            if (e.getMessage().contains("Email đã tồn tại")) {
+                bindingResult.rejectValue("email", "existedEmail", e.getMessage());
+            } else if (e.getMessage().contains("Tên tài khoản đã tồn tại")) {
+                bindingResult.rejectValue("username", "existedUsername", e.getMessage());
+            } else if (e.getMessage().contains("Số điện thoại đã tồn tại")) {
+                bindingResult.rejectValue("phone", "existedPhoneNumber", e.getMessage());
+            } else {
+                bindingResult.reject("registerationUnexpectedError", e.getMessage());
+            }
+            return renderRegisterPage;
         }
     }
+
     @GetMapping("/dangky-thanhcong")
     public String registrationSuccess(Model model) {
         if (!model.containsAttribute(successRegistered)) {
