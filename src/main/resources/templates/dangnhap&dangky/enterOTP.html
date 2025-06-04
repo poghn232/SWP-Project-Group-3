@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Xác Minh Mã OTP</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" xintegrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa; /* light gray background */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 1rem;
+            box-sizing: border-box;
+        }
+        .otp-card {
+            background-color: #ffffff;
+            padding: 2.5rem;
+            border-radius: 0.75rem; /* rounded corners */
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15); /* shadow */
+            width: 100%;
+            max-width: 480px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        .otp-input-group input {
+            width: 3.5rem; /* fixed width for each input */
+            height: 3.5rem; /* fixed height for each input */
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 600;
+            border: 2px solid #ced4da; /* border-gray-300 */
+            border-radius: 0.5rem; /* rounded-lg */
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+        .otp-input-group input:focus {
+            outline: none;
+            border-color: #86b7fe; /* Bootstrap focus blue */
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25); /* Bootstrap focus shadow */
+        }
+        .btn-primary {
+            background-color: #0d6efd; /* Bootstrap primary blue */
+            border-color: #0d6efd;
+            color: #fff;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
+        }
+        .btn-primary:hover {
+            background-color: #0b5ed7;
+            border-color: #0a58ca;
+            box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1);
+        }
+        .link-text {
+            color: #0d6efd; /* Bootstrap link blue */
+            text-decoration: none;
+            font-weight: 600;
+            transition: color 0.2s, text-decoration 0.2s;
+        }
+        .link-text:hover {
+            color: #0a58ca;
+            text-decoration: underline;
+        }
+        .alert-danger {
+            color: #842029;
+            background-color: #f8d7da;
+            border-color: #f5c2c7;
+            padding: 0.75rem 1.25rem;
+            margin-bottom: 1rem;
+            border: 1px solid transparent;
+            border-radius: 0.25rem;
+        }
+        .alert-success {
+            color: #0f5132;
+            background-color: #d1e7dd;
+            border-color: #badbcc;
+            padding: 0.75rem 1.25rem;
+            margin-bottom: 1rem;
+            border: 1px solid transparent;
+            border-radius: 0.25rem;
+        }
+    </style>
+</head>
+<body th:data-otp-verified="${otpVerified != null && otpVerified}" class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+<div class="otp-card">
+    <h2 class="text-3xl font-bold text-gray-800 mb-4">Xác Minh Mã OTP</h2>
+    <p class="text-gray-600 mb-6">Mã OTP đã được gửi đến email của bạn. Vui lòng nhập mã vào các ô bên dưới.</p>
+
+    <!-- Hiển thị thông báo thành công/lỗi (từ Controller) -->
+    <div th:if="${successMessage}" class="alert alert-success" role="alert">
+        <span th:text="${successMessage}"></span>
+    </div>
+    <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+        <span th:text="${errorMessage}"></span>
+    </div>
+
+    <form th:action="@{/enterOtp}" th:object="${otpDto}" method="post" id="otpForm">
+        <!-- Hidden field for email (assuming it's passed from previous step) -->
+        <input type="hidden" th:field="*{email}" />
+
+        <div class="d-flex justify-content-center space-x-2 mb-4">
+            <input type="text" id="otp-1" name="otp1" maxlength="1" pattern="[0-9]" inputmode="numeric" autocomplete="one-time-code" data-index="0" class="form-control text-center me-2" required>
+            <input type="text" id="otp-2" name="otp2" maxlength="1" pattern="[0-9]" inputmode="numeric" data-index="1" class="form-control text-center me-2" required>
+            <input type="text" id="otp-3" name="otp3" maxlength="1" pattern="[0-9]" inputmode="numeric" data-index="2" class="form-control text-center me-2" required>
+            <input type="text" id="otp-4" name="otp4" maxlength="1" pattern="[0-9]" inputmode="numeric" data-index="3" class="form-control text-center me-2" required>
+            <input type="text" id="otp-5" name="otp5" maxlength="1" pattern="[0-9]" inputmode="numeric" data-index="4" class="form-control text-center me-2" required>
+            <input type="text" id="otp-6" name="otp6" maxlength="1" pattern="[0-9]" inputmode="numeric" data-index="5" class="form-control text-center" required>
+        </div>
+
+        <!-- Hidden field to store the combined OTP -->
+        <input type="hidden" id="combinedOtp" name="otp" value="">
+
+        <button type="submit" class="btn btn-primary w-100 mb-3">Xác Nhận Mã OTP</button>
+    </form>
+
+    <div class="text-center">
+        <p class="text-secondary mb-2">Bạn chưa nhận được mã?</p>
+        <!-- Form để gửi lại OTP - Sẽ reload trang -->
+        <form th:action="@{/verify-otp/resend}" method="post">
+            <!-- Sử dụng th:value để đảm bảo email được truyền đúng -->
+            <input type="hidden" name="email" th:value="*{otpDto.email}" />
+            <button type="submit" class="btn btn-link link-text p-0">Gửi lại mã OTP</button>
+        </form>
+    </div>
+</div>
+
+<!-- Bootstrap Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" xintegrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
+
+<script>
+    const otpInputs = document.querySelectorAll('.otp-input-group input');
+    const combinedOtpField = document.getElementById('combinedOtp');
+    const otpForm = document.getElementById('otpForm');
+
+    function combineOtp() {
+        let otp = '';
+        otpInputs.forEach(input => {
+            otp += input.value;
+        });
+        combinedOtpField.value = otp;
+        return otp;
+    }
+
+    otpInputs.forEach((input, index) => {
+        input.addEventListener('input', (e) => {
+            e.target.value = e.target.value.replace(/[^0-9]/g, ''); // Chỉ cho phép nhập số
+
+            if (e.target.value.length === 1 && index < otpInputs.length - 1) {
+                otpInputs[index + 1].focus(); // Di chuyển đến ô tiếp theo
+            }
+            combineOtp();
+        });
+
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Backspace') {
+                if (e.target.value === '' && index > 0) {
+                    // Nếu ô hiện tại rỗng, di chuyển đến ô trước và xóa nội dung
+                    otpInputs[index - 1].focus();
+                    otpInputs[index - 1].value = '';
+                } else if (e.target.value !== '') {
+                    // Nếu ô hiện tại có giá trị, chỉ xóa giá trị đó
+                    e.target.value = '';
+                }
+                combineOtp();
+            } else if (e.key === 'ArrowLeft' && index > 0) {
+                otpInputs[index - 1].focus();
+            } else if (e.key === 'ArrowRight' && index < otpInputs.length - 1) {
+                otpInputs[index + 1].focus();
+            }
+        });
+
+        if (index === 0) {
+            input.addEventListener('paste', (e) => {
+                e.preventDefault();
+                const pasteData = e.clipboardData.getData('text').trim();
+                if (pasteData.length > 0) {
+                    for (let i = 0; i < otpInputs.length; i++) {
+                        if (i < pasteData.length) {
+                            otpInputs[i].value = pasteData[i];
+                        } else {
+                            otpInputs[i].value = '';
+                        }
+                    }
+                    // Di chuyển focus đến ô cuối cùng được điền hoặc ô cuối cùng
+                    if (pasteData.length < otpInputs.length) {
+                        otpInputs[pasteData.length - 1].focus();
+                    } else {
+                        otpInputs[otpInputs.length - 1].focus();
+                    }
+                    combineOtp();
+                }
+            });
+        }
+    });
+
+    otpForm.addEventListener('submit', (e) => {
+        combineOtp(); // Đảm bảo trường combinedOtpField được cập nhật trước khi gửi form
+    });
+
+    // Logic xử lý chuyển hướng sau khi OTP được xác minh thành công
+    document.addEventListener('DOMContentLoaded', () => {
+        if (otpInputs.length > 0) {
+            otpInputs[0].focus();
+        }
+
+        // Kiểm tra cờ otpVerified từ server
+        const otpVerifiedFlag = document.body.dataset.otpVerified === 'true';
+        if (otpVerifiedFlag) {
+            // Hiển thị thông báo thành công (đã được Thymeleaf xử lý)
+            // Chờ 3 giây trước khi chuyển hướng
+            setTimeout(() => {
+                window.location.href = '/reset-password'; // Chuyển hướng đến trang đặt lại mật khẩu
+            }, 3000); // Độ trễ 3 giây
+        }
+    });
+</script>
+</body>
+</html>
