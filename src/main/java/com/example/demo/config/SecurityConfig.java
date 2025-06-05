@@ -28,7 +28,10 @@ public class SecurityConfig {
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
-        return new DaoAuthenticationProvider();
+        DaoAuthenticationProvider provider = new DaoAuthenticationProvider();
+        provider.setUserDetailsService(customUserDetailsService);  // Chỉ định UserDetailsService
+        provider.setPasswordEncoder(passwordEncoder());  // Chỉ định PasswordEncoder
+        return provider;
     }
 
     @Bean

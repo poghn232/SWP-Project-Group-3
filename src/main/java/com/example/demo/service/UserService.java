@@ -7,12 +7,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
+@Service
 public class UserService {
     private Map<String, String> otpStorage = new HashMap<>(); // email -> OTP
     private Map<String, LocalDateTime> otpExpiry = new HashMap<>(); // email -> expiryTime
