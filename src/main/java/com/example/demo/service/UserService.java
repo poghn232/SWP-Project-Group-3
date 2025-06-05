@@ -29,6 +29,10 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
+    public User getUserInfo(String username) {
+        return userRepository.findByUsername(username);
+    }
+
     /**
      * Phương thức xử lý logic đăng ký người dùng mới.
      * Bao gồm kiểm tra trùng lặp và lưu người dùng vào database.
