@@ -15,4 +15,9 @@ public class AdminController {
     public String showAdminDashboard() {
         return "admin/dashboard";
     }
+
+    @GetMapping("/admin/manageProfile")
+    public String showManagePage() {
+        return "admin/manageUserProfiles";
+    }
 }

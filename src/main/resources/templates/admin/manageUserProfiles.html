@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Quản Lý Hồ Sơ Người Dùng (Admin)</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" xintegrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
+    <!-- Font Awesome (cho các icon) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" xintegrity="sha512-SnH5WK+bZxgPHs44uWIX+LLJAJ9/2PkPKZ5QiAj6Ta86w+fsb2TkcmfRyVX3pBnMFcV7oQPJkl9QevSCWr3W6A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f9fa; /* light gray background */
+        }
+        .container-fluid {
+            padding-top: 2rem;
+            padding-bottom: 2rem;
+        }
+        .card {
+            border-radius: 0.75rem;
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+        }
+        .card-header {
+            background-color: #007bff;
+            color: white;
+            border-top-left-radius: 0.75rem;
+            border-top-right-radius: 0.75rem;
+            padding: 1.5rem;
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        .table thead th {
+            background-color: #e9ecef;
+            color: #495057;
+            font-weight: 600;
+            vertical-align: middle;
+        }
+        .table tbody tr {
+            vertical-align: middle;
+        }
+        .table tbody td {
+            padding: 1rem 0.75rem;
+        }
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: rgba(0, 0, 0, 0.03);
+        }
+        .btn-action {
+            border-radius: 0.5rem;
+            padding: 0.5rem 1rem;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s ease-in-out;
+            margin-right: 0.25rem;
+        }
+        .btn-action i {
+            margin-right: 0.3rem;
+        }
+        .form-control {
+            border-radius: 0.5rem;
+            padding: 0.75rem 1rem;
+        }
+        .input-group .btn {
+            border-top-left-radius: 0.5rem !important;
+            border-bottom-left-radius: 0.5rem !important;
+        }
+        .input-group .form-control:first-child {
+            border-top-right-radius: 0.5rem !important;
+            border-bottom-right-radius: 0.5rem !important;
+        }
+        .status-badge {
+            padding: 0.4em 0.8em;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-size: 0.85em;
+        }
+        .status-active {
+            background-color: #d4edda;
+            color: #155724;
+        }
+        .status-locked {
+            background-color: #f8d7da;
+            color: #842029;
+        }
+        .status-pending {
+            background-color: #fff3cd;
+            color: #664d03;
+        }
+        /* Style cho phân trang */
+        .pagination .page-item .page-link {
+            border-radius: 0.5rem;
+            margin: 0 0.25rem;
+        }
+        .pagination .page-item.active .page-link {
+            background-color: #007bff;
+            border-color: #007bff;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-lg-10 col-md-12">
+            <div class="card">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <span><i class="fas fa-users me-2"></i>Quản Lý Hồ Sơ Người Dùng</span>
+                    <!-- Nút Thêm người dùng (tùy chọn) -->
+                    <a href="/admin/add-user" class="btn btn-light btn-action"><i class="fas fa-user-plus"></i>Thêm người dùng</a>
+                </div>
+                <div class="card-body">
+                    <!-- Khu vực tìm kiếm -->
+                    <div class="mb-4">
+                        <div class="input-group">
+                            <input type="text" id="searchInput" class="form-control" placeholder="Tìm kiếm theo tên người dùng, email, hoặc số điện thoại...">
+                            <button class="btn btn-outline-secondary" type="button" id="searchButton"><i class="fas fa-search"></i> Tìm kiếm</button>
+                        </div>
+                    </div>
+
+                    <!-- Bảng danh sách người dùng -->
+                    <div class="table-responsive">
+                        <table class="table table-striped table-hover" id="userTable">
+                            <thead>
+                            <tr>
+                                <th scope="col">ID</th>
+                                <th scope="col">Tên người dùng</th>
+                                <th scope="col">Email</th>
+                                <th scope="col">Điện thoại</th>
+                                <th scope="col">Vai trò</th>
+                                <th scope="col">Trạng thái</th>
+                                <th scope="col">Hành động</th>
+                            </tr>
+                            </thead>
+                            <tbody id="userTableBody">
+                            <!-- Dữ liệu người dùng sẽ được đổ vào đây bởi JavaScript -->
+                            <!-- Dữ liệu mẫu ban đầu (sẽ bị ghi đè khi dữ liệu thật được tải) -->
+                            <tr><td colspan="7" class="text-center">Đang tải dữ liệu người dùng...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <!-- Khu vực phân trang -->
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-center" id="paginationControls">
+                            <!-- Các nút phân trang sẽ được tạo bởi JavaScript -->
+                            <li class="page-item disabled" id="prevPageBtn">
+                                <a class="page-link" href="#" aria-label="Previous">
+                                    <span aria-hidden="true">&laquo;</span>
+                                </a>
+                            </li>
+                            <!-- Các nút số trang sẽ được thêm vào đây -->
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item disabled" id="nextPageBtn">
+                                <a class="page-link" href="#" aria-label="Next">
+                                    <span aria-hidden="true">&raquo;</span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Bootstrap Bundle with Popper -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" xintegrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const searchInput = document.getElementById('searchInput');
+        const searchButton = document.getElementById('searchButton');
+        const userTableBody = document.getElementById('userTableBody');
+        const paginationControls = document.getElementById('paginationControls');
+        const prevPageBtn = document.getElementById('prevPageBtn');
+        const nextPageBtn = document.getElementById('nextPageBtn');
+
+        // Mẫu dữ liệu người dùng (trong thực tế sẽ tải từ backend)
+        let allUsers = [
+            { userId: 1, username: "adminuser", email: "admin@example.com", phone: "0912345678", role: "ADMIN", status: "ACTIVE" },
+            { userId: 2, username: "customer1", email: "customer1@example.com", phone: "0901112233", role: "CUSTOMER", status: "LOCKED" },
+            { userId: 3, username: "manager_a", email: "manager@example.com", phone: "0987654321", role: "MANAGER", status: "ACTIVE" },
+            { userId: 4, username: "staff_b", email: "staff@example.com", phone: "0977889900", role: "STAFF", status: "ACTIVE" },
+            { userId: 5, username: "shipper_c", email: "shipper@example.com", phone: "0966554433", role: "SHIPPER", status: "PENDING" },
+            { userId: 6, username: "customer2", email: "customer2@example.com", phone: "0912121212", role: "CUSTOMER", status: "ACTIVE" },
+            { userId: 7, username: "staff_c", email: "staff2@example.com", phone: "0909090909", role: "STAFF", status: "ACTIVE" },
+            { userId: 8, username: "admin2", email: "admin2@example.com", phone: "0988776655", role: "ADMIN", status: "LOCKED" },
+            { userId: 9, username: "customer3", email: "customer3@example.com", phone: "0900112233", role: "CUSTOMER", status: "ACTIVE" },
+            { userId: 10, username: "manager_b", email: "manager2@example.com", phone: "0911223344", role: "MANAGER", status: "ACTIVE" },
+            { userId: 11, username: "staff_d", email: "staff3@example.com", phone: "0922334455", role: "STAFF", status: "PENDING" },
+            { userId: 12, username: "customer4", email: "customer4@example.com", phone: "0933445566", role: "CUSTOMER", status: "ACTIVE" }
+        ];
+
+        let currentPage = 1;
+        const pageSize = 5; // Số lượng người dùng mỗi trang
+        let filteredUsers = []; // Danh sách người dùng sau khi lọc
+
+        // Hàm ánh xạ trạng thái sang văn bản tiếng Việt và class CSS
+        function getStatusDisplay(status) {
+            switch (status.toUpperCase()) {
+                case 'ACTIVE': return { text: 'Hoạt động', class: 'status-active' };
+                case 'LOCKED': return { text: 'Bị khóa', class: 'status-locked' };
+                case 'PENDING': return { text: 'Chờ xử lý', class: 'status-pending' };
+                default: return { text: status, class: '' };
+            }
+        }
+
+        // Hàm render bảng người dùng cho trang hiện tại
+        function renderTable(usersToDisplay) {
+            userTableBody.innerHTML = ''; // Xóa nội dung cũ
+            if (usersToDisplay.length === 0) {
+                userTableBody.innerHTML = '<tr><td colspan="7" class="text-center">Không tìm thấy người dùng nào.</td></tr>';
+                return;
+            }
+
+            usersToDisplay.forEach(user => {
+                const statusInfo = getStatusDisplay(user.status);
+                const row = `
+                    <tr data-user-id="${user.userId}" data-username="${user.username.toLowerCase()}" data-email="${user.email.toLowerCase()}" data-phone="${user.phone}">
+                        <td>${user.userId}</td>
+                        <td>${user.username}</td>
+                        <td>${user.email}</td>
+                        <td>${user.phone}</td>
+                        <td>${user.role}</td>
+                        <td><span class="status-badge ${statusInfo.class}" data-status="${user.status.toLowerCase()}">${statusInfo.text}</span></td>
+                        <td>
+                            <button class="btn btn-warning btn-action btn-edit"><i class="fas fa-edit"></i>Sửa</button>
+                            ${user.status.toUpperCase() === 'ACTIVE' ?
+                                `<button class="btn btn-danger btn-action btn-lock" data-action="lock"><i class="fas fa-lock"></i>Khóa</button>` :
+                                `<button class="btn btn-success btn-action btn-unlock" data-action="unlock"><i class="fas fa-lock-open"></i>Mở khóa</button>`
+                            }
+                        </td>
+                    </tr>
+                `;
+                userTableBody.insertAdjacentHTML('beforeend', row);
+            });
+        }
+
+        // Hàm render các nút phân trang
+        function renderPagination(totalItems) {
+            const totalPages = Math.ceil(totalItems / pageSize);
+            paginationControls.innerHTML = ''; // Xóa các nút cũ
+
+            // Nút "Trước"
+            const prevLi = document.createElement('li');
+            prevLi.className = `page-item ${currentPage === 1 ? 'disabled' : ''}`;
+            prevLi.id = 'prevPageBtn';
+            prevLi.innerHTML = `<a class="page-link" href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>`;
+            paginationControls.appendChild(prevLi);
+
+            // Các nút số trang
+            for (let i = 1; i <= totalPages; i++) {
+                const pageLi = document.createElement('li');
+                pageLi.className = `page-item ${i === currentPage ? 'active' : ''}`;
+                pageLi.innerHTML = `<a class="page-link" href="#" data-page="${i}">${i}</a>`;
+                paginationControls.appendChild(pageLi);
+            }
+
+            // Nút "Tiếp"
+            const nextLi = document.createElement('li');
+            nextLi.className = `page-item ${currentPage === totalPages ? 'disabled' : ''}`;
+            nextLi.id = 'nextPageBtn';
+            nextLi.innerHTML = `<a class="page-link" href="#" aria-label="Next"><span aria-hidden="true">&raquo;</span></a>`;
+            paginationControls.appendChild(nextLi);
+
+            // Gắn lại event listeners cho các nút phân trang mới
+            addPaginationEventListeners();
+        }
+
+        // Hàm thêm event listeners cho các nút phân trang
+        function addPaginationEventListeners() {
+            document.querySelectorAll('.pagination .page-link').forEach(link => {
+                link.removeEventListener('click', handlePageClick); // Xóa listener cũ để tránh trùng lặp
+                link.addEventListener('click', handlePageClick);
+            });
+        }
+
+        // Hàm xử lý khi nhấn nút phân trang
+        function handlePageClick(event) {
+            event.preventDefault();
+            const target = event.target.closest('.page-link'); // Đảm bảo bắt đúng thẻ <a>
+
+            if (!target || target.parentNode.classList.contains('disabled')) {
+                return; // Bỏ qua nếu không phải link hợp lệ hoặc đang disabled
+            }
+
+            if (target.getAttribute('aria-label') === 'Previous') {
+                if (currentPage > 1) {
+                    currentPage--;
+                }
+            } else if (target.getAttribute('aria-label') === 'Next') {
+                const totalPages = Math.ceil(filteredUsers.length / pageSize);
+                if (currentPage < totalPages) {
+                    currentPage++;
+                }
+            } else {
+                currentPage = parseInt(target.getAttribute('data-page'));
+            }
+            displayUsers(); // Hiển thị người dùng cho trang mới
+        }
+
+        // Hàm chính để hiển thị người dùng (sau lọc và phân trang)
+        function displayUsers() {
+            const startIndex = (currentPage - 1) * pageSize;
+            const endIndex = startIndex + pageSize;
+            const usersOnCurrentPage = filteredUsers.slice(startIndex, endIndex);
+
+            renderTable(usersOnCurrentPage);
+            renderPagination(filteredUsers.length);
+        }
+
+        // Hàm lọc bảng dựa trên input tìm kiếm
+        function filterTable() {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            if (searchTerm === '') {
+                filteredUsers = allUsers; // Nếu không có searchTerm, hiển thị tất cả
+            } else {
+                filteredUsers = allUsers.filter(user =>
+                    user.username.toLowerCase().includes(searchTerm) ||
+                    user.email.toLowerCase().includes(searchTerm) ||
+                    user.phone.includes(searchTerm)
+                );
+            }
+            currentPage = 1; // Reset về trang đầu tiên sau khi lọc
+            displayUsers();
+        }
+
+        // Gắn event listeners cho tìm kiếm
+        searchButton.addEventListener('click', filterTable);
+        searchInput.addEventListener('keyup', filterTable);
+
+        // Hàm xử lý hành động khóa/mở/sửa tài khoản (mô phỏng client-side)
+        userTableBody.addEventListener('click', function(event) {
+            const target = event.target;
+            const row = target.closest('tr');
+
+            if (row) {
+                const userId = row.getAttribute('data-user-id');
+                const username = row.cells[1].textContent;
+                const currentStatusElement = row.cells[5].querySelector('.status-badge');
+                let currentStatus = currentStatusElement.getAttribute('data-status');
+
+                if (target.classList.contains('btn-lock')) {
+                    if (currentStatus === 'active') {
+                        if (confirm(`Bạn có chắc muốn khóa tài khoản "${username}" (ID: ${userId}) không?`)) {
+                            // Simulate locking
+                            currentStatusElement.textContent = 'Bị khóa';
+                            currentStatusElement.classList.remove('status-active');
+                            currentStatusElement.classList.add('status-locked');
+                            currentStatusElement.setAttribute('data-status', 'locked');
+
+                            // Update button
+                            target.classList.remove('btn-danger', 'btn-lock');
+                            target.classList.add('btn-success', 'btn-unlock');
+                            target.innerHTML = '<i class="fas fa-lock-open"></i>Mở khóa';
+                            alert(`Tài kh
