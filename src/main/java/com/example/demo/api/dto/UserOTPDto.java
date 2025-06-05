@@ -20,7 +20,6 @@ public class UserOTPDto {
     private String email;
 
     @NotBlank(message = "Mã OTP không được để trống.")
-    @Size(min = 6, max = 6, message = "Mã OTP phải có 6 chữ số.")
     @Pattern(regexp = "^[0-9]{6}$", message = "Mã OTP chỉ chứa chữ số.")
     private String otp;
 }

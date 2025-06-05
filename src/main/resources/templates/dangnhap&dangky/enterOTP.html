@@ -45,6 +45,15 @@
             border-color: #86b7fe; /* Bootstrap focus blue */
             box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25); /* Bootstrap focus shadow */
         }
+        /* Style for invalid OTP inputs */
+        .otp-input-group input.is-invalid {
+            border-color: #dc3545; /* Red border for invalid */
+        }
+        /* Style for disabled inputs */
+        .otp-input-group input:disabled {
+            background-color: #e9ecef; /* Light gray background for disabled */
+            cursor: not-allowed;
+        }
         .btn-primary {
             background-color: #0d6efd; /* Bootstrap primary blue */
             border-color: #0d6efd;
@@ -88,6 +97,17 @@
             border: 1px solid transparent;
             border-radius: 0.25rem;
         }
+        /* Class for field specific errors */
+        .text-danger {
+            font-size: 0.875em;
+            margin-top: 0.25rem;
+        }
+        /* Style for disabled button */
+        .btn-primary:disabled {
+            background-color: #cccccc;
+            border-color: #cccccc;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body th:data-otp-verified="${otpVerified != null && otpVerified}" class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
@@ -103,11 +123,11 @@
         <span th:text="${errorMessage}"></span>
     </div>
 
-    <form th:action="@{/enterOtp}" th:object="${otpDto}" method="post" id="otpForm">
+    <form th:action="@{/enterOTP}" th:object="${otpDto}" method="post" id="otpForm">
         <!-- Hidden field for email (assuming it's passed from previous step) -->
         <input type="hidden" th:field="*{email}" />
 
-        <div class="d-flex justify-content-center space-x-2 mb-4">
+        <div class="d-flex justify-content-center space-x-2 mb-2 otp-input-group">
             <input type="text" id="otp-1" name="otp1" maxlength="1" pattern="[0-9]" inputmode="numeric" autocomplete="one-time-code" data-index="0" class="form-control text-center me-2" required>
             <input type="text" id="otp-2" name="otp2" maxlength="1" pattern="[0-9]" inputmode="numeric" data-index="1" class="form-control text-center me-2" required>
             <input type="text" id="otp-3" name="otp3" maxlength="1" pattern="[0-9]" inputmode="numeric" data-index="2" class="form-control text-center me-2" required>
@@ -119,16 +139,20 @@
         <!-- Hidden field to store the combined OTP -->
         <input type="hidden" id="combinedOtp" name="otp" value="">
 
-        <button type="submit" class="btn btn-primary w-100 mb-3">Xác Nhận Mã OTP</button>
+        <!-- CHỖ HIỂN THỊ LỖI OTP CỤ THỂ -->
+        <div class="text-danger mb-4" th:if="${#fields.hasErrors('otp')}" th:errors="*{otp}"></div>
+
+
+        <button type="submit" class="btn btn-primary w-100 mb-3" id="verifyOtpButton">Xác Nhận Mã OTP</button>
     </form>
 
     <div class="text-center">
         <p class="text-secondary mb-2">Bạn chưa nhận được mã?</p>
         <!-- Form để gửi lại OTP - Sẽ reload trang -->
-        <form th:action="@{/verify-otp/resend}" method="post">
+        <form th:action="@{/forgetPassword}" method="post">
             <!-- Sử dụng th:value để đảm bảo email được truyền đúng -->
-            <input type="hidden" name="email" th:value="*{otpDto.email}" />
-            <button type="submit" class="btn btn-link link-text p-0">Gửi lại mã OTP</button>
+            <input type="hidden" name="email" th:value="*{otpDto.email}"/>
+            <button type="submit" class="btn btn-link link-text p-0" id="resendOtpLink">Gửi lại mã OTP</button>
         </form>
     </div>
 </div>
@@ -140,6 +164,8 @@
     const otpInputs = document.querySelectorAll('.otp-input-group input');
     const combinedOtpField = document.getElementById('combinedOtp');
     const otpForm = document.getElementById('otpForm');
+    const verifyOtpButton = document.getElementById('verifyOtpButton');
+    const resendOtpLink = document.getElementById('resendOtpLink');
 
     function combineOtp() {
         let otp = '';
@@ -204,6 +230,19 @@
 
     otpForm.addEventListener('submit', (e) => {
         combineOtp(); // Đảm bảo trường combinedOtpField được cập nhật trước khi gửi form
+
+        // Thêm class 'is-invalid' nếu có lỗi OTP
+        // Đây là kiểm tra client-side, thường không xử lý lỗi server-side
+        // Để lỗi server-side, chúng ta dùng logic ở DOMContentLoaded
+        // if (combinedOtpField.classList.contains('is-invalid')) {
+        //     otpInputs.forEach(input => {
+        //         input.classList.add('is-invalid');
+        //     });
+        // } else {
+        //     otpInputs.forEach(input => {
+        //         input.classList.remove('is-invalid');
+        //     });
+        // }
     });
 
     // Logic xử lý chuyển hướng sau khi OTP được xác minh thành công
@@ -215,11 +254,28 @@
         // Kiểm tra cờ otpVerified từ server
         const otpVerifiedFlag = document.body.dataset.otpVerified === 'true';
         if (otpVerifiedFlag) {
+            // Vô hiệu hóa input và button
+            otpInputs.forEach(input => {
+                input.disabled = true;
+                input.classList.remove('is-invalid'); // Xóa trạng thái lỗi nếu có
+            });
+            verifyOtpButton.disabled = true;
+            resendOtpLink.disabled = true; // Vô hiệu hóa nút gửi lại
+
             // Hiển thị thông báo thành công (đã được Thymeleaf xử lý)
-            // Chờ 3 giây trước khi chuyển hướng
+            // Chờ 2.5 giây trước khi chuyển hướng
             setTimeout(() => {
-                window.location.href = '/reset-password'; // Chuyển hướng đến trang đặt lại mật khẩu
-            }, 3000); // Độ trễ 3 giây
+                window.location.href = '/resetPassword'; // Chuyển hướng đến trang đặt lại mật khẩu
+            }, 2500); // Độ trễ 2.5 giây
+        }
+
+        // Thêm class 'is-invalid' cho các ô OTP nếu có lỗi OTP từ server-side validation
+        // Kiểm tra xem div lỗi có tồn tại và có nội dung hay không
+        const otpErrorDiv = document.querySelector('.text-danger[th\\:if="${#fields.hasErrors(\'otp\')}"]');
+        if (otpErrorDiv && otpErrorDiv.textContent.trim() !== '') {
+             otpInputs.forEach(input => {
+                input.classList.add('is-invalid');
+            });
         }
     });
 </script>
