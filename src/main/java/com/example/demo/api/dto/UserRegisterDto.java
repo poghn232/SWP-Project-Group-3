@@ -1,4 +1,4 @@
-package com.example.demo.api.register;
+package com.example.demo.api.dto;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -21,6 +21,10 @@ public class UserRegisterDto {
     @NotBlank(message = "Email không được để trống")
     @Email(message = "Email không hợp lệ")
     private String email;
+
+    @NotBlank(message = "Số điện thoại không được để trống")
+    @Size(min = 10, max = 10, message = "Mật khẩu 10 số, vui lòng xem lại")
+    private String phone;
 
     @NotBlank(message = "Mật khẩu không được để trống")
     @Size(min = 8, message = "Mật khẩu phải có ít nhất 8 kí tự")

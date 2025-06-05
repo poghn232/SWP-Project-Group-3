@@ -1,6 +1,7 @@
-package com.example.demo.api.foodmanage;
+package com.example.demo.controller;
 
 import com.example.demo.model.Item;
+import com.example.demo.repository.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -14,7 +15,7 @@ public class DishPageController {
     @Autowired
     private ItemRepository itemRepository;
 
-    @GetMapping("/")
+    @GetMapping("/list")
     public String viewItems(Model model) {
         model.addAttribute("items", itemRepository.findAll());
         return "views/list"; // Tương ứng WEB-INF/views/list.jsp

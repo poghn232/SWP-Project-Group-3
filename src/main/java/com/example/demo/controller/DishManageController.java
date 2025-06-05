@@ -1,7 +1,7 @@
-package com.example.demo.api.foodmanage;
+package com.example.demo.controller;
 
 import com.example.demo.model.Item;
-import com.example.demo.api.foodmanage.ItemRepository;
+import com.example.demo.repository.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -50,92 +50,18 @@
                         data-bs-target="#loginModal">
                     Login
                 </button>
-                <button class="btn btn-primary" type="button" data-bs-toggle="modal" data-bs-target="#registerModal">
+                <a class="btn btn-primary" href="/register">
                     Register
-                </button>
+                </a>
             </div>
         </div>
     </div>
 </nav>
 
-<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="loginModalLabel">Login</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form action="/api/login" method="post">
-                    <div class="mb-3">
-                        <label for="loginUsername" class="form-label">Username</label>
-                        <input type="text" class="form-control" id="loginUsername" name="username" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="loginPassword" class="form-label">Password</label>
-                        <input type="password" class="form-control" id="loginPassword" name="password" required>
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100">Login</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div class="modal fade" id="registerModal" tabindex="-1" aria-labelledby="registerModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="registerModalLabel">Register</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body">
-                <form action="/register" method="post">
-                    <div class="mb-3">
-                        <label for="registerUsername" class="form-label">Username</label>
-                        <input type="text" id="registerUsername" name="username" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="registerEmail" class="form-label">Email address</label>
-                        <input type="email" id="registerEmail" name="email" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="registerPassword" class="form-label">Password</label>
-                        <input type="password" id="registerPassword" name="password" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="confirmPassword" class="form-label">Confirm Password</label>
-                        <input type="password" id="confirmPassword" name="confirmPassword"
-                               required>
-                    </div>
-                    <button type="submit" class="btn btn-primary w-100">Register</button>
-                </form>
-            </div>
-        </div>
-    </div>
-</div>
-
 <div class="container my-5">
     <h2>Main Content Area</h2>
     <p>This is where the main content of your web page would go.</p>
     <p>You can add more Bootstrap components here, like cards, grids, carousels, etc.</p>
-
-    <p>Bảng dưới lấy dữ liệu từ mysql, nếu thấy thì get thành công :D, just jpa testing</p>
-
-    <table class="table table-dark table-striped" border="1">
-        <thead>
-            <th>Id</th>
-            <th>Name</th>
-            <th>Price</th>
-        </thead>
-        <tbody>
-            <tr th:each="product : ${products}">
-                <td th:text="${product.id}"></td>
-                <td th:text="${product.name}"></td>
-                <td th:text="${product.price}"></td>
-            </tr>
-        </tbody>
-    </table>
 
 </div>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
