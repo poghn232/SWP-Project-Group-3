@@ -11,13 +11,14 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class UserLoginDto {
+public class UserResetPasswordDto {
 
-    @NotBlank(message = "Tên người dùng không được để trống")
-    @Size(min = 8, max = 30, message = "Tên người dùng phải có từ 8 đến 30 ký tự")
-    private String username;
+    private String email;
 
     @NotBlank(message = "Mật khẩu không được để trống")
     @Size(min = 8, message = "Mật khẩu phải có ít nhất 8 kí tự")
     private String password;
+
+    @NotBlank(message = "Xác nhận mật khẩu không được để trống")
+    private String confirmPassword;
 }

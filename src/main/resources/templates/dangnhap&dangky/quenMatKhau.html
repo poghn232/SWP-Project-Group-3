@@ -90,7 +90,7 @@
         <span th:text="${errorMessage}"></span>
     </div>
 
-    <form th:action="@{/forgotpassword}" th:object="${emailDto}" method="post">
+    <form th:action="@{/forgetPassword}" th:object="${emailDto}" method="post">
         <div class="mb-3">
             <label for="email" class="form-label">Địa chỉ Email</label>
             <input type="email" class="form-control" id="email"
@@ -98,6 +98,9 @@
                    th:classappend="${#fields.hasErrors('email')} ? 'is-invalid' : ''"
                    placeholder="Nhập địa chỉ email của bạn" required>
             <div class="text-danger" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></div>
+        </div>
+        <div th:if="${#fields.hasGlobalErrors()}" class="alert alert-danger" role="alert">
+            <p th:each="err : ${#fields.globalErrors()}" th:text="${err}"></p>
         </div>
 
         <button type="submit" class="btn btn-primary w-100">Gửi Mã OTP</button>

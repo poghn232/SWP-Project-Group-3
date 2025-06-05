@@ -6,6 +6,7 @@ import com.example.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.stereotype.Service;
 
@@ -55,21 +56,21 @@ public class UserService {
 
         String encodedPassword = passwordEncoder.encode(registerDto.getPassword());
         User newUser = new User(registerDto.getUserName(),
-                                encodedPassword,
-                                registerDto.getEmail(),
-                                registerDto.getPhone());
+                encodedPassword,
+                registerDto.getEmail(),
+                registerDto.getPhone());
         return userRepository.save(newUser);
     }
 
     public void OTPEmailSender(String email) {
         User user = userRepository.findByEmail(email);
 
-        if(user == null) {
+        if (user == null) {
             throw new IllegalArgumentException("Email không tồn tại trong hệ thống. Vui lòng xem lại.");
         }
 
         String outputOtp = String.format("%06d", new Random().nextInt(999999));
-        LocalDateTime expiryTime = LocalDateTime.now().plusMinutes(2);
+        LocalDateTime expiryTime = LocalDateTime.now().plusMinutes(5);
 
         otpStorage.put(email, outputOtp);
         otpExpiry.put(email, expiryTime);
@@ -85,7 +86,7 @@ public class UserService {
         if (storedOtp == null || !storedOtp.equals(inputOtp)) {
             throw new IllegalArgumentException("Mã OTP không hợp lệ");
         }
-        if (storedExpiryTime == null || storedExpiryTime.isBefore(LocalDateTime.now())){
+        if (storedExpiryTime == null || storedExpiryTime.isBefore(LocalDateTime.now())) {
             otpStorage.remove(email);
             otpExpiry.remove(email);
             throw new IllegalArgumentException("Mã OTP đã hết hạn");
@@ -94,5 +95,18 @@ public class UserService {
         otpStorage.remove(email);
         otpExpiry.remove(email);
         return true;
+    }
+
+    public void resetPassword(String email, String password, String confirmPassword) {
+        User user = userRepository.findByEmail(email);
+
+        if (!password.equals(confirmPassword)) {
+            throw new IllegalArgumentException("Mật khẩu xác nhận không đúng. Vui lòng thử lại");
+        }
+
+        String hashedPassword = passwordEncoder.encode(password);
+        user.setPasswordHash(hashedPassword);
+
+        userRepository.save(user);
     }
 }

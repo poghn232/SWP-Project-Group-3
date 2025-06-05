@@ -13,6 +13,6 @@ public class AdminController {
 
     @GetMapping("/admin/dashboard")
     public String showAdminDashboard() {
-        return "";
+        return "admin/dashboard";
     }
 }
