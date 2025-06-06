@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 import com.example.demo.model.User;
-import com.example.demo.repository.UserRepository;
 import com.example.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -29,7 +28,10 @@ public class AdminController {
     }
 
     @GetMapping("/admin/manageProfile")
-    public String showManagePage() {
+    public String showManagePage(Model model) {
+        if (!model.containsAttribute("user")) {
+
+        }
         return "admin/manageUserProfiles";
     }
 }
