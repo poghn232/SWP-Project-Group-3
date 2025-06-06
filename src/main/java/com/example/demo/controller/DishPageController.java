@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
+@RequestMapping("/admin/manageDish") // Thêm prefix cho dễ tổ chức
 public class DishPageController {
 
     @Autowired
@@ -18,12 +19,12 @@ public class DishPageController {
     @GetMapping("/list")
     public String viewItems(Model model) {
         model.addAttribute("items", itemRepository.findAll());
-        return "views/list"; // Tương ứng WEB-INF/views/list.jsp
+        return "admin/manageDish/listdish"; // đường dẫn đúng với file JSP
     }
 
     @GetMapping("/add")
     public String addForm() {
-        return "views/add";
+        return "admin/manageDish/adddish";
     }
 
     @PostMapping("/add")
@@ -36,13 +37,13 @@ public class DishPageController {
         item.setImageUrl(req.getParameter("imageUrl"));
         item.setAvailable(req.getParameter("isAvailable") != null);
         itemRepository.save(item);
-        return "redirect:/";
+        return "redirect:/admin/manageDish/list";
     }
 
     @GetMapping("/edit")
     public String editForm(@RequestParam int id, Model model) {
         model.addAttribute("item", itemRepository.findById(id).orElse(null));
-        return "views/edit";
+        return "admin/manageDish/editdish";
     }
 
     @PostMapping("/edit")
@@ -58,12 +59,13 @@ public class DishPageController {
             item.setAvailable(req.getParameter("isAvailable") != null);
             itemRepository.save(item);
         }
-        return "redirect:/";
+        return "redirect:/admin/manageDish/list";
     }
 
     @GetMapping("/delete")
     public String deleteItem(@RequestParam int id) {
         itemRepository.deleteById(id);
-        return "redirect:/";
+        return "redirect:/admin/manageDish/list";
     }
 }
+

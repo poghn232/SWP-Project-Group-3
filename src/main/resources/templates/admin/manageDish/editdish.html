@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Sửa món ăn</title>
+</head>
+<body>
+    <h2>Sửa món ăn</h2>
+    <form method="post" th:action="@{/admin/manageDish/edit}">
+        <input type="hidden" name="itemId" th:value="${item.itemId}" />
+        
+        <label>Tên: <input type="text" name="name" th:value="${item.name}" /></label><br/>
+        <label>Mô tả: <input type="text" name="description" th:value="${item.description}" /></label><br/>
+        <label>Giá: <input type="text" name="price" th:value="${item.price}" /></label><br/>
+        <label>Loại: <input type="text" name="category" th:value="${item.category}" /></label><br/>
+        <label>Ảnh URL: <input type="text" name="imageUrl" th:value="${item.imageUrl}" /></label><br/>
+        <label>
+            Còn hàng? 
+            <input type="checkbox" name="isAvailable" value="true"
+                   th:checked="${item.available}" />
+        </label><br/>
+        
+        <input type="submit" value="Cập nhật" />
+    </form>
+</body>
+</html>
