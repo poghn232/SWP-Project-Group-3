@@ -13,7 +13,7 @@ public class LoginController {
     @Autowired
     private UserService userService;
 
-    private final String renderLoginPage = "dangnhap&dangky/dangnhap";
+    private final String renderLoginPage = "sampleTemplate/login";
 
     @GetMapping("/login")
     public String showLoginPage(Model model){

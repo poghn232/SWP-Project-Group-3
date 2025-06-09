@@ -1433,7 +1433,6 @@ h2.title {
 }
 
 .login-form {
-
 }
 
 .signup-form {
@@ -1461,7 +1460,7 @@ h2.title {
   margin-bottom: 10px;
   outline: medium none;
   padding-left: 10px;
-  width: 100%;
+  width: 25%;
 }
 
 .login-form form span{
