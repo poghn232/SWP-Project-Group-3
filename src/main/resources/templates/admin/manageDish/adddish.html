@@ -3,17 +3,86 @@
 <head>
     <meta charset="UTF-8">
     <title>Thêm món ăn</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        td {
+            padding: 8px 12px;
+        }
+        input[type="text"], select, input[type="file"] {
+            width: 100%;
+            padding: 6px;
+        }
+        input[type="submit"] {
+            padding: 8px 16px;
+        }
+    </style>
 </head>
 <body>
+    <iframe src="../../jsp/header.jsp" width="100%"></iframe>
+
     <h2>Thêm món ăn mới</h2>
-    <form method="post" th:action="@{/admin/manageDish/add}">
-        <label>Tên: <input type="text" name="name" /></label><br/>
-        <label>Mô tả: <input type="text" name="description" /></label><br/>
-        <label>Giá: <input type="text" name="price" /></label><br/>
-        <label>Loại: <input type="text" name="category" /></label><br/>
-        <label>Ảnh URL: <input type="text" name="imageUrl" /></label><br/>
-        <label>Còn hàng? <input type="checkbox" name="isAvailable" value="true"/></label><br/>
-        <input type="submit" value="Thêm món"/>
+    <form method="post" th:action="@{/admin/manageDish/add}" enctype="multipart/form-data">
+        <table>
+            <tr>
+                <td><label for="name">Tên:</label></td>
+                <td><input type="text" id="name" name="name" required/></td>
+            </tr>
+            <tr>
+                <td><label for="description">Mô tả:</label></td>
+                <td><input type="text" id="description" name="description"/></td>
+            </tr>
+            <tr>
+                <td><label for="price">Giá:</label></td>
+                <td><input type="number" id="price" name="price" required min="0.01"/></td>
+            </tr>
+            <tr>
+                <td><label for="category">Loại:</label></td>
+                <td>
+                    <select id="category" name="category" required>
+                        <option value="">--Chọn loại--</option>
+                        <option value="Đồ chiên">Đồ chiên</option>
+                        <option value="Đồ hấp">Đồ hấp</option>
+                        <option value="Mì Ý">Mì Ý</option>
+                        <option value="Mì trộn">Mì trộn</option>
+                        <option value="Đồ uống">Đồ uống</option>
+                        <option value="Rau xanh">Rau xanh</option>
+                        <option value="Chè">Chè</option>
+                        <option value="Tráng miệng">Tráng miệng</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td><label for="image">Ảnh:</label></td>
+                <td><input type="file" id="image" name="imageFile" accept=".png,.jpg,.jpeg" required/></td>
+            </tr>
+            <tr>
+                <td><label for="isAvailable">Còn hàng?</label></td>
+                <td><input type="checkbox" id="isAvailable" name="isAvailable" value="true"/>Còn hàng</td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align: center;">
+                    <input type="submit" value="Thêm món"/>
+                </td>
+            </tr>
+        </table>
     </form>
+
+    <iframe src="../../jsp/footer.jsp" width="100%"></iframe>
 </body>
+<script>
+    document.querySelector("form").addEventListener("submit", function(e) {
+        const priceInput = document.getElementById("price");
+        const price = parseFloat(priceInput.value);
+
+        if (isNaN(price) || price <= 0) {
+            alert("Giá bán phải lớn hơn 0");
+            priceInput.focus();
+            e.preventDefault(); // ngăn form gửi đi
+        }
+    });
+</script>
+
 </html>

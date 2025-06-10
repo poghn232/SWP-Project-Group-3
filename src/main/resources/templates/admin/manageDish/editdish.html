@@ -3,24 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <title>Sửa món ăn</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            margin: 20px 0;
+        }
+        td {
+            padding: 8px 12px;
+        }
+        input[type="text"], select, input[type="file"] {
+            width: 100%;
+            padding: 6px;
+        }
+        input[type="submit"] {
+            padding: 8px 16px;
+        }
+    </style>
 </head>
 <body>
     <h2>Sửa món ăn</h2>
-    <form method="post" th:action="@{/admin/manageDish/edit}">
+    <form method="post" th:action="@{/admin/manageDish/edit}" enctype="multipart/form-data">
         <input type="hidden" name="itemId" th:value="${item.itemId}" />
-        
-        <label>Tên: <input type="text" name="name" th:value="${item.name}" /></label><br/>
-        <label>Mô tả: <input type="text" name="description" th:value="${item.description}" /></label><br/>
-        <label>Giá: <input type="text" name="price" th:value="${item.price}" /></label><br/>
-        <label>Loại: <input type="text" name="category" th:value="${item.category}" /></label><br/>
-        <label>Ảnh URL: <input type="text" name="imageUrl" th:value="${item.imageUrl}" /></label><br/>
-        <label>
-            Còn hàng? 
-            <input type="checkbox" name="isAvailable" value="true"
-                   th:checked="${item.available}" />
-        </label><br/>
-        
-        <input type="submit" value="Cập nhật" />
+
+        <table>
+            <tr>
+                <td><label for="name">Tên:</label></td>
+                <td><input type="text" id="name" name="name" th:value="${item.name}" required /></td>
+            </tr>
+            <tr>
+                <td><label for="description">Mô tả:</label></td>
+                <td><input type="text" id="description" name="description" th:value="${item.description}" /></td>
+            </tr>
+            <tr>
+                <td><label for="price">Giá:</label></td>
+                <td><input type="number" id="price" name="price" th:value="${item.price}" required min="0.1"/></td>
+            </tr>
+            <tr>
+                <td><label for="category">Loại:</label></td>
+                <td>
+                    <select id="category" name="category" required>
+                        <option value="">--Chọn loại--</option>
+                        <option value="Đồ chiên" th:selected="${item.category == 'Đồ chiên'}">Đồ chiên</option>
+                        <option value="Đồ hấp" th:selected="${item.category == 'Đồ hấp'}">Đồ hấp</option>
+                        <option value="Mì Ý" th:selected="${item.category == 'Mì Ý'}">Mì Ý</option>
+                        <option value="Mì trộn" th:selected="${item.category == 'Mì trộn'}">Mì trộn</option>
+                        <option value="Đồ uống" th:selected="${item.category == 'Đồ uống'}">Đồ uống</option>
+                        <option value="Rau xanh" th:selected="${item.category == 'Rau xanh'}">Rau xanh</option>
+                        <option value="Chè" th:selected="${item.category == 'Chè'}">Chè</option>
+                        <option value="Tráng miệng" th:selected="${item.category == 'Chè'}">Tráng miệng</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
+                <td><label for="imageFile">Ảnh mới:</label></td>
+                <td><input type="file" id="imageFile" name="imageFile" accept=".png,.jpg,.jpeg" /></td>
+            </tr>
+            <tr>
+                <td>Ảnh hiện tại:</td>
+                <td><img th:src="${item.imageUrl}" alt="Ảnh hiện tại" width="120" /></td>
+            </tr>
+            <tr>
+                <td><label for="isAvailable">Còn hàng?</label></td>
+                <td><input type="checkbox" id="isAvailable" name="isAvailable" value="true" th:checked="${item.available}" /></td>
+            </tr>
+            <tr>
+                <td colspan="2" style="text-align: center;">
+                    <input type="submit" value="Cập nhật" />
+                </td>
+            </tr>
+        </table>
     </form>
 </body>
+<script>
+    document.querySelector("form").addEventListener("submit", function(e) {
+        const priceInput = document.getElementById("price");
+        const price = parseFloat(priceInput.value);
+
+        if (isNaN(price) || price <= 0) {
+            alert("Giá bán phải lớn hơn 0");
+            priceInput.focus();
+            e.preventDefault(); // ngăn form gửi đi
+        }
+    });
+</script>
+
 </html>

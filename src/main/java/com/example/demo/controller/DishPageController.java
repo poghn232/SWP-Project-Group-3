@@ -2,6 +2,10 @@ package com.example.demo.controller;
 
 import com.example.demo.model.Item;
 import com.example.demo.repository.ItemRepository;
+
+import java.util.List;
+import java.util.stream.Collectors;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -17,10 +21,23 @@ public class DishPageController {
     private ItemRepository itemRepository;
 
     @GetMapping("/list")
-    public String viewItems(Model model) {
-        model.addAttribute("items", itemRepository.findAll());
-        return "admin/manageDish/listdish"; // đường dẫn đúng với file JSP
-    }
+public String viewItems(@RequestParam(required = false) String keyword,
+                        @RequestParam(required = false) String category,
+                        Model model) {
+    List<Item> allItems = itemRepository.findAll();
+
+    // Lọc theo keyword và category nếu có
+    List<Item> filtered = allItems.stream()
+        .filter(item -> keyword == null || keyword.isEmpty() || item.getName().toLowerCase().contains(keyword.toLowerCase()))
+        .filter(item -> category == null || category.isEmpty() || item.getCategory().equalsIgnoreCase(category))
+        .collect(Collectors.toList());
+
+    model.addAttribute("items", filtered);
+    model.addAttribute("keyword", keyword);     // Để giữ lại text người dùng nhập
+    model.addAttribute("category", category);   // Để giữ lại category người dùng chọn
+    return "admin/manageDish/listdish";
+}
+
 
     @GetMapping("/add")
     public String addForm() {
@@ -67,5 +84,7 @@ public class DishPageController {
         itemRepository.deleteById(id);
         return "redirect:/admin/manageDish/list";
     }
+    
+    
 }
 
