@@ -1,6 +1,6 @@
-package com.example.demo.controller;
+package com.example.demo.controller.AuthenticationController;
 
-import com.example.demo.api.dto.UserRegisterDto;
+import com.example.demo.api.dto.authentication.UserRegisterDto;
 import com.example.demo.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

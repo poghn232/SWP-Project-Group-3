@@ -1,8 +1,8 @@
-package com.example.demo.controller;
+package com.example.demo.controller.AuthenticationController;
 
-import com.example.demo.api.dto.UserEmailDto;
-import com.example.demo.api.dto.UserOTPDto;
-import com.example.demo.api.dto.UserResetPasswordDto;
+import com.example.demo.api.dto.authentication.UserEmailDto;
+import com.example.demo.api.dto.authentication.UserOTPDto;
+import com.example.demo.api.dto.authentication.UserResetPasswordDto;
 import com.example.demo.service.UserService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;

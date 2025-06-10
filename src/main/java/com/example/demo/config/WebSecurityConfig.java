@@ -13,7 +13,7 @@ import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
 @EnableWebSecurity
-public class SecurityConfig {
+public class WebSecurityConfig {
 
     @Autowired
     private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;

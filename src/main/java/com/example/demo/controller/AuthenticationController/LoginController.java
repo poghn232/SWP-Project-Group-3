@@ -1,6 +1,6 @@
-package com.example.demo.controller;
+package com.example.demo.controller.AuthenticationController;
 
-import com.example.demo.api.dto.UserLoginDto;
+import com.example.demo.api.dto.authentication.UserLoginDto;
 import com.example.demo.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
