@@ -1,11 +1,23 @@
 package com.example.demo.model;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+
+@Entity
+@Table(name = "combo_details")
 public class ComboDetail {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int comboDetailId;
     private int comboId;
     private int itemId;
     private int quantity;
 
+    public ComboDetail() {}
+    
     public ComboDetail(int comboDetailId, int comboId, int itemId, int quantity) {
         this.comboDetailId = comboDetailId;
         this.comboId = comboId;
