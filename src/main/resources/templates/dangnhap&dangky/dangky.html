@@ -124,7 +124,7 @@
         <div class="mb-3">
             <label for="password" class="form-label">Mật khẩu</label>
             <input type="password" class="form-control" id="password" name="password"
-                   th:classappend="${#fields.hasErrors('password')} ? 'is-invalid' : ''"
+                   th:classappend="${#fields.hasErrors('password')} ? 'is-invalid' : '  '"
                    minlength="8"
                    placeholder="Nhập mật khẩu của bạn" required>
             <div class="form-text text-muted">Ít nhất 8 ký tự.</div>
@@ -142,11 +142,12 @@
         <button type="submit" class="btn btn-primary w-100" >Đăng Ký</button>
     </form>
 
+    <div class="text-center mt-3">
+        <a href="/" class="btn btn-outline-secondary">Quay lại trang chủ</a>
+    </div>
+
     <div class="text-center mt-4">
         Bạn đã có tài khoản? <a href="/login" class="link-secondary">Đăng nhập ngay</a>
-    </div>
-    <div class="text-center mt-4">
-        <a href="/" class="link-secondary">Quay lại trang chủ</a>
     </div>
 </div>
 
