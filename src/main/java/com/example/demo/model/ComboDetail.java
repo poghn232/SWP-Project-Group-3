@@ -7,7 +7,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "combo_details")
+@Table(name = "combodetail")
 public class ComboDetail {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
