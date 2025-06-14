@@ -13,7 +13,7 @@ import lombok.Setter;
 @Setter
 public class UserEmailDto {
 
-    @NotBlank(message = "Email không được để trống")
-    @Email(message = "Email không hợp lệ")
+    @NotBlank(message = "Email cannot be empty")
+    @Email(message = "Email is not in the right form")
     private String email;
 }

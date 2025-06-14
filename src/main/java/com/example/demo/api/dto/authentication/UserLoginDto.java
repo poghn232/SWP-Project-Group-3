@@ -13,11 +13,11 @@ import lombok.Setter;
 @Setter
 public class UserLoginDto {
 
-    @NotBlank(message = "Tên người dùng không được để trống")
-    @Size(min = 8, max = 30, message = "Tên người dùng phải có từ 8 đến 30 ký tự")
+    @NotBlank(message = "Username cannot be empty")
+    @Size(min = 8, max = 30, message = "Username must have from 8 to 30 characters")
     private String username;
 
-    @NotBlank(message = "Mật khẩu không được để trống")
-    @Size(min = 8, message = "Mật khẩu phải có ít nhất 8 kí tự")
+    @NotBlank(message = "Password cannot be empty")
+    @Size(min = 8, message = "Password must have at least 8 characters")
     private String password;
 }

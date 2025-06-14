@@ -15,10 +15,10 @@ public class UserResetPasswordDto {
 
     private String email;
 
-    @NotBlank(message = "Mật khẩu không được để trống")
-    @Size(min = 8, message = "Mật khẩu phải có ít nhất 8 kí tự")
+    @NotBlank(message = "Password cannot be empty")
+    @Size(min = 8, message = "Password must have at least 8 characters")
     private String password;
 
-    @NotBlank(message = "Xác nhận mật khẩu không được để trống")
+    @NotBlank(message = "Confirm password cannot be empty")
     private String confirmPassword;
 }

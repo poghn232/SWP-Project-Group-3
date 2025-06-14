@@ -244,40 +244,6 @@
         //     });
         // }
     });
-
-    // Logic xử lý chuyển hướng sau khi OTP được xác minh thành công
-    document.addEventListener('DOMContentLoaded', () => {
-        if (otpInputs.length > 0) {
-            otpInputs[0].focus();
-        }
-
-        // Kiểm tra cờ otpVerified từ server
-        const otpVerifiedFlag = document.body.dataset.otpVerified === 'true';
-        if (otpVerifiedFlag) {
-            // Vô hiệu hóa input và button
-            otpInputs.forEach(input => {
-                input.disabled = true;
-                input.classList.remove('is-invalid'); // Xóa trạng thái lỗi nếu có
-            });
-            verifyOtpButton.disabled = true;
-            resendOtpLink.disabled = true; // Vô hiệu hóa nút gửi lại
-
-            // Hiển thị thông báo thành công (đã được Thymeleaf xử lý)
-            // Chờ 2.5 giây trước khi chuyển hướng
-            setTimeout(() => {
-                window.location.href = '/resetPassword'; // Chuyển hướng đến trang đặt lại mật khẩu
-            }, 2500); // Độ trễ 2.5 giây
-        }
-
-        // Thêm class 'is-invalid' cho các ô OTP nếu có lỗi OTP từ server-side validation
-        // Kiểm tra xem div lỗi có tồn tại và có nội dung hay không
-        const otpErrorDiv = document.querySelector('.text-danger[th\\:if="${#fields.hasErrors(\'otp\')}"]');
-        if (otpErrorDiv && otpErrorDiv.textContent.trim() !== '') {
-             otpInputs.forEach(input => {
-                input.classList.add('is-invalid');
-            });
-        }
-    });
 </script>
 </body>
 </html>

@@ -6,7 +6,6 @@ import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
-import org.springframework.mail.SimpleMailMessage; // Dùng cho email đơn giản (text thuần)
 import org.springframework.mail.javamail.JavaMailSender; // Interface chính để gửi email
 import org.springframework.mail.javamail.MimeMessageHelper; // Dùng để tạo email phức tạp (HTML, file đính kèm)
 import org.springframework.stereotype.Service;
