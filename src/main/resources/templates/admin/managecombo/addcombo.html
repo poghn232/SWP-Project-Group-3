@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Tạo Combo Mới</title>
+    <meta charset="UTF-8">
+    <style>
+        .container { display: flex; gap: 40px; }
+        .list { border: 1px solid #ccc; padding: 20px; width: 40%; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+        th { background-color: #f2f2f2; }
+        input, select { margin-bottom: 10px; width: 100%; padding: 5px; }
+        button { padding: 5px 10px; }
+    </style>
+</head>
+<body>
+
+<h1>Tạo Combo Mới</h1>
+
+<form th:action="@{/admin/combos/create}" th:object="${combo}" method="post">
+
+    <p><label>Tên combo: <input type="text" th:field="*{name}" required></label></p>
+    <p><label>Mô tả: <input type="text" th:field="*{description}"></label></p>
+    <p><label>Giá: <input type="number" th:field="*{price}" required></label></p>
+    <p><label>Có sẵn: <input type="checkbox" th:field="*{available}"></label></p>
+
+    <div class="container">
+        <!-- Danh sách món ăn -->
+        <div class="list">
+            <h3>Danh sách món ăn</h3>
+
+            <input type="text" id="searchInput" placeholder="Tìm kiếm món ăn">
+            <select id="categoryFilter">
+                <option value="">Tất cả</option>
+                <option th:each="cat : ${categories}" th:value="${cat}" th:text="${cat}"></option>
+            </select>
+
+            <table>
+                <thead>
+                    <tr><th>Tên món</th><th>Thêm</th></tr>
+                </thead>
+                <tbody id="itemTable">
+                    <tr th:each="item : ${items}" th:id="'item-'+${item.itemId}">
+                        <td th:text="${item.name}"></td>
+                        <td><button type="button" th:attr="onclick=|addItem(${item.itemId}, '${item.name}')|">+</button></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Danh sách món đã chọn -->
+        <div class="list">
+            <h3>Món ăn đã chọn</h3>
+            <table>
+                <thead><tr><th>Tên</th><th>Số lượng</th><th>Xóa</th></tr></thead>
+                <tbody id="selectedTable"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Input ẩn lưu dữ liệu khi submit -->
+    <div id="hiddenInputs"></div>
+
+    <p><button type="submit">Tạo Combo</button></p>
+</form>
+
+<script>
+    const allItems = [[`${items}`]];
+    let selected = [];
+
+    function addItem(id, name) {
+        if (selected.find(i => i.id === id)) return;
+
+        selected.push({id, name, quantity: 1});
+        document.getElementById('item-' + id).style.display = 'none';
+        renderSelected();
+    }
+
+    function removeItem(id) {
+        selected = selected.filter(i => i.id !== id);
+        document.getElementById('item-' + id).style.display = '';
+        renderSelected();
+    }
+
+    function renderSelected() {
+        const table = document.getElementById("selectedTable");
+        const hidden = document.getElementById("hiddenInputs");
+        table.innerHTML = "";
+        hidden.innerHTML = "";
+
+        selected.forEach((item, idx) => {
+            const row = `<tr>
+                <td>${item.name}</td>
+                <td><input type="number" value="${item.quantity}" min="1" onchange="changeQuantity(${item.id}, this.value)"></td>
+                <td><button type="button" onclick="removeItem(${item.id})">-</button></td>
+            </tr>`;
+            table.innerHTML += row;
+
+            // generate input hidden
+            hidden.innerHTML += `<input type="hidden" name="itemIds" value="${item.id}">`;
+            hidden.innerHTML += `<input type="hidden" name="quantities" value="${item.quantity}">`;
+        });
+    }
+
+    function changeQuantity(id, val) {
+        const item = selected.find(i => i.id === id);
+        item.quantity = parseInt(val);
+        renderSelected();
+    }
+
+    // Filter và tìm kiếm
+    document.getElementById("searchInput").addEventListener("input", filterItems);
+    document.getElementById("categoryFilter").addEventListener("change", filterItems);
+
+    function filterItems() {
+        const search = document.getElementById("searchInput").value.toLowerCase();
+        const category = document.getElementById("categoryFilter").value;
+
+        allItems.forEach(item => {
+            const row = document.getElementById('item-' + item.itemId);
+            if (selected.find(i => i.id === item.itemId)) return;
+
+            const matchName = item.name.toLowerCase().includes(search);
+            const matchCat = category === "" || item.category === category;
+
+            row.style.display = (matchName && matchCat) ? "" : "none";
+        });
+    }
+</script>
+
+</body>
+</html>

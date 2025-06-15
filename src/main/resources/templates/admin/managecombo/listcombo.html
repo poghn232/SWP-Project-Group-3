@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Danh sách Combo</title>
+    <meta charset="UTF-8">
+    <style>
+        table { width: 80%; margin: auto; border-collapse: collapse; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+        th { background-color: #f2f2f2; }
+        h1 { text-align: center; }
+        tr:hover { background-color: #f1f1f1; cursor: pointer; }
+        .empty-message { text-align: center; color: #888; }
+    </style>
+</head>
+<body>
+
+<h1>Danh sách Combo</h1>
+
+<table>
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Tên Combo</th>
+            <th>Mô tả</th>
+            <th>Giá</th>
+            <th>Có sẵn?</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Kiểm tra xem có combos không -->
+        <tr th:each="combo : ${combos}" 
+            th:onclick="'window.location.href=\'/admin/managecombo/detail/' + ${combo.comboId} + '\';'">
+            <td th:text="${combo.comboId}"></td>
+            <td th:text="${combo.name}"></td>
+            <td th:text="${combo.description}"></td>
+            <td th:text="${combo.price}"></td>
+            <td th:text="${combo.available ? 'Có' : 'Không'}"></td>
+        </tr>
+
+        <!-- Nếu không có combos thì hiển thị thông báo -->
+        <tr th:if="${#lists.isEmpty(combos)}">
+            <td colspan="5" class="empty-message">Không có combo nào để hiển thị.</td>
+        </tr>
+    </tbody>
+</table>
+
+</body>
+</html>

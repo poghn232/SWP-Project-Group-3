@@ -5,10 +5,10 @@ import com.example.demo.model.ComboDetail;
 import com.example.demo.repository.ComboRepository;
 import com.example.demo.repository.ComboDetailRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/admin/combos")
@@ -23,58 +23,72 @@ public class ComboController {
     // Combo CRUD
 
     @GetMapping
-    public List<Combo> getAllCombos() {
-        return comboRepository.findAll();
+    public ResponseEntity<List<Combo>> getAllCombos() {
+        return ResponseEntity.ok(comboRepository.findAll());
     }
 
     @GetMapping("/{id}")
-    public Combo getComboById(@PathVariable int id) {
-        return comboRepository.findById(id).orElse(null);
+    public ResponseEntity<Combo> getComboById(@PathVariable int id) {
+        return comboRepository.findById(id)
+                .map(ResponseEntity::ok)
+                .orElse(ResponseEntity.notFound().build());
     }
 
     @PostMapping
-    public Combo createCombo(@RequestBody Combo combo) {
-        return comboRepository.save(combo);
+    public ResponseEntity<Combo> createCombo(@RequestBody Combo combo) {
+        Combo savedCombo = comboRepository.save(combo);
+        return ResponseEntity.ok(savedCombo);
     }
 
     @PutMapping("/{id}")
-    public Combo updateCombo(@PathVariable int id, @RequestBody Combo combo) {
+    public ResponseEntity<Combo> updateCombo(@PathVariable int id, @RequestBody Combo combo) {
         if (!comboRepository.existsById(id)) {
-            return null;
+            return ResponseEntity.notFound().build();
         }
         combo.setComboId(id);
-        return comboRepository.save(combo);
+        Combo updatedCombo = comboRepository.save(combo);
+        return ResponseEntity.ok(updatedCombo);
     }
 
     @DeleteMapping("/{id}")
-    public void deleteCombo(@PathVariable int id) {
+    public ResponseEntity<Void> deleteCombo(@PathVariable int id) {
+        if (!comboRepository.existsById(id)) {
+            return ResponseEntity.notFound().build();
+        }
         comboRepository.deleteById(id);
+        return ResponseEntity.noContent().build();
     }
 
     // ComboDetail CRUD
 
     @GetMapping("/{comboId}/details")
-    public List<ComboDetail> getComboDetails(@PathVariable int comboId) {
-        return comboDetailRepository.findByComboId(comboId);
+    public ResponseEntity<List<ComboDetail>> getComboDetails(@PathVariable int comboId) {
+        return ResponseEntity.ok(comboDetailRepository.findByComboId(comboId));
     }
 
     @PostMapping("/{comboId}/details")
-    public ComboDetail createComboDetail(@PathVariable int comboId, @RequestBody ComboDetail comboDetail) {
+    public ResponseEntity<ComboDetail> createComboDetail(@PathVariable int comboId, @RequestBody ComboDetail comboDetail) {
         comboDetail.setComboId(comboId);
-        return comboDetailRepository.save(comboDetail);
+        ComboDetail savedDetail = comboDetailRepository.save(comboDetail);
+        return ResponseEntity.ok(savedDetail);
     }
 
     @PutMapping("/details/{detailId}")
-    public ComboDetail updateComboDetail(@PathVariable int detailId, @RequestBody ComboDetail comboDetail) {
+    public ResponseEntity<ComboDetail> updateComboDetail(@PathVariable int detailId, @RequestBody ComboDetail comboDetail) {
         if (!comboDetailRepository.existsById(detailId)) {
-            return null;
+            return ResponseEntity.notFound().build();
         }
         comboDetail.setComboDetailId(detailId);
-        return comboDetailRepository.save(comboDetail);
+        ComboDetail updatedDetail = comboDetailRepository.save(comboDetail);
+        return ResponseEntity.ok(updatedDetail);
     }
 
     @DeleteMapping("/details/{detailId}")
-    public void deleteComboDetail(@PathVariable int detailId) {
+    public ResponseEntity<Void> deleteComboDetail(@PathVariable int detailId) {
+        if (!comboDetailRepository.existsById(detailId)) {
+            return ResponseEntity.notFound().build();
+        }
         comboDetailRepository.deleteById(detailId);
+        return ResponseEntity.noContent().build();
     }
 }

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Chi tiết Combo</title>
+    <meta charset="UTF-8">
+    <style>
+        div { width: 60%; margin: auto; border: 1px solid #ccc; padding: 20px; }
+        h1, p { text-align: center; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { border: 1px solid #ddd; padding: 8px; text-align: center; }
+        th { background-color: #f2f2f2; }
+    </style>
+</head>
+<body>
+
+<h1>Chi tiết Combo</h1>
+
+<div th:if="${combo != null}">
+    <p><strong>ID:</strong> <span th:text="${combo.comboId}"></span></p>
+    <p><strong>Tên:</strong> <span th:text="${combo.name}"></span></p>
+    <p><strong>Mô tả:</strong> <span th:text="${combo.description}"></span></p>
+    <p><strong>Giá:</strong> <span th:text="${combo.price}"></span></p>
+    <p><strong>Có sẵn:</strong> <span th:text="${combo.available ? 'Có' : 'Không'}"></span></p>
+
+    <h2>Danh sách món ăn trong Combo</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>ID Chi tiết</th>
+                <th>Tên Món Ăn</th>
+                <th>Số lượng</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="detail : ${comboDetails}">
+                <td th:text="${detail.comboDetailId}"></td>
+                <td th:text="${detail.itemName}"></td>
+                <td th:text="${detail.quantity}"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div th:if="${combo == null}">
+    <p>Combo không tồn tại.</p>
+</div>
+
+<a href="/admin/combos" style="display: block; text-align: center;">Quay lại danh sách</a>
+
+</body>
+</html>
