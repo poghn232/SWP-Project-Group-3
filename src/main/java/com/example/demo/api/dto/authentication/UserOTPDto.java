@@ -14,11 +14,11 @@ import lombok.Setter;
 @Setter
 public class UserOTPDto {
 
-    @NotBlank(message = "Email không được để trống")
-    @Email(message = "Email không hợp lệ")
+    @NotBlank(message = "Email cannot be empty")
+    @Email(message = "Email is not in the right form")
     private String email;
 
-    @NotBlank(message = "Mã OTP không được để trống.")
-    @Pattern(regexp = "^[0-9]{6}$", message = "Mã OTP chỉ chứa chữ số.")
+    @NotBlank(message = "OTP code cannot be empty")
+    @Pattern(regexp = "^[0-9]{6}$", message = "OTP code can only have numbers")
     private String otp;
 }

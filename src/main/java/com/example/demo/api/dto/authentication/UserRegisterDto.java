@@ -14,16 +14,16 @@ import lombok.Setter;
 @Setter
 public class UserRegisterDto {
 
-    @NotBlank(message = "Tên người dùng không được để trống")
-    @Size(min = 8, max = 30, message = "Tên người dùng phải có từ 8 đến 30 ký tự")
+    @NotBlank(message = "Username cannot be empty")
+    @Size(min = 8, max = 30, message = "Username must have from 8 to 30 characters")
     private String userName;
 
-    @NotBlank(message = "Email không được để trống")
-    @Email(message = "Email không hợp lệ")
+    @NotBlank(message = "Email cannot be empty")
+    @Email(message = "Email is not the the right form")
     private String email;
 
-    @NotBlank(message = "Số điện thoại không được để trống")
-    @Size(min = 10, max = 10, message = "Mật khẩu 10 số, vui lòng xem lại")
+    @NotBlank(message = "Phone number cannot be empty")
+    @Size(min = 10, max = 10, message = "Phone number must have ")
     private String phone;
 
     @NotBlank(message = "Mật khẩu không được để trống")

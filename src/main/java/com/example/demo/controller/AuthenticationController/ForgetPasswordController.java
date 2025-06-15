@@ -18,7 +18,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @Controller
 public class ForgetPasswordController {
 
-    private final String renderForgetPasswordPage = "dangnhap&dangky/quenMatKhau";
+    private final String renderForgetPasswordPage = "dangnhap&dangky/forgetPassword";
     private final String renderEnterOTPPage = "dangnhap&dangky/enterOTP";
     private final String renderResetPasswordPage = "dangnhap&dangky/resetMatKhau";
 
@@ -103,9 +103,8 @@ public class ForgetPasswordController {
         try {
             boolean otpVerifed = userService.verifyOTP(otpDto.getOtp(), otpDto.getEmail());
             if (otpVerifed) {
-                redirectAttributes.addFlashAttribute("successMessage", "Xác nhận thành công mã OTP. Đặt lại mật khẩu...");
-                redirectAttributes.addFlashAttribute("otpVerified", true);
-                return "redirect:/enterOTP";
+                redirectAttributes.addFlashAttribute("successMessage", "Xác nhận thành công mã OTP.");
+                return "redirect:/resetPassword";
             }
         } catch (IllegalArgumentException e) {
             if (e.getMessage().contains("Mã OTP không hợp lệ")) {

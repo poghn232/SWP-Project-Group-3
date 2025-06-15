@@ -10,19 +10,4 @@ public class HomeController {
     public String getHomePage() {
         return "trangchu";
     }
-
-    @GetMapping("/feature")
-    public String getFeaturePage() {
-        return "navPages/features";
-    }
-
-    @GetMapping("/pricing")
-    public String getPricingPage() {
-        return "navPages/pricing";
-    }
-
-    @GetMapping("/about")
-    public String getAboutUsPage() {
-        return "navPages/aboutus";
-    }
 }
