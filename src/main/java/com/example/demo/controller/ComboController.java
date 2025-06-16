@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/admin/combos")
+@RequestMapping("/api/admin/manageCombo")
 public class ComboController {
 
     @Autowired
