@@ -17,13 +17,39 @@
 
 <h1>Tạo Combo Mới</h1>
 
-<form th:action="@{/admin/combos/create}" th:object="${combo}" method="post">
+<form th:action="@{/admin/manageCombo/create}" th:object="${combo}" method="post">
 
-    <p><label>Tên combo: <input type="text" th:field="*{name}" required></label></p>
-    <p><label>Mô tả: <input type="text" th:field="*{description}"></label></p>
-    <p><label>Giá: <input type="number" th:field="*{price}" required></label></p>
-    <p><label>Có sẵn: <input type="checkbox" th:field="*{available}"></label></p>
+    <p>
+        <label>Tên combo:
+            <input type="text" th:field="*{name}" required maxlength="30"
+                   oninvalid="this.setCustomValidity('Tên combo không được để trống và tối đa 30 ký tự')"
+                   oninput="this.setCustomValidity('')">
+        </label>
+    </p>
 
+    <p>
+        <label>Mô tả:
+            <input type="text" th:field="*{description}" maxlength="120"
+                   oninvalid="this.setCustomValidity('Mô tả tối đa 120 ký tự')"
+                   oninput="this.setCustomValidity('')">
+        </label>
+    </p>
+
+    <p>
+        <label>Giá:
+            <input type="number" th:field="*{price}" required min="1"
+                   oninvalid="this.setCustomValidity('Giá phải lớn hơn 0')"
+                   oninput="this.setCustomValidity('')">
+        </label>
+    </p>
+
+    <p>
+        <label>Mở bán:
+            <input type="checkbox" th:field="*{available}">
+        </label>
+    </p>
+
+    <!-- Phần chọn món ăn giữ nguyên -->
     <div class="container">
         <!-- Danh sách món ăn -->
         <div class="list">
@@ -40,9 +66,9 @@
                     <tr><th>Tên món</th><th>Thêm</th></tr>
                 </thead>
                 <tbody id="itemTable">
-                    <tr th:each="item : ${items}" th:id="'item-'+${item.itemId}">
+                    <tr th:each="item : ${items}" th:id="'item-' + ${item.itemId}">
                         <td th:text="${item.name}"></td>
-                        <td><button type="button" th:attr="onclick=|addItem(${item.itemId}, '${item.name}')|">+</button></td>
+                        <td><button type="button" th:attr="onclick=|addItem(${item.itemId}, '${item.name}', '${item.category}')|">+</button></td>
                     </tr>
                 </tbody>
             </table>
@@ -58,20 +84,25 @@
         </div>
     </div>
 
-    <!-- Input ẩn lưu dữ liệu khi submit -->
     <div id="hiddenInputs"></div>
 
     <p><button type="submit">Tạo Combo</button></p>
 </form>
 
-<script>
-    const allItems = [[`${items}`]];
+<script th:inline="javascript">
+    const allItems = /*[[${items}]]*/ [];
+
+    const itemsData = allItems.map(item => ({
+        id: item.itemId,
+        name: item.name,
+        category: item.category
+    }));
+
     let selected = [];
 
-    function addItem(id, name) {
+    function addItem(id, name, category) {
         if (selected.find(i => i.id === id)) return;
-
-        selected.push({id, name, quantity: 1});
+        selected.push({id, name, category, quantity: 1});
         document.getElementById('item-' + id).style.display = 'none';
         renderSelected();
     }
@@ -88,15 +119,12 @@
         table.innerHTML = "";
         hidden.innerHTML = "";
 
-        selected.forEach((item, idx) => {
-            const row = `<tr>
+        selected.forEach(item => {
+            table.innerHTML += `<tr>
                 <td>${item.name}</td>
                 <td><input type="number" value="${item.quantity}" min="1" onchange="changeQuantity(${item.id}, this.value)"></td>
                 <td><button type="button" onclick="removeItem(${item.id})">-</button></td>
             </tr>`;
-            table.innerHTML += row;
-
-            // generate input hidden
             hidden.innerHTML += `<input type="hidden" name="itemIds" value="${item.id}">`;
             hidden.innerHTML += `<input type="hidden" name="quantities" value="${item.quantity}">`;
         });
@@ -108,7 +136,6 @@
         renderSelected();
     }
 
-    // Filter và tìm kiếm
     document.getElementById("searchInput").addEventListener("input", filterItems);
     document.getElementById("categoryFilter").addEventListener("change", filterItems);
 
@@ -116,13 +143,11 @@
         const search = document.getElementById("searchInput").value.toLowerCase();
         const category = document.getElementById("categoryFilter").value;
 
-        allItems.forEach(item => {
-            const row = document.getElementById('item-' + item.itemId);
-            if (selected.find(i => i.id === item.itemId)) return;
-
+        itemsData.forEach(item => {
+            const row = document.getElementById('item-' + item.id);
+            if (selected.find(i => i.id === item.id)) return;
             const matchName = item.name.toLowerCase().includes(search);
             const matchCat = category === "" || item.category === category;
-
             row.style.display = (matchName && matchCat) ? "" : "none";
         });
     }
