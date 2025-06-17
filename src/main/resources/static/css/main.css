@@ -1448,7 +1448,8 @@ h2.title {
 }
 
 
-.login-form form input, .signup-form form input {
+
+.login-form form input, .signup-form form input, .reset-password-card form input {
   background: #F0F0E9;
   border: medium none;
   color: #696763;
@@ -1460,11 +1461,15 @@ h2.title {
   margin-bottom: 10px;
   outline: medium none;
   padding-left: 10px;
-  width: 25%;
+  max-width: 1000px;
 }
 
 .login-form form span{
   line-height: 25px;
+}
+
+.alert {
+    width: 50%;
 }
 
 .login-form form span input {

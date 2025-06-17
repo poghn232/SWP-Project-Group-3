@@ -25,9 +25,6 @@ public class ForgetPasswordController {
     @Autowired
     private UserService userService;
 
-    @Autowired
-    private HttpSession session;
-
     @GetMapping("/forgetPassword")
     public String showForgetPasswordForm(Model model) {
         if (!model.containsAttribute("emailDto")) {
@@ -50,12 +47,12 @@ public class ForgetPasswordController {
         } else {
             try {
                 userService.OTPEmailSender(userEmailDto.getEmail());
-                redirectAttributes.addFlashAttribute("successMessage", "OTP đã được gửi đến email của bạn.");
-                session.setAttribute("emailResetPassword", userEmailDto.getEmail());
+                redirectAttributes.addFlashAttribute("successMessage", "OTP code has sent to your email.");
+                redirectAttributes.addFlashAttribute("emailResetPassword", userEmailDto.getEmail());
                 return "redirect:/enterOTP";
             } catch (IllegalArgumentException e) {
                 if (e.getMessage().contains("Email không tồn tại")) {
-                    bindingResult.rejectValue("email", "notExistEmail", "Email không tồn tại. Vui lòng thử lại.");
+                    bindingResult.rejectValue("email", "notExistEmail", "Email not exist in database. Try again.");
                 } else {
                     bindingResult.reject("globalError", e.getMessage()); // Lỗi khác (ví dụ: lỗi gửi email)
                 }
@@ -68,12 +65,12 @@ public class ForgetPasswordController {
     public String showEnterOTPPage(Model model,
                                    RedirectAttributes redirectAttributes) {
 
-        String email = (String) session.getAttribute("emailResetPassword");
+        String email = (String) model.getAttribute("emailResetPassword");
 
         //session timeout or return back to enterOTP after successfully get to reset password page,
         // or trying to direct access from URL
         if (email == null || email.isEmpty()) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Vui lòng yêu cầu mã OTP để xác minh");
+            redirectAttributes.addFlashAttribute("errorMessage", "Please enter email.");
             return "redirect:/forgetPassword";
         }
         UserOTPDto otpDto = new UserOTPDto();
@@ -103,14 +100,15 @@ public class ForgetPasswordController {
         try {
             boolean otpVerifed = userService.verifyOTP(otpDto.getOtp(), otpDto.getEmail());
             if (otpVerifed) {
-                redirectAttributes.addFlashAttribute("successMessage", "Xác nhận thành công mã OTP.");
+                redirectAttributes.addFlashAttribute("successMessage", "Successfully authorized.");
+                redirectAttributes.addFlashAttribute("emailResetPassword", otpDto.getEmail());
                 return "redirect:/resetPassword";
             }
         } catch (IllegalArgumentException e) {
             if (e.getMessage().contains("Mã OTP không hợp lệ")) {
-                bindingResult.rejectValue("otp", "unvalidOTP", "Mã OTP không hợp lệ. Vui lòng thử lại.");
+                bindingResult.rejectValue("otp", "unvalidOTP", "Invalid OTP code. Try again");
             } else if (e.getMessage().contains("Mã OTP đã hết hạn")) {
-                bindingResult.rejectValue("otp", "expiredOTP", "Mã OTP đã hết hạn. Vui lòng thử lại");
+                bindingResult.rejectValue("otp", "expiredOTP", "OTP code out of date. Try again");
             } else {
                 bindingResult.reject("globalError", e.getMessage());
             }
@@ -122,11 +120,11 @@ public class ForgetPasswordController {
     public String showResetPasswordPage(RedirectAttributes redirectAttributes,
                                         Model model) {
 
-        String emailResetPassword = (String) session.getAttribute("emailResetPassword");
+        String emailResetPassword = (String) model.getAttribute("emailResetPassword");
 
         //session timeout
         if (emailResetPassword == null || emailResetPassword.isEmpty()) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Phiên làm lại mật khẩu hết hạn.");
+            redirectAttributes.addFlashAttribute("errorMessage", "Please enter your email.");
             return "redirect:/forgetPassword";
         }
         UserResetPasswordDto userResetPasswordDto = new UserResetPasswordDto();
@@ -157,7 +155,7 @@ public class ForgetPasswordController {
             return "dangnhap&dangky/resetThanhcong";
         } catch (IllegalArgumentException e) {
             if (e.getMessage().contains("Mật khẩu")) {
-                bindingResult.rejectValue("passwordConfirm", "wrongConfirmPass", "Mật khẩu xác nhận không đúng. Vui lòng thử lại");
+                bindingResult.rejectValue("passwordConfirm", "wrongConfirmPass", "Confirm password incorrect. Try again");
             } else {
                 bindingResult.reject("globalError", e.getMessage());
             }
