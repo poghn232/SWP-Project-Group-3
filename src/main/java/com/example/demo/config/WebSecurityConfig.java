@@ -55,6 +55,7 @@ public class WebSecurityConfig {
                                 "/css/**",
                                 "/resetThanhcong",
                                 "/js/**",
+                                "/layouts/**",
                                 "/images/**",
                                 "/fonts/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
