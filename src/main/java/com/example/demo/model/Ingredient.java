@@ -2,13 +2,28 @@ package com.example.demo.model;
 
 import java.util.Date;
 
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
+
 public class Ingredient {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int ingredientId;
+
     private String name;
     private String unit;
     private double quantityInStock;
     private double minimumRequired;
+
+    @Temporal(TemporalType.TIMESTAMP)
     private Date lastUpdated;
+
+    public Ingredient() {
+        
+    }
 
     public Ingredient(int ingredientId, String name, String unit, double quantityInStock, double minimumRequired,
             Date lastUpdated) {

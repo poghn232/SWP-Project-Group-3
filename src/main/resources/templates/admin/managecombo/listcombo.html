@@ -29,7 +29,7 @@
     <tbody>
         <!-- Kiểm tra xem có combos không -->
         <tr th:each="combo : ${combos}" 
-            th:onclick="'window.location.href=\'/admin/managecombo/detail/' + ${combo.comboId} + '\';'">
+            th:onclick="'window.location.href=\'/admin/manageCombo/detail/' + ${combo.comboId} + '\';'">
             <td th:text="${combo.comboId}"></td>
             <td th:text="${combo.name}"></td>
             <td th:text="${combo.description}"></td>
