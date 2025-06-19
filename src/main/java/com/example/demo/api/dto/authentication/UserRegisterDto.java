@@ -23,14 +23,14 @@ public class UserRegisterDto {
     private String email;
 
     @NotBlank(message = "Phone number cannot be empty")
-    @Size(min = 10, max = 10, message = "Phone number must have ")
+    @Size(min = 9, max = 10, message = "Phone number must have 9 to 10 characters")
     private String phone;
 
-    @NotBlank(message = "Mật khẩu không được để trống")
-    @Size(min = 8, message = "Mật khẩu phải có ít nhất 8 kí tự")
+    @NotBlank(message = "Password cannot be empty!")
+    @Size(min = 8, message = "Password must have at least 8 characters")
     private String password;
 
-    @NotBlank(message = "Xác nhận mật khẩu không được để trống")
+    @NotBlank(message = "Confirm password cannot be empty!")
     private String confirmPassword;
 
     public boolean isPasswordMatched() {

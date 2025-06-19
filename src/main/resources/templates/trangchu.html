@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layouts/end_user_layout :: layout(~{::title}, ~{::#content})}">
+      th:replace="~{layouts/end_user_layout :: layout(~{::title},
+       ~{::#extra_head_content}, ~{::#content}, ~{::#extra_scripts})}">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">

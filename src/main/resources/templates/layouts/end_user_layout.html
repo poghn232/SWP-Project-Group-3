@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org"
-      th:fragment="layout(title, content)">
+      th:fragment="layout(title, extra_head_content, content, extra_scripts)">
 <head>
     <meta charset="UTF-8">
     <title th:replace="${title}">Change your title pls</title>
@@ -14,7 +14,31 @@
     <link href="/css/responsive.css" rel="stylesheet">
 
     <script src="/js/html5shiv.js"></script>
+
+    <th:block th:replace="${extra_head_content} ?: _"></th:block>
+    <style>
+        #header {
+            background-color: #ffffff; /* Màu nền mặc định cho toàn bộ header */
+            transition: box-shadow 0.3s ease-in-out; /* Chỉ chuyển đổi đổ bóng cho toàn bộ header */
+            position: relative; /* Đảm bảo các phần tử con có thể được định vị tương đối */
+            z-index: 999; /* Đảm bảo header nằm trên hầu hết nội dung, nhưng dưới sticky header-middle */
+        }
+
+        /* CSS cho header-middle khi không cuộn (vị trí ban đầu) */
+
+        /* CSS cho header-middle khi đã cuộn (sẽ được thêm bởi JavaScript) */
+        #headerMiddleSticky.header-scrolled {
+            position: fixed; /* Cố định vị trí */
+            top: 0;          /* Đặt ở trên cùng */
+            width: 100%;     /* Chiếm toàn bộ chiều rộng */
+            z-index: 1000;   /* Đảm bảo nằm trên các phần tử khác */
+            background-color: #ffffff; /* Đặt màu nền rõ ràng khi dính */
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1); /* Thêm bóng đổ nhẹ để tạo hiệu ứng nổi */
+            /* transform: translateY(0); -- Không cần thiết nếu top: 0 */
+        }
+    </style>
 </head>
+
 <body>
 <!--  header chung ở dưới  -->
 <header id="header"><!--header-->
@@ -43,7 +67,7 @@
         </div>
     </div><!--/header_top-->
 
-    <div class="header-middle"><!--header-middle-->
+    <div class="header-middle" id="headerMiddleSticky"><!--header-middle-->
         <div class="container">
             <div class="row">
                 <div class="col-sm-4">
@@ -276,6 +300,40 @@
     </div>
 
 </footer><!--/Footer-->
+
+<th:block th:replace="${extra_scripts} ?: _"></th:block>
+
+<!-- Middle header đi theo khi cuộn xuống-->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const headerElement = document.getElementById('headerMiddleSticky');
+        if (!headerElement) return; // Thoát nếu phần tử không tồn tại
+
+        let headerOffset = headerElement.offsetTop; // Vị trí ban đầu của header-middle
+
+        // Cập nhật offset nếu trang tải xong hoặc kích thước thay đổi
+        function updateHeaderOffset() {
+            headerOffset = headerElement.offsetTop;
+        }
+
+        function checkHeaderSticky() {
+            const scrollY = window.scrollY || document.documentElement.scrollTop;
+
+            if (scrollY > headerOffset) {
+                headerElement.classList.add('header-scrolled');
+            } else {
+                headerElement.classList.remove('header-scrolled');
+            }
+        }
+
+        window.addEventListener('scroll', checkHeaderSticky);
+        window.addEventListener('resize', updateHeaderOffset); // Cập nhật offset khi thay đổi kích thước cửa sổ
+
+        // Chạy kiểm tra một lần khi tải trang để xử lý trường hợp trang đã cuộn sẵn
+        checkHeaderSticky();
+        updateHeaderOffset(); // Lấy offset ban đầu sau khi DOM tải
+    });
+</script>
 
 <script src="/js/jquery.js"></script>
 <script src="/js/bootstrap.min.js"></script>

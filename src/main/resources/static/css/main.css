@@ -120,7 +120,7 @@ a#scrollUp i{
   background: #0083C9;
 }
 
-.fa-twitter:hover  {
+.fa-twitter:hover   {
 	background:#5BBCEC;
 }
 
@@ -150,6 +150,11 @@ a#scrollUp i{
 
 .header-middle .container .row .col-sm-8 {
 	padding-right:0;
+	padding-top: 15px;
+}
+
+.header-middle .container .row .col-sm-8 a {
+    background-color: none;
 }
 
 .usa {
@@ -1427,12 +1432,15 @@ h2.title {
 
 #form {
   display: block;
-  margin-bottom: 185px;
-  margin-top: 185px;
+  margin-bottom: 100px;
+  margin-top: 100px;
   overflow: hidden;
 }
 
 .login-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .signup-form {
@@ -1461,7 +1469,7 @@ h2.title {
   margin-bottom: 10px;
   outline: medium none;
   padding-left: 10px;
-  max-width: 1000px;
+  width: 250px;
 }
 
 .login-form form span{
@@ -1481,6 +1489,8 @@ h2.title {
 
 .login-form form button {
   margin-top: 23px;
+  margin-bottom: 23px;
+  align-items: center;
 }
 
 .login-form form button, .signup-form form button {
@@ -1491,6 +1501,7 @@ h2.title {
   display: block;
   font-family: 'Roboto', sans-serif;
   padding: 6px 25px;
+  align-items: center;
 }
 
 .login-form label{
