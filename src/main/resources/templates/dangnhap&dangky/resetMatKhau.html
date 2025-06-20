@@ -1,209 +1,203 @@
 <!DOCTYPE html>
-<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/minimal_layout :: layout(~{::title},
+       ~{::#extra_head_content}, ~{::#content}, ~{::#extra_scripts})}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Đặt Lại Mật Khẩu</title>
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet"
-          xintegrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
-    <link href="/css/bootstrap.min.css" rel="stylesheet">
-    <link href="/css/font-awesome.min.css" rel="stylesheet">
-    <link href="/css/prettyPhoto.css" rel="stylesheet">
-    <link href="/css/price-range.css" rel="stylesheet">
-    <link href="/css/animate.css" rel="stylesheet">
-    <link href="/css/main.css" rel="stylesheet">
-    <link href="/css/responsive.css" rel="stylesheet">
-    <script src="/js/html5shiv.js"></script>
-    <style>
-        body {
-            background-color: #f8f9fa; /* light gray background */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 1rem;
-            box-sizing: border-box;
-        }
-        .reset-password-card {
-            background-color: #ffffff;
-            padding: 2.5rem;
-            border-radius: 0.75rem; /* rounded corners */
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15); /* shadow */
-            width: 100%;
-            max-width: 600px;
-            box-sizing: border-box;
-            text-align: center;
-        }
-        .form-label {
-            font-weight: 500;
-            color: #495057;
-            text-align: left; /* Align label text to left */
-            display: block; /* Make label a block element to align properly */
-        }
-        .form-control {
-            border-radius: 0.5rem; /* Bo tròn input */
-            padding: 0.75rem 1rem; /* Tăng padding input */
-            font-size: 1rem;
-        }
-        .form-control.is-invalid {
-            border-color: #dc3545;
-            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right calc(0.375em + 0.1875rem) center;
-            background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
-        }
-        .text-danger {
-            font-size: 0.875em;
-            margin-top: 0.25rem;
-            text-align: left; /* Align error messages to left */
-        }
-        .alert-danger {
-            color: #842029;
-            background-color: #f8d7da;
-            border-color: #f5c2c7;
-            padding: 0.75rem 1.25rem;
-            margin-bottom: 1rem;
-            border: 1px solid transparent;
-            border-radius: 0.25rem;
-        }
-        .alert-success {
-            color: #0f5132;
-            background-color: #d1e7dd;
-            border-color: #badbcc;
-            padding: 0.75rem 1.25rem;
-            margin-bottom: 1rem;
-            border: 1px solid transparent;
-            border-radius: 0.25rem;
-        }
-        .button {
-            max-width: 300px;
-        }
-    </style>
+    <title>Reset Password</title>
+    <th:block id="extra_head_content">
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet"
+              xintegrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT"
+              crossorigin="anonymous">
+        <style>
+            body {
+                background-color: #f8f9fa; /* light gray background */
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 100vh;
+                margin: 0;
+                padding: 1rem;
+                box-sizing: border-box;
+            }
+            .reset-password-card {
+                background-color: #ffffff;
+                padding: 2.5rem;
+                border-radius: 0.75rem; /* rounded corners */
+                box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15); /* shadow */
+                width: 100%;
+                max-width: 600px;
+                box-sizing: border-box;
+                text-align: center;
+            }
+            .form-label {
+                font-weight: 500;
+                color: #495057;
+                text-align: left; /* Align label text to left */
+                display: block; /* Make label a block element to align properly */
+            }
+            .form-control {
+                border-radius: 0.5rem; /* Bo tròn input */
+                padding: 0.75rem 1rem; /* Tăng padding input */
+                font-size: 1rem;
+            }
+            .form-control.is-invalid {
+                border-color: #dc3545;
+                background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' width='12' height='12' fill='none' stroke='%23dc3545'%3e%3ccircle cx='6' cy='6' r='4.5'/%3e%3cpath stroke-linejoin='round' d='M5.8 3.6h.4L6 6.5z'/%3e%3ccircle cx='6' cy='8.2' r='.6' fill='%23dc3545' stroke='none'/%3e%3c/svg%3e");
+                background-repeat: no-repeat;
+                background-position: right calc(0.375em + 0.1875rem) center;
+                background-size: calc(0.75em + 0.375rem) calc(0.75em + 0.375rem);
+            }
+            .text-danger {
+                font-size: 0.875em;
+                margin-top: 0.25rem;
+                text-align: left; /* Align error messages to left */
+            }
+            .alert-danger {
+                color: #842029;
+                background-color: #f8d7da;
+                border-color: #f5c2c7;
+                padding: 0.75rem 1.25rem;
+                margin-bottom: 1rem;
+                border: 1px solid transparent;
+                border-radius: 0.25rem;
+            }
+            .alert-success {
+                color: #0f5132;
+                background-color: #d1e7dd;
+                border-color: #badbcc;
+                padding: 0.75rem 1.25rem;
+                margin-bottom: 1rem;
+                border: 1px solid transparent;
+                border-radius: 0.25rem;
+            }
+            .button {
+                max-width: 300px;
+            }
+        </style>
+    </th:block>
 </head>
 <body>
-<div class="reset-password-card">
-    <h2 class="text-3xl font-bold text-gray-800 mb-4">Reset Password</h2>
-    <p class="text-gray-600 mb-6">Please enter new password for your account.</p>
 
-    <!-- Hiển thị thông báo thành công/lỗi (Flash Attributes) -->
-    <center>
-        <div th:if="${successMessage}" class="alert alert-success" role="alert">
-            <span th:text="${successMessage}"></span>
-        </div>
-        <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
-            <span th:text="${errorMessage}"></span>
-        </div>
-    </center>
+<th:block id="content">
+    <div class="reset-password-card">
+        <h2 class="text-3xl font-bold text-gray-800 mb-4">Reset Password</h2>
+        <p class="text-gray-600 mb-6">Please enter new password for your account.</p>
 
-    <!-- HIỂN THỊ LỖI TOÀN CỤC TỪ BINDINGRESULT -->
+        <!-- Hiển thị thông báo thành công/lỗi (Flash Attributes) -->
+        <center>
+            <div th:if="${successMessage}" class="alert alert-success" role="alert">
+                <span th:text="${successMessage}"></span>
+            </div>
+            <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+                <span th:text="${errorMessage}"></span>
+            </div>
+        </center>
 
-    <form th:action="@{/resetPassword}" th:object="${userResetPasswordDto}" method="post" id="resetPasswordForm">
-        <!-- Hidden field for email (passed from verify-otp step) -->
-        <input type="hidden" th:field="*{email}"/>
+        <!-- HIỂN THỊ LỖI TOÀN CỤC TỪ BINDINGRESULT -->
 
-        <label for="newPassword" class="form-label">New Password</label>
-        <input type="password" id="newPassword"
-               th:field="*{password}"
-               th:classappend="${#fields.hasErrors('password')} ? 'is-invalid' : ''"
-               placeholder="Enter new password" minlength="8" required>
-        <div class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
-        <div id="passwordLengthError" class="text-danger mt-1" style="display:none;">Password must have at least 8
-            characters
-        </div>
+        <form th:action="@{/resetPassword}" th:object="${userResetPasswordDto}" method="post" id="resetPasswordForm">
+            <!-- Hidden field for email (passed from verify-otp step) -->
+            <input type="hidden" th:field="*{email}"/>
 
-        <label for="confirmNewPassword" class="form-label">Confirm new password</label>
-        <input type="password" id="confirmNewPassword"
-               th:field="*{confirmPassword}"
-               th:classappend="${#fields.hasErrors('confirmPassword')} ? 'is-invalid' : ''"
-               placeholder="Confirm new password" required>
-        <div class="text-danger" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></div>
-        <div id="passwordMatchError" class="text-danger mt-1" style="display:none;">Confirm password cannot be empty
-        </div>
+            <label for="newPassword" class="form-label">New Password</label>
+            <input type="password" id="newPassword"
+                   th:field="*{password}"
+                   th:classappend="${#fields.hasErrors('password')} ? 'is-invalid' : ''"
+                   placeholder="Enter new password" minlength="8" required>
+            <div class="text-danger" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></div>
+            <div id="passwordLengthError" class="text-danger mt-1" style="display:none;">Password must have at least 8
+                characters
+            </div>
 
-        <div th:if="${#fields.hasGlobalErrors()}" class="alert alert-danger" role="alert">
-            <span th:each="err : ${#fields.globalErrors()}" th:text="${err}"></span>
-        </div>
+            <label for="confirmNewPassword" class="form-label">Confirm new password</label>
+            <input type="password" id="confirmNewPassword"
+                   th:field="*{confirmPassword}"
+                   th:classappend="${#fields.hasErrors('confirmPassword')} ? 'is-invalid' : ''"
+                   placeholder="Confirm new password" required>
+            <div class="text-danger" th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}"></div>
+            <div id="passwordMatchError" class="text-danger mt-1" style="display:none;">Confirm password cannot be empty
+            </div>
 
-        <button type="submit" class="btn btn-primary w-100">Reset Password</button>
-    </form>
-</div>
+            <div th:if="${#fields.hasGlobalErrors()}" class="alert alert-danger" role="alert">
+                <span th:each="err : ${#fields.globalErrors()}" th:text="${err}"></span>
+            </div>
 
-<!-- Bootstrap Bundle with Popper -->
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"
-        xintegrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO"
-        crossorigin="anonymous"></script>
+            <button type="submit" class="btn btn-primary w-100">Reset Password</button>
+        </form>
+    </div>
+</th:block>
 
-<script>
-    const newPasswordField = document.getElementById('newPassword');
-    const confirmNewPasswordField = document.getElementById('confirmNewPassword');
-    const passwordMatchError = document.getElementById('passwordMatchError');
-    const passwordLengthError = document.getElementById('passwordLengthError');
-    const resetPasswordForm = document.getElementById('resetPasswordForm');
+<th:block id="extra_scripts">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js"
+            xintegrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO"
+            crossorigin="anonymous"></script>
 
-    function validatePasswordMatch() {
-        if (newPasswordField.value !== confirmNewPasswordField.value) {
-            confirmNewPasswordField.classList.add('is-invalid');
-            passwordMatchError.style.display = 'block';
-            return false;
-        } else {
-            confirmNewPasswordField.classList.remove('is-invalid');
+    <script>
+        const newPasswordField = document.getElementById('newPassword');
+        const confirmNewPasswordField = document.getElementById('confirmNewPassword');
+        const passwordMatchError = document.getElementById('passwordMatchError');
+        const passwordLengthError = document.getElementById('passwordLengthError');
+        const resetPasswordForm = document.getElementById('resetPasswordForm');
+
+        function validatePasswordMatch() {
+            if (newPasswordField.value !== confirmNewPasswordField.value) {
+                confirmNewPasswordField.classList.add('is-invalid');
+                passwordMatchError.style.display = 'block';
+                return false;
+            } else {
+                confirmNewPasswordField.classList.remove('is-invalid');
+                passwordMatchError.style.display = 'none';
+                return true;
+            }
+        }
+
+        function validatePasswordLength() {
+            if (newPasswordField.value.length < 8 && newPasswordField.value.length > 0) {
+                newPasswordField.classList.add('is-invalid');
+                passwordLengthError.style.display = 'block';
+                return false;
+            } else {
+                newPasswordField.classList.remove('is-invalid');
+                passwordLengthError.style.display = 'none';
+                return true;
+            }
+        }
+
+        // Add event listeners for password fields
+        newPasswordField.addEventListener('input', () => {
+            validatePasswordLength();
+            validatePasswordMatch();
+        });
+        confirmNewPasswordField.addEventListener('input', validatePasswordMatch);
+
+        // Form submission handler
+        resetPasswordForm.addEventListener('submit', (e) => {
+            // Re-validate just before submission to catch any missed cases
+            const isPasswordLengthValid = validatePasswordLength();
+            const isPasswordMatchValid = validatePasswordMatch();
+
+            if (!isPasswordLengthValid || !isPasswordMatchValid) {
+                e.preventDefault(); // Prevent form submission if validation fails
+            }
+        });
+
+        // Ensure error messages are hidden on initial load and handle server-side errors
+        document.addEventListener('DOMContentLoaded', () => {
             passwordMatchError.style.display = 'none';
-            return true;
-        }
-    }
-
-    function validatePasswordLength() {
-        if (newPasswordField.value.length < 8 && newPasswordField.value.length > 0) {
-            newPasswordField.classList.add('is-invalid');
-            passwordLengthError.style.display = 'block';
-            return false;
-        } else {
-            newPasswordField.classList.remove('is-invalid');
             passwordLengthError.style.display = 'none';
-            return true;
-        }
-    }
 
-    // Add event listeners for password fields
-    newPasswordField.addEventListener('input', () => {
-        validatePasswordLength();
-        validatePasswordMatch();
-    });
-    confirmNewPasswordField.addEventListener('input', validatePasswordMatch);
-
-    // Form submission handler
-    resetPasswordForm.addEventListener('submit', (e) => {
-        // Re-validate just before submission to catch any missed cases
-        const isPasswordLengthValid = validatePasswordLength();
-        const isPasswordMatchValid = validatePasswordMatch();
-
-        if (!isPasswordLengthValid || !isPasswordMatchValid) {
-            e.preventDefault(); // Prevent form submission if validation fails
-        }
-    });
-
-    // Ensure error messages are hidden on initial load and handle server-side errors
-    document.addEventListener('DOMContentLoaded', () => {
-        passwordMatchError.style.display = 'none';
-        passwordLengthError.style.display = 'none';
-
-        // Check for server-side validation errors and apply 'is-invalid' class
-        if (document.querySelector('.text-danger[th\\:if="${#fields.hasErrors(\'password\')}"]') && document.querySelector('.text-danger[th\\:if="${#fields.hasErrors(\'password\')}"]').textContent.trim() !== '') {
-            newPasswordField.classList.add('is-invalid');
-        }
-        if (document.querySelector('.text-danger[th\\:if="${#fields.hasErrors(\'confirmPassword\')}"]') && document.querySelector('.text-danger[th\\:if="${#fields.hasErrors(\'confirmPassword\')}"]').textContent.trim() !== '') {
-            confirmNewPasswordField.classList.add('is-invalid');
-        }
-    });
-</script>
-<script src="/js/jquery.js"></script>
-<script src="/js/price-range.js"></script>
-<script src="/js/jquery.scrollUp.min.js"></script>
-<script src="/js/bootstrap.min.js"></script>
-<script src="/js/jquery.prettyPhoto.js"></script>
-<script src="/js/main.js"></script>
+            // Check for server-side validation errors and apply 'is-invalid' class
+            if (document.querySelector('.text-danger[th\\:if="${#fields.hasErrors(\'password\')}"]') && document.querySelector('.text-danger[th\\:if="${#fields.hasErrors(\'password\')}"]').textContent.trim() !== '') {
+                newPasswordField.classList.add('is-invalid');
+            }
+            if (document.querySelector('.text-danger[th\\:if="${#fields.hasErrors(\'confirmPassword\')}"]') && document.querySelector('.text-danger[th\\:if="${#fields.hasErrors(\'confirmPassword\')}"]').textContent.trim() !== '') {
+                confirmNewPasswordField.classList.add('is-invalid');
+            }
+        });
+    </script>
+</th:block>
 </body>
 </html>

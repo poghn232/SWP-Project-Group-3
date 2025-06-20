@@ -162,4 +162,9 @@ public class ForgetPasswordController {
         }
         return renderResetPasswordPage;
     }
+
+    @GetMapping("/resetThanhcong")
+    public String showSuccessResetPasswordPage() {
+        return "dangnhap&dangky/resetThanhcong";
+    }
 }
