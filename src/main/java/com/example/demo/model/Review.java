@@ -1,18 +1,44 @@
 package com.example.demo.model;
 
-public class Review {
-    private int reviewId;
-    private int itemId;
-    private int rating;
-    private String comment;
-    private String createdAt;
+import jakarta.persistence.*;
+import java.time.LocalDateTime;
 
-    public Review(int reviewId, int itemId, int rating, String comment, String createdAt) {
-        this.reviewId = reviewId;
+@Entity
+@Table(name = "review") // tên table trong DB
+public class Review {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int reviewId;
+
+    private int itemId;
+
+    private int rating;
+
+    private String comment;
+
+    private LocalDateTime createdAt;
+
+    // Liên kết nhiều Review về một User
+    @ManyToOne
+    @JoinColumn(name = "created_by")
+    private User createdBy;
+
+    // Trạng thái review (pending, approved, rejected,...)
+    private String status;
+
+    public Review() {
+        this.createdAt = LocalDateTime.now();
+        this.status = "pending"; // mặc định khi tạo review
+    }
+
+    public Review(int itemId, int rating, String comment, User createdBy) {
         this.itemId = itemId;
         this.rating = rating;
         this.comment = comment;
-        this.createdAt = createdAt;
+        this.createdBy = createdBy;
+        this.createdAt = LocalDateTime.now();
+        this.status = "pending"; // mặc định khi tạo review
     }
 
     public int getReviewId() {
@@ -47,11 +73,27 @@ public class Review {
         this.comment = comment;
     }
 
-    public String getCreatedAt() {
+    public LocalDateTime getCreatedAt() {
         return createdAt;
     }
 
-    public void setCreatedAt(String createdAt) {
+    public void setCreatedAt(LocalDateTime createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public User getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(User createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

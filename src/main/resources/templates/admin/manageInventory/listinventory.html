@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:replace="admin/dashboard :: content">
+
+    <h3>Danh Sách Nguyên Liệu</h3>
+    <!-- Thanh công cụ trên cùng -->
+    <div class="d-flex justify-content-between align-items-center my-3">
+        <a href="/ingredients/add" class="btn btn-success">+ Thêm</a>
+        <form method="get" action="/ingredients" class="d-flex align-items-center">
+            <input type="text" name="name" placeholder="Tìm theo tên" class="form-control me-2"
+                   th:value="${param.name}" />
+            <select name="unit" class="form-select me-2">
+                <option value="">-- Lọc theo đơn vị --</option>
+                <option th:each="unitItem : ${allUnits}"
+                        th:value="${unitItem}"
+                        th:text="${unitItem}"
+                        th:selected="${param.unit == unitItem}"></option>
+            </select>
+            <button class="btn btn-primary" type="submit">Tìm</button>
+        </form>
+    </div>
+
+    <!-- Bảng danh sách -->
+    <table class="table table-hover table-bordered">
+        <thead class="table-light">
+            <tr>
+                <th>ID</th>
+                <th>Tên nguyên liệu</th>
+                <th>Đơn vị</th>
+                <th>Tồn kho</th>
+                <th>Tối thiểu</th>
+                <th>Ngày cập nhật</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="ingredient : ${ingredients}"
+                th:onclick="'window.location=\'/ingredients/edit/' + ${ingredient.ingredientId} + '\'"'
+                th:classappend="${ingredient.quantityInStock < ingredient.minimumRequired} ? 'table-danger' : ''"
+                style="cursor: pointer;">
+                <td th:text="${ingredient.ingredientId}"></td>
+                <td th:text="${ingredient.name}"></td>
+                <td th:text="${ingredient.unit}"></td>
+                <td th:text="${ingredient.quantityInStock}"></td>
+                <td th:text="${ingredient.minimumRequired}"></td>
+                <td th:text="${#dates.format(ingredient.lastUpdated, 'dd/MM/yyyy HH:mm')}"></td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
+</body>
+</html>
