@@ -49,11 +49,9 @@ public class WebSecurityConfig {
                                 "/about",
                                 "/login",
                                 "/resetPassword",
-                                "/dangky-thanhcong",
                                 "/forgetPassword",
                                 "/enterOTP",
                                 "/css/**",
-                                "/resetThanhcong",
                                 "/js/**",
                                 "/layouts/**",
                                 "/images/**",
@@ -80,4 +78,6 @@ public class WebSecurityConfig {
                 );
         return http.build();
     }
+
+
 }

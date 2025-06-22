@@ -13,6 +13,7 @@ import lombok.Setter;
 @Setter
 public class UserResetPasswordDto {
 
+
     private String email;
 
     @NotBlank(message = "Password cannot be empty")
