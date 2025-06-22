@@ -40,21 +40,21 @@ public class RegisterController {
         }
 
         if (!registerDto.isPasswordMatched()) {
-            bindingResult.rejectValue("confirmPassword", "passwordMismatch", "Mật khẩu xác nhận không khớp");
+            bindingResult.rejectValue("confirmPassword", "passwordMismatch", "Confirm password isn't correct.");
             return renderRegisterPage;
         }
 
         //call service
         try {
             userService.registerNewUser(registerDto);
-            redirectAttributes.addFlashAttribute(successRegistered, "Đăng ký thành công!");
+            redirectAttributes.addFlashAttribute(successRegistered, "Successfully registered!");
             return "redirect:/dangky-thanhcong";
         } catch (IllegalArgumentException e) {
-            if (e.getMessage().contains("Email đã tồn tại")) {
+            if (e.getMessage().contains("Email existed")) {
                 bindingResult.rejectValue("email", "existedEmail", e.getMessage());
-            } else if (e.getMessage().contains("Tên tài khoản đã tồn tại")) {
+            } else if (e.getMessage().contains("Username existed!")) {
                 bindingResult.rejectValue("username", "existedUsername", e.getMessage());
-            } else if (e.getMessage().contains("Số điện thoại đã tồn tại")) {
+            } else if (e.getMessage().contains("Phone number existed!")) {
                 bindingResult.rejectValue("phone", "existedPhoneNumber", e.getMessage());
             } else {
                 bindingResult.reject("registerationUnexpectedError", e.getMessage());
@@ -66,7 +66,7 @@ public class RegisterController {
     @GetMapping("/dangky-thanhcong")
     public String registrationSuccess(Model model) {
         if (!model.containsAttribute(successRegistered)) {
-            model.addAttribute(successRegistered, "Đăng ký thành công!");
+            model.addAttribute(successRegistered, "Successfully registered!");
         }
         return "dangnhap&dangky/dangky-thanhcong";
     }

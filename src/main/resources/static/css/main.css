@@ -120,7 +120,7 @@ a#scrollUp i{
   background: #0083C9;
 }
 
-.fa-twitter:hover  {
+.fa-twitter:hover   {
 	background:#5BBCEC;
 }
 
@@ -150,6 +150,11 @@ a#scrollUp i{
 
 .header-middle .container .row .col-sm-8 {
 	padding-right:0;
+	padding-top: 15px;
+}
+
+.header-middle .container .row .col-sm-8 a {
+    background-color: none;
 }
 
 .usa {
@@ -187,7 +192,7 @@ a#scrollUp i{
 
 
 .shop-menu ul li {
-	display:inline-block;
+    display:inline-block;
   padding-left: 15px;
   padding-right: 15px;
 }
@@ -217,6 +222,15 @@ a#scrollUp i{
 .shop-menu ul li a:hover {
 	color:#fe980f;
 	background:#fff;
+}
+
+.shop-menu .sub-menu li a {
+    background: none;
+}
+
+.shop-menu .sub-menu li a:hover {
+    color:#fe980f;
+    background: none;
 }
 
 
@@ -1427,12 +1441,15 @@ h2.title {
 
 #form {
   display: block;
-  margin-bottom: 185px;
-  margin-top: 185px;
+  margin-bottom: 150px;
+  margin-top: 150px;
   overflow: hidden;
 }
 
 .login-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .signup-form {
@@ -1448,7 +1465,8 @@ h2.title {
 }
 
 
-.login-form form input, .signup-form form input {
+
+.login-form form input, .signup-form form input, .reset-password-card form input {
   background: #F0F0E9;
   border: medium none;
   color: #696763;
@@ -1460,11 +1478,15 @@ h2.title {
   margin-bottom: 10px;
   outline: medium none;
   padding-left: 10px;
-  width: 25%;
+  width: 250px;
 }
 
 .login-form form span{
   line-height: 25px;
+}
+
+.alert {
+    width: 50%;
 }
 
 .login-form form span input {
@@ -1476,6 +1498,8 @@ h2.title {
 
 .login-form form button {
   margin-top: 23px;
+  margin-bottom: 23px;
+  align-items: center;
 }
 
 .login-form form button, .signup-form form button {
@@ -1486,6 +1510,7 @@ h2.title {
   display: block;
   font-family: 'Roboto', sans-serif;
   padding: 6px 25px;
+  align-items: center;
 }
 
 .login-form label{

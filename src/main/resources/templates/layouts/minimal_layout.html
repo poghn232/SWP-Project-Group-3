@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:fragment="layout(title, extra_head_content, content, extra_scripts)">
+<head>
+    <meta charset="UTF-8">
+    <title th:replace="${title}">Change your title pls</title>
+    <link rel="icon" type="image/svg+xml" href="/images/spring.svg">
+    <link href="/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/css/font-awesome.min.css" rel="stylesheet">
+    <link href="/css/prettyPhoto.css" rel="stylesheet">
+    <link href="/css/price-range.css" rel="stylesheet">
+    <link href="/css/animate.css" rel="stylesheet">
+    <link href="/css/main.css" rel="stylesheet">
+    <link href="/css/responsive.css" rel="stylesheet">
+
+    <script src="/js/html5shiv.js"></script>
+
+    <th:block th:replace="${extra_head_content} ?: _"></th:block>
+</head>
+<body>
+
+<th:block th:replace="${content}"></th:block>
+
+<th:block th:replace="${extra_scripts} ?: _"></th:block>
+<script src="/js/jquery.js"></script>
+<script src="/js/bootstrap.min.js"></script>
+<script src="/js/jquery.scrollUp.min.js"></script>
+<script src="/js/price-range.js"></script>
+<script src="/js/jquery.prettyPhoto.js"></script>
+<script src="/js/main.js"></script>
+</body>
+</html>

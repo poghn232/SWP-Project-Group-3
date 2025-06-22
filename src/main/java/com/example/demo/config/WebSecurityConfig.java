@@ -7,6 +7,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
@@ -37,15 +38,29 @@ public class WebSecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .csrf(csrf -> csrf.disable())
+                .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(authorize -> authorize
 
-                        .requestMatchers("/", "/register", "/feature", "/pricing", "/about", "/dangky-thanhcong","/forgetPassword", "/enterOTP", "/css/**", "/js/**", "/images/**", "/fonts/**", "/login").permitAll()
+                        .requestMatchers(
+                                "/",
+                                "/register",
+                                "/feature",
+                                "/pricing",
+                                "/about",
+                                "/login",
+                                "/resetPassword",
+                                "/forgetPassword",
+                                "/enterOTP",
+                                "/css/**",
+                                "/js/**",
+                                "/layouts/**",
+                                "/images/**",
+                                "/fonts/**").permitAll()
                         .requestMatchers("/admin/**").hasRole("ADMIN")
                         .requestMatchers("/manager/**").hasRole("MANAGER")
                         .requestMatchers("/staff/**").hasRole("STAFF")
                         .requestMatchers("/customer/**").hasRole("CUSTOMER")
-                        .requestMatchers("/SHIPPER/**").hasRole("SHIPPER")
+                        .requestMatchers("/shipper/**").hasRole("SHIPPER")
 
                         .anyRequest().authenticated()
                 )
@@ -63,4 +78,6 @@ public class WebSecurityConfig {
                 );
         return http.build();
     }
+
+
 }
