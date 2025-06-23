@@ -9,4 +9,9 @@ public class HomeController {
     public String getHomePage() {
         return "trangchu";
     }
+
+    @GetMapping("/error")
+    public String showErrorPage() {
+        return "sampleTemplate/404";
+    }
 }

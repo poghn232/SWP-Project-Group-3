@@ -6,7 +6,10 @@ import com.example.demo.model.User;
 import com.example.demo.service.UserService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -33,10 +36,44 @@ public class ProfileController {
     }
 
     @PostMapping("/profile")
-    public String getProfile(@ModelAttribute("authenticatedUserDto") @Valid UserDto authenticatedUserDto,
+    public String getProfile(@ModelAttribute("authenticatedUserDto") @Valid UserDto manageAccountUserDto,
                              BindingResult bindingResult,
+                             @AuthenticationPrincipal User user,
+                             Model model,
                              RedirectAttributes redirectAttributes) {
+
         if (bindingResult.hasErrors()) {
+            return renderProfilePage;
+        }
+
+        try {
+
+            User updatedUser = userService.changeUserInformation(user.getUsername(), manageAccountUserDto);
+
+            Authentication currentAuth = SecurityContextHolder.getContext().getAuthentication(); // Lấy auth hiện tại để giữ credentials
+            UsernamePasswordAuthenticationToken newAuth = new UsernamePasswordAuthenticationToken(
+                    updatedUser, // Principal mới: đối tượng User đã được cập nhật (implement UserDetails)
+                    currentAuth.getCredentials(), // Giữ nguyên credentials (mật khẩu đã băm)
+                    updatedUser.getAuthorities() // Lấy lại quyền hạn từ đối tượng User đã cập nhật
+            );
+
+            SecurityContextHolder.getContext().setAuthentication(newAuth);
+
+            //display new changes to manage page
+            UserDto authenticatedUserDto = new UserDto(updatedUser.getUsername(), updatedUser.getEmail(), updatedUser.getPhone());
+            model.addAttribute("authenticatedUserDto", authenticatedUserDto);
+            redirectAttributes.addFlashAttribute("successMessage","Your information has been updated successfully!");
+            return "redirect:/profile";
+        } catch (IllegalArgumentException e) {
+            if (e.getMessage().contains("Email đã tồn tại")){
+                bindingResult.rejectValue("email", "existedEmail", "Email existed. Try again");
+            } else if (e.getMessage().contains("Tên tài khoản đã tồn tại")) {
+                bindingResult.rejectValue("username", "existedUsername", "Username existed. Try again");
+            } else if (e.getMessage().contains("Số điện thoại đã tồn tại")) {
+                bindingResult.rejectValue("phone", "existedPhoneNumber", "Phone number existed. Try again");
+            } else {
+                bindingResult.reject("unexpectedError", "Unexpected error!");
+            }
             return renderProfilePage;
         }
     }
