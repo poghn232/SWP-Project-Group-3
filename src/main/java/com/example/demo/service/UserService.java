@@ -1,6 +1,6 @@
 package com.example.demo.service;
 
-import com.example.demo.api.dto.UserDto;
+import com.example.demo.api.dto.account.UserDto;
 import com.example.demo.api.dto.authentication.UserRegisterDto;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
@@ -13,7 +13,6 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
-import java.util.logging.Logger;
 
 @Service
 public class UserService {

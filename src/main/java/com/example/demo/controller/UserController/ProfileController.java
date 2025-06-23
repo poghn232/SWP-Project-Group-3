@@ -1,7 +1,6 @@
 package com.example.demo.controller.UserController;
 
-import com.example.demo.api.dto.UserDto;
-import com.example.demo.api.dto.authentication.UserRegisterDto;
+import com.example.demo.api.dto.account.UserDto;
 import com.example.demo.model.User;
 import com.example.demo.service.UserService;
 import jakarta.validation.Valid;
@@ -83,8 +82,13 @@ public class ProfileController {
         return "change-password";
     }
 
-    @PostMapping("/change-password")
+    @PostMapping("/change-password") //TODO
     public String getNewPassword() {
+        return "";
+    }
+
+    @PostMapping("/delete-account") //TODO
+    public String deleteAccount() {
         return "";
     }
 }
