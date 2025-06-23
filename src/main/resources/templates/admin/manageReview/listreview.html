@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org">
+<body>
+<div th:replace="admin/dashboard :: content">
+    <h3>Quản lý đánh giá</h3>
+    <table class="table table-bordered mt-3">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Item ID</th>
+                <th>Người tạo</th>
+                <th>Đánh giá</th>
+                <th>Comment</th>
+                <th>Trạng thái</th>
+                <th>Ngày tạo</th>
+                <th>Hành động</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="review : ${reviews}">
+                <td th:text="${review.reviewId}"></td>
+                <td th:text="${review.itemId}"></td>
+                <td th:text="${review.createdBy.username}"></td>
+                <td th:text="${review.rating}"></td>
+                <td th:text="${review.comment}"></td>
+                <td th:text="${review.status}"></td>
+                <td th:text="${#temporals.format(review.createdAt, 'dd/MM/yyyy HH:mm')}"></td>
+                <td>
+                    <a th:href="@{/admin/reviews/{id}(id=${review.reviewId})}" class="btn btn-sm btn-primary">Chi tiết</a>
+                    <form th:if="${review.status != 'approved'}" th:action="@{/admin/reviews/{id}/approve(id=${review.reviewId})}" method="post" style="display:inline;">
+                        <button class="btn btn-success btn-sm" type="submit">Duyệt</button>
+                    </form>
+                    <form th:if="${review.status != 'rejected'}" th:action="@{/admin/reviews/{id}/reject(id=${review.reviewId})}" method="post" style="display:inline;">
+                        <button class="btn btn-danger btn-sm" type="submit">Từ chối</button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+</body>
+</html>
