@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/end_user_layout :: layout(~{::title},
+       ~{::#extra_head_content}, ~{::#content}, ~{::#extra_scripts})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<th:block id="content">
+    <section id="form">
+        <div class="container">
+            <div class="row">
+                <h2>Account Details</h2>
+                <!--               Thông báo chỉnh sửa thông tin -->
+                <center>
+                    <div th:if="${successMessage}" class="alert alert-success" role="alert">
+                        <span th:text="${successMessage}"></span>
+                    </div>
+                    <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+                        <span th:text="${errorMessage}"></span>
+                    </div>
+                </center>
+                <!--            /thông báo -->
+                <div class="login-form">
+                    <form action="/profile" th:object="${authenticatedUserDto}" method="post">
+                        <label for="name">Username</label>
+                        <input type="text" th:field="*{username}" id="name">
+                        <div class="text-danger" th:if="${#fields.hasErrors('username')}"
+                             th:errors="*{username}"></div>
+
+                        <label for="email">Email</label>
+                        <input type="email" th:field="*{email}" id="email">
+                        <div class="text-danger" th:if="${#fields.hasErrors('email')}"
+                             th:errors="*{email}"></div>
+
+                        <label for="phone">Phone number</label>
+                        <input type="tel" th:field="*{phone}" id="phone">
+                        <div class="text-danger" th:if="${#fields.hasErrors('phone')}"
+                             th:errors="*{phone}"></div>
+
+                        <center>
+                            <button type="submit">Save Changes</button>
+                            <form action="/delete-account" method="post">
+                                <button type="submit" class="btn text-danger">Delete Account</button>
+<!--                                TODO: create modal when click delete account-->
+                            </form>
+                        </center>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+</th:block>
+
+</body>
+</html>

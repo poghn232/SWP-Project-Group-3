@@ -14,13 +14,6 @@
         <div class="container">
             <div class="row">
                 <div>
-                    <!-- Hiển thị thông báo đặt lại mật khẩu thành công -->
-                    <div th:if="${successMessage}" class="alert alert-success" role="alert">
-                        <span th:text="${successMessage}"></span>
-                    </div>
-                    <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
-                        <span th:text="${errorMessage}"></span>
-                    </div>
                     <div class="login-form"><!--login form-->
                         <h2>Register new account</h2>
                         <form th:action="@{/register}" th:object="${registerDto}" method="post">

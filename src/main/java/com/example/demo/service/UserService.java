@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.api.dto.account.UserDto;
 import com.example.demo.api.dto.authentication.UserRegisterDto;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
@@ -99,6 +100,7 @@ public class UserService {
         return true;
     }
 
+    @Transactional
     public void resetPassword(String email, String password, String confirmPassword) {
         User user = userRepository.findByEmail(email);
 
@@ -110,5 +112,39 @@ public class UserService {
         user.setPasswordHash(hashedPassword);
 
         userRepository.save(user);
+    }
+
+    @Transactional
+    public User changeUserInformation(String username, UserDto changedUserDto) {
+        User user = userRepository.findByUsername(username);
+
+        //email found in db and it is someone else's email
+        if (userRepository.findByEmail(changedUserDto.getEmail()) != null) {
+            if (!userRepository.findByEmail(changedUserDto.getEmail()).getEmail().equals(user.getEmail())){
+                throw new IllegalArgumentException("Email đã tồn tại. Vui lòng xem lại.");
+            }
+        }
+
+        //username found in db and it is someone else's username
+        if (userRepository.findByUsername(changedUserDto.getUsername()) != null) {
+            if (!userRepository.findByUsername(changedUserDto.getUsername()).getUsername().equals(user.getUsername())){
+                throw new IllegalArgumentException("Tên tài khoản đã tồn tại. Vui lòng xem lại.");
+            }
+        }
+
+
+        //phone number found in db and it is someone else's phone number
+        if (userRepository.findByPhone(changedUserDto.getPhone()) != null) {
+            if (!userRepository.findByPhone(changedUserDto.getPhone()).getPhone().equals(user.getPhone())){
+                throw new IllegalArgumentException("Số điện thoại đã tồn tại. Vui lòng xem lại.");
+            }
+        }
+
+        user.setUsername(changedUserDto.getUsername());
+        user.setEmail(changedUserDto.getEmail());
+        user.setPhone(changedUserDto.getPhone());
+
+        userRepository.save(user);
+        return user;
     }
 }
