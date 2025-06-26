@@ -1,10 +1,12 @@
 package com.example.demo.service;
 
+import com.example.demo.api.dto.account.ChangePasswordDto;
 import com.example.demo.api.dto.account.UserDto;
 import com.example.demo.api.dto.authentication.UserRegisterDto;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -112,6 +114,31 @@ public class UserService {
         user.setPasswordHash(hashedPassword);
 
         userRepository.save(user);
+    }
+
+    @Transactional
+    public void changePassword(String username, ChangePasswordDto changePasswordDto) {
+        User user = userRepository.findByUsername(username);
+
+        if (!user.getPassword().equals(changePasswordDto.getOldPassword())) {
+            throw new IllegalArgumentException("Old password isn't correct. Try again");
+        }
+
+        if (!changePasswordDto.confirmingPassword()) {
+            throw new IllegalArgumentException(("Confirm password isn't correct. Try again"));
+        }
+
+        String hashedPassword = passwordEncoder.encode(changePasswordDto.getPassword());
+        user.setPasswordHash(hashedPassword);
+
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public void deleteAccount(String username) {
+        User user = userRepository.findByUsername(username);
+
+        userRepository.delete(user);
     }
 
     @Transactional

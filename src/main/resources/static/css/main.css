@@ -1434,13 +1434,16 @@ h2.title {
   padding: 8px 40px;
 }
 
+.authentication-content {
+    display: flex;
+    justify-content: center;
+}
 
 /*************************
 *******login page CSS******
 **************************/
 
 #form {
-  display: block;
   margin-bottom: 150px;
   margin-top: 150px;
   overflow: hidden;
@@ -1450,6 +1453,7 @@ h2.title {
     display: flex;
     flex-direction: column;
     align-items: center;
+    width: 289px;
 }
 
 .signup-form {
@@ -1464,7 +1468,9 @@ h2.title {
   margin-bottom: 30px;
 }
 
-
+.login-form form {
+    width: 100%;
+}
 
 .login-form form input, .signup-form form input, .reset-password-card form input {
   background: #F0F0E9;
@@ -1478,7 +1484,7 @@ h2.title {
   margin-bottom: 10px;
   outline: medium none;
   padding-left: 10px;
-  width: 250px;
+  width: 100%;
 }
 
 .login-form form span{

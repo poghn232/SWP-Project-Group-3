@@ -1,5 +1,6 @@
 package com.example.demo.controller.UserController;
 
+import com.example.demo.api.dto.account.ChangePasswordDto;
 import com.example.demo.api.dto.account.UserDto;
 import com.example.demo.model.User;
 import com.example.demo.service.UserService;
@@ -24,6 +25,8 @@ public class ProfileController {
     private UserService userService;
 
     private final String renderProfilePage = "profile";
+    private final String renderChangePasswordPage = "change-password";
+
 
     @GetMapping("/profile")
     public String showProfile(Model model, @AuthenticationPrincipal User user) {
@@ -61,10 +64,10 @@ public class ProfileController {
             //display new changes to manage page
             UserDto authenticatedUserDto = new UserDto(updatedUser.getUsername(), updatedUser.getEmail(), updatedUser.getPhone());
             model.addAttribute("authenticatedUserDto", authenticatedUserDto);
-            redirectAttributes.addFlashAttribute("successMessage","Your information has been updated successfully!");
+            redirectAttributes.addFlashAttribute("successMessage", "Your information has been updated successfully!");
             return "redirect:/profile";
         } catch (IllegalArgumentException e) {
-            if (e.getMessage().contains("Email đã tồn tại")){
+            if (e.getMessage().contains("Email đã tồn tại")) {
                 bindingResult.rejectValue("email", "existedEmail", "Email existed. Try again");
             } else if (e.getMessage().contains("Tên tài khoản đã tồn tại")) {
                 bindingResult.rejectValue("username", "existedUsername", "Username existed. Try again");
@@ -78,17 +81,46 @@ public class ProfileController {
     }
 
     @GetMapping("/change-password")
-    public String showResetPasswordPage() {
+    public String showResetPasswordPage(Model model) {
+        if (!model.containsAttribute("changePasswordDto")) {
+            model.addAttribute("changePasswordDto", new ChangePasswordDto());
+        }
         return "change-password";
     }
 
     @PostMapping("/change-password") //TODO
-    public String getNewPassword() {
-        return "";
+    public String getNewPassword(@ModelAttribute("changePasswordDto") @Valid ChangePasswordDto changePasswordDto,
+                                 BindingResult bindingResult,
+                                 Authentication authentication,
+                                 RedirectAttributes redirectAttributes) {
+
+        if (bindingResult.hasErrors()) {
+            return renderChangePasswordPage;
+        }
+
+        try {
+            userService.changePassword(authentication.getName(), changePasswordDto);
+
+            redirectAttributes.addFlashAttribute("successMessage", "Password changed successfully! Please login again.");
+
+            return "redirect:/logout";
+        } catch (IllegalArgumentException e) {
+            if (e.getMessage().contains("Old password")) {
+                bindingResult.rejectValue("oldPassword", "oldPasswordIncorrect", "Old password isn't correct, try again!");
+            } else if (e.getMessage().contains("Confirm password")) {
+                bindingResult.rejectValue("confirmPassword", "confirmPasswordIncorrect", "Confirm password isn't correct, try again!");
+            } else {
+                bindingResult.reject("unexpectedError", "Unexpected Error: " + e.getMessage());
+            }
+            return renderChangePasswordPage;
+        }
     }
 
     @PostMapping("/delete-account") //TODO
-    public String deleteAccount() {
-        return "";
+    public String deleteAccount(Authentication authentication, RedirectAttributes redirectAttributes) {
+        userService.deleteAccount(authentication.getName());
+
+        redirectAttributes.addFlashAttribute("successMessage", "Account deleted successfully!");
+        return "redirect:/register";
     }
 }
