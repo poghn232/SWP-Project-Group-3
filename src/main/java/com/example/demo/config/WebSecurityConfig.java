@@ -20,6 +20,9 @@ public class WebSecurityConfig {
     private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
 
     @Autowired
+    private CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
+
+    @Autowired
     private CustomUserDetailsService customUserDetailsService;
 
     @Bean
@@ -51,6 +54,7 @@ public class WebSecurityConfig {
                                 "/resetPassword",
                                 "/forgetPassword",
                                 "/enterOTP",
+                                "/dangky-thanhcong",
                                 "/css/**",
                                 "/js/**",
                                 "/layouts/**",
@@ -68,7 +72,7 @@ public class WebSecurityConfig {
                         .loginPage("/login")
                         .loginProcessingUrl("/perform_login")
                         .successHandler(customAuthenticationSuccessHandler)
-                        .failureUrl("/login?error=true")
+                        .failureHandler(customAuthenticationFailureHandler)
                         .permitAll()
                 )
                 .logout(logout -> logout

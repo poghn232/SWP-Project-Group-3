@@ -50,12 +50,12 @@ public class RegisterController {
             redirectAttributes.addFlashAttribute(successRegistered, "Successfully registered!");
             return "redirect:/dangky-thanhcong";
         } catch (IllegalArgumentException e) {
-            if (e.getMessage().contains("Email existed")) {
-                bindingResult.rejectValue("email", "existedEmail", e.getMessage());
-            } else if (e.getMessage().contains("Username existed!")) {
-                bindingResult.rejectValue("username", "existedUsername", e.getMessage());
-            } else if (e.getMessage().contains("Phone number existed!")) {
-                bindingResult.rejectValue("phone", "existedPhoneNumber", e.getMessage());
+            if (e.getMessage().contains("Email đã tồn tại")) {
+                bindingResult.rejectValue("email", "existedEmail", "Email existed. Try again!");
+            } else if (e.getMessage().contains("Tên tài khoản đã tồn tại")) {
+                bindingResult.rejectValue("userName", "existedUsername", "Username existed. Try again!");
+            } else if (e.getMessage().contains("Số điện thoại đã tồn tại")) {
+                bindingResult.rejectValue("phone", "existedPhoneNumber", "Phone number existed. Try again!");
             } else {
                 bindingResult.reject("registerationUnexpectedError", e.getMessage());
             }

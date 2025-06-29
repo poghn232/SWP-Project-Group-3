@@ -121,6 +121,6 @@ public class ProfileController {
         userService.deleteAccount(authentication.getName());
 
         redirectAttributes.addFlashAttribute("successMessage", "Account deleted successfully!");
-        return "redirect:/register";
+        return "redirect:/logout";
     }
 }

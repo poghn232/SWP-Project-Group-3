@@ -2,6 +2,7 @@ package com.example.demo.service;
 
 import com.example.demo.api.dto.account.ChangePasswordDto;
 import com.example.demo.api.dto.account.UserDto;
+import com.example.demo.api.dto.authentication.UserLoginDto;
 import com.example.demo.api.dto.authentication.UserRegisterDto;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
@@ -32,6 +33,17 @@ public class UserService {
 
     public User getUserInfo(String username) {
         return userRepository.findByUsername(username);
+    }
+
+    public void doLogin(UserLoginDto userLoginDto) {
+        if (userRepository.findByUsername(userLoginDto.getUsername()) == null) {
+            throw new IllegalArgumentException("Username incorrect. Try again!");
+        } else {
+            User foundUser = userRepository.findByUsername(userLoginDto.getUsername());
+            if (!foundUser.getPassword().equals(userLoginDto.getPassword())) {
+                throw new IllegalArgumentException("Password incorrect. Try again!");
+            }
+        }
     }
 
     /**

@@ -14,9 +14,6 @@
         <div class="container">
             <div class="row">
                 <center>
-                    <div th:if="${param.error}" class="alert alert-danger" role="alert">
-                        Username or password is incorrect.
-                    </div>
                     <!-- Hiển thị thông báo đăng xuất thành công -->
                     <div th:if="${param.logout}" class="alert alert-success" role="alert">
                         Logout successfully!
@@ -25,23 +22,23 @@
                     <div th:if="${successMessage}" class="alert alert-success" role="alert">
                         <span th:text="${successMessage}"></span>
                     </div>
+                    <div th:if="${errorMessage}" class="alert alert-danger" role="alert">
+                        <span th:text="${errorMessage}"></span>
+                    </div>
                 </center>
                 <div class="authentication-content">
                     <div class="login-form" id="loginForm"><!--login form-->
                         <h2>Login</h2>
+
                         <a href="/register" style="margin-bottom: 10px;">Register new account here</a>
+
                         <form th:action="@{/perform_login}" th:object="${userDto}" method="post">
                             <label for="username">Username</label>
-                            <input type="text"
-                                   th:field="*{username}" id="username"/>
-                            <div class="text-danger" th:if="${#fields.hasErrors('username')}"
-                                 th:errors="*{username}"></div>
+                            <input type="text" th:field="*{username}" id="username"/>
+                            <div class="text-danger" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></div>
 
                             <label for="password">Password</label>
-                            <input type="password"
-                                   th:field="*{password}" id="password"/>
-                            <div class="text-danger" th:if="${#fields.hasErrors('password')}"
-                                 th:errors="*{password}"></div>
+                            <input type="password" th:field="*{password}" id="password"/>
                             <center>
                                 <button type="submit">Submit</button>
                             </center>

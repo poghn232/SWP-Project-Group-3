@@ -7,12 +7,21 @@
     <title>Title</title>
     <th:block id="extra_head_content">
         <style>
+            .modal-content {
+                margin-top: 200px;
+            }
+            .modal-footer {
+                display: flex;
+                justify-content: space-between;
+                padding: 0;
+            }
         </style>
     </th:block>
 </head>
 <body>
 
 <th:block id="content">
+    <!-- Modal -->
     <section id="form">
         <div class="container">
             <div class="row">
@@ -45,30 +54,33 @@
                                      th:errors="*{phone}"></div>
                             </div>
 
-                            <table>
-                                <tr>
-                                    <td>
-                                        <button type="submit">Save Changes</button>
-                                    </td>
-                                    <td></td>
-                                    <td>
-                                        <button id="btn-open">Delete Account</button>
-                                    </td>
-                                </tr>
-                            </table>
+                            <center>
+                                <button type="submit">Save Changes</button>
+                                <button type="button" data-toggle="modal" data-target="#myModal">
+                                    Launch demo modal
+                                </button>
+                            </center>
                             <!--                                TODO: create modal when click delete account-->
                             <!--                            modal-->
-                            <div id="modal-container">
-                                <div id="modal">
-                                    <div id="modal-header">
-                                        <h2>Delete Account</h2>
-                                        <button><i class="fa fa-times" aria-hidden="true"></i></button>
-                                    </div>
-                                    <div id="modal-body">
-                                    </div>
-                                </div>
-                            </div>
                             <!--                            end modal-->
+                            <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <center><h1 class="modal-title" id="myModalLabel">Delete Account</h1></center>
+                                        </div>
+                                        <div class="modal-body">
+                                            <h3>Your account will be permanently deleted. Are you sure to continue?</h3>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <form action="/delete-account" method="post">
+                                                <button type="submit">Delete Account</button>
+                                            </form>
+                                            <button type="button" data-dismiss="modal">Close</button>
+                                        </div>
+                                    </div><!-- /.modal-content -->
+                                </div><!-- /.modal-dialog -->
+                            </div><!-- /.modal -->
                         </form>
                     </div>
                 </div>
@@ -77,8 +89,7 @@
     </section>
 </th:block>
 
-<th:block td="extra_scripts">
-
+<th:block id="extra_scripts">
 </th:block>
 </body>
 </html>
