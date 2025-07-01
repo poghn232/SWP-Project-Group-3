@@ -73,14 +73,13 @@
             <div class="row">
                 <div class="col-sm-4">
                     <div class="logo pull-left">
-                        <a href="/"><img src="/images/home/logo.png" alt=""/></a>
+                        <img src="/images/home/logo.png" alt="" onclick="scrollToTop()" style="cursor: pointer;"/>
                     </div>
                 </div>
                 <div class="col-sm-8">
                     <div class="shop-menu pull-right">
                         <ul class="nav navbar-nav">
                             <li><a href="../sampleTemplate/checkout.html"><i class="fa fa-crosshairs"></i> Checkout</a></li>
-                            <li><a href="../sampleTemplate/cart.html"><i class="fa fa-shopping-cart"></i> Cart</a></li>
                             <li sec:authorize="!isAuthenticated()">
                                 <a href="/login"><i class="fa fa-lock"></i> Login</a>
                             </li>
@@ -311,6 +310,13 @@
 
 <!-- Middle header đi theo khi cuộn xuống-->
 <script>
+    function scrollToTop() {
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth' // Cuộn mượt
+      });
+    }
+
     document.addEventListener('DOMContentLoaded', function() {
         const headerElement = document.getElementById('headerMiddleSticky');
         if (!headerElement) return; // Thoát nếu phần tử không tồn tại
