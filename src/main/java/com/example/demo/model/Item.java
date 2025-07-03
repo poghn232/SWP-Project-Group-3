@@ -1,90 +1,41 @@
 package com.example.demo.model;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
+@Getter
+@Setter
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "items")
 public class Item {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int itemId;
+    @Column(name = "item_id")
+    private Integer itemId;
 
-    private String name;
-    private String description;
-    private double price;
-    private String category;
-    private String imageUrl;
-    private boolean isAvailable;
+    @Column(name = "description", length = 255)
+    private String itemDescription;
 
-    // Constructors
-    public Item() {}
+    @Column(name = "name", length = 75)
+    private String itemName;
 
-    public Item(int itemId, String name, String description, double price, String category, String imageUrl,
-                boolean isAvailable) {
-        this.itemId = itemId;
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.category = category;
-        this.imageUrl = imageUrl;
-        this.isAvailable = isAvailable;
-    }
+    @Column(name = "unit", length = 10)
+    private String itemUnit;
 
+    @Column(name = "price")
+    private Integer itemPrice;
 
-    public int getItemId() {
-        return itemId;
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "party_id", nullable = false)
+    private Party party;
 
-    public void setItemId(int itemId) {
-        this.itemId = itemId;
-    }
+    @Column(name = "amount")
+    private Integer itemAmount;
 
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public double getPrice() {
-        return price;
-    }
-
-    public void setPrice(double price) {
-        this.price = price;
-    }
-
-    public String getCategory() {
-        return category;
-    }
-
-    public void setCategory(String category) {
-        this.category = category;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
-    public boolean isAvailable() {
-        return isAvailable;
-    }
-
-    public void setAvailable(boolean available) {
-        isAvailable = available;
-    }
 }

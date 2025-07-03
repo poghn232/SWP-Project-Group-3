@@ -44,8 +44,18 @@
                 display: flex;
                 justify-content: center;
             }
-            .active-heading {
+            .panel-heading h4 {
+              color: #696763;
+              font-family: 'Roboto', sans-serif;
+              font-size: 14px;
+              text-decoration: none;
+              text-transform: uppercase;
+            }
+            .category-products .panel-default .panel-heading.active-heading {
                 background: #f0f0e9;
+            }
+            .category-products .panel-default .panel-heading.active-heading h4{
+                font-size: 17px;
             }
             .panel-title {
                 width: fit-content;
@@ -57,10 +67,49 @@
                 display: flex;
                 justify-content: space-around;
             }
+            .button-container button {
+                margin: 12px;
+                transform : scale(1.25);
+            }
             .food-content {
                 position: relative;
                 overflow: hidden;
                 height: 484px;
+            }
+            .hotspot {
+                position: absolute;
+                cursor: pointer;
+                background-color: rgba(255, 0, 0, 0.2);
+            }
+            .tooltip {
+                position: absolute;
+                background-color: white;
+                border: 1px solid #ccc;
+                padding: 8px 12px;
+                border-radius: 5px;
+                box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+                pointer-events: none;
+                display: none;
+                z-index: 9999;
+                font-size: 14px;
+                max-width: 200px;
+            }
+            .modal-footer button {
+                  background: #FE980F;
+                  border: medium none;
+                  border-radius: 0;
+                  color: #FFFFFF;
+                  display: block;
+                  font-family: 'Roboto', sans-serif;
+                  padding: 6px 25px;
+                  align-items: center;
+            }
+            body.modal-open {
+                padding-right: 15px;
+            }
+            body.modal-open #header,
+            body.modal-open #headerMiddleSticky.header-scrolled {
+                padding-right: 17px; /* Đồng bộ với body */
             }
         </style>
     </th:block>
@@ -130,45 +179,82 @@
         </div>
     </section><!--/slider-->
 
-    <section>
+    <section style="margin-bottom: 40px;">
+        <div th:each="party: ${partyDto.parties}" class="modal fade" th:id="${'partyModal_' + party.partyId}"
+             tabindex="-1"
+             role="dialog" aria-labelledby="myModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <center>
+                            <h1 class="modal-title" th:id="${'myModalLabel_' + party.partyId}">
+                                <span th:text="${party.partyName}"></span> <span th:text="${party.partyType}"></span>
+                                Menu Details
+                            </h1>
+                        </center>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table">
+                            <tr>
+                                <th>Name</th>
+                                <th>Description</th>
+                                <th>Unit</th>
+                                <th>Price</th>
+                            </tr>
+                            <tr th:each="item: ${party.items}">
+                                <td th:text="${item.itemName}"></td>
+                                <td th:text="${item.itemDescription}"></td>
+                                <td th:text="${item.itemUnit}"></td>
+                                <td th:text="${item.itemPrice}"></td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <center>
+                            <button type="button" data-dismiss="modal">OK</button>
+                        </center>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
         <div class="container">
             <div class="row">
                 <div class="col-sm-3">
                     <div class="left-sidebar">
+
+                        <!--                            Party-->
                         <h2>Party</h2>
                         <div class="panel-group category-products"><!--category-productsr-->
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h4 class="panel-title" onclick="showPartyContent('standard')">Standard
-                                        Party Menu</h4>
+                            <div th:each="party: ${partyDto.parties}">
+                                <div th:if="${party.partyType == 'Party'}">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title"
+                                                th:attr="onclick='showPartyContent(\'' + ${party.partyName.toLowerCase()} + '\')'">
+                                                <span th:text="${party.partyName}"></span> <span
+                                                    th:text="${party.partyType}"></span> Menu
+                                            </h4>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h4 class="panel-title" onclick="showPartyContent('seafood')">Seafood
-                                        Party Menu</h4>
-                                </div>
-                            </div>
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h4 class="panel-title" onclick="showPartyContent('sweets')">Sweets
-                                        Party Menu</h4>
-                                </div>
-                            </div>
-                        </div><!--/category-products-->
+                        </div>
 
+                        <!--                            Buffet-->
                         <h2>Buffet</h2>
                         <div class="panel-group category-products">
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h4 class="panel-title" onclick="showPartyContent('buffet-standard')">Standard
-                                        Buffet Menu</h4>
-                                </div>
-                            </div>
-                            <div class="panel panel-default">
-                                <div class="panel-heading">
-                                    <h4 class="panel-title" onclick="showPartyContent('buffet-sweets')">Sweets
-                                        Buffet Menu</h4>
+                            <div th:each="party: ${partyDto.parties}">
+                                <div th:unless="${party.partyType == 'Party'}">
+                                    <div class="panel panel-default">
+                                        <div class="panel-heading">
+                                            <h4 class="panel-title"
+                                                th:attr="onclick='showPartyContent(\'' + 'buffet-' + ${party.partyName.toLowerCase()} + '\')'">
+                                                <span th:text="${party.partyName}"></span> <span
+                                                    th:text="${party.partyType}"></span> Menu
+                                            </h4>
+                                        </div>
+                                    </div><!--/category-products-->
                                 </div>
                             </div>
                         </div>
@@ -179,28 +265,37 @@
                     <div class="features_items"><!--features_items-->
                         <h2 class="title text-center">Content</h2>
                         <div class="food-content">
-                            <div class="partyContent exit" id="seafood">
-                                <img src="/images/home/product1.jpg" alt="">
-                                <div class="button-container">
-                                    <button>Order now!</button>
-                                    <button>Order with customizing items</button>
+                            <div th:each="party: ${partyDto.parties}">
+                                <div th:if="${party.partyType == 'Party'}">
+                                    <div class="partyContent exit"
+                                         th:id="${party.partyName == 'Standard' ? 'standard' : (party.partyName == 'Seafood' ? 'seafood' : 'sweets')}">
+                                        <img th:src="${party.imageUrl}" th:alt="${party.partyName + ' Image'}">
+
+                                        <div class="button-container">
+                                            <button>Order with customizing items</button>
+                                            <button>Order now!</button>
+                                            <button type="button" data-toggle="modal"
+                                                    th:data-target="${'#partyModal_' + party.partyId}">
+                                                View details
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="partyContent exit" id="sweets">
-                                <img src="/images/home/product2.jpg" alt="">
-                                <div class="button-container">
-                                    <button>Order now!</button>
-                                    <button>Order with customizing items</button>
+                                <div th:unless="${party.partyType == 'Party'}">
+                                    <div class="partyContent exit"
+                                         th:id="${party.partyName == 'Standard' ? 'buffet-standard' : 'buffet-sweets'}">
+                                        <img th:src="${party.imageUrl}" th:alt="${party.partyName + ' Image'}">
+
+                                        <div class="button-container">
+                                            <button>Order with customizing items</button>
+                                            <button>Order now!</button>
+                                            <button type="button" data-toggle="modal"
+                                                    th:data-target="${'#partyModal_' + party.partyId}">
+                                                View details
+                                            </button>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="partyContent" id="standard">
-                                <img src="/images/home/product4.jpg" alt="">
-                            </div>
-                            <div class="partyContent exit" id="buffet-standard">
-                                <img src="/images/home/product4.jpg" alt="">
-                            </div>
-                            <div class="partyContent exit" id="buffet-sweets">
-                                <img src="/images/home/product2.jpg" alt="">
                             </div>
                         </div>
                     </div><!--features_items-->
@@ -211,33 +306,49 @@
 </th:block>
 <th:block id="extra_scripts">
     <script>
-        let currentContent = document.getElementById('standard');
-        const panels = document.querySelectorAll('.panel-heading');
+        document.addEventListener("DOMContentLoaded", function () {
+            let currentContent = null;
+            const panels = document.querySelectorAll('.panel-heading');
 
-        function showPartyContent(id) {
-            const nextContent = document.getElementById(id);
+            window.showPartyContent = function(id) {
+                const nextContent = document.getElementById(id);
 
-            if (currentContent === nextContent) return;
+                if (currentContent === nextContent) return;
 
-            // Xử lý hiển thị nội dung
-            if (currentContent) {
-                currentContent.classList.remove('active');
-                currentContent.classList.add('exit');
-            }
+                // Ẩn phần hiện tại
+                if (currentContent) {
+                    currentContent.classList.remove('active');
+                    currentContent.classList.add('exit');
+                }
 
-            nextContent.classList.remove('exit');
-            nextContent.classList.add('active');
-            currentContent = nextContent;
+                // Hiện phần được chọn
+                nextContent.classList.remove('exit');
+                nextContent.classList.add('active');
+                currentContent = nextContent;
 
-            // Xử lý đổi màu panel-heading
-            panels.forEach(p => p.classList.remove('active-heading'));
-            const clickedPanel = Array.from(panels).find(p =>
-                p.querySelector('h4')?.getAttribute('onclick')?.includes(id)
-            );
-            if (clickedPanel) {
-                clickedPanel.classList.add('active-heading');
-            }
-        }
+                // Cập nhật màu cho panel-heading
+                panels.forEach(p => p.classList.remove('active-heading'));
+                const clickedPanel = Array.from(panels).find(p =>
+                    p.querySelector('h4')?.getAttribute('onclick')?.includes(id)
+                );
+                if (clickedPanel) {
+                    clickedPanel.classList.add('active-heading');
+                }
+            };
+        });
+        document.addEventListener("DOMContentLoaded", function () {
+            const scrollbarWidth = window.innerWidth - document.documentElement.clientWidth;
+
+            const observer = new MutationObserver(() => {
+                if (document.body.classList.contains('modal-open')) {
+                    document.body.style.paddingRight = `${scrollbarWidth}px`;
+                } else {
+                    document.body.style.paddingRight = '';
+                }
+            });
+
+            observer.observe(document.body, { attributes: true, attributeFilter: ['class'] });
+        });
     </script>
 </th:block>
 </body>
