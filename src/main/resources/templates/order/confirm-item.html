@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/end_user_layout :: layout(~{::title},
+       ~{::#extra_head_content}, ~{::#content}, ~{::#extra_scripts})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <th:block id="extra_head_content">
+        <style>
+            body {
+                font-family: 'Roboto', sans-serif;
+                font-weight: 400px;
+            }
+            .confirm-item-form {
+                border: 5px solid #ffa500;
+                box-shadow: -4px 8px 5px 0px rgba(230,202,202,0.75);
+                -webkit-box-shadow: -4px 8px 5px 0px rgba(230,202,202,0.75);
+                -moz-box-shadow: -4px 8px 5px 0px rgba(230,202,202,0.75);
+            }
+            .confirm-item-content {
+                margin: 20px;
+            }
+            .content-header {
+                padding: 15px;
+                text-align: center;
+            }
+            .content-body p{
+                font-style: italic;
+            }
+            .content-footer {
+                display: flex;
+                justify-content: space-around;
+            }
+            .content-footer button {
+                  background: #FE980F;
+                  border: medium none;
+                  border-radius: 0;
+                  color: #FFFFFF;
+                  display: block;
+                  font-family: 'Roboto', sans-serif;
+                  padding: 6px 25px;
+                  align-items: center;
+            }
+            .total-price {
+                padding: 10px;
+                width: fit-content;
+                border: 3px solid #ffa500;
+            }
+        </style>
+    </th:block>
+</head>
+<body>
+<th:block id="content">
+    <div class="confirm-item-form">
+        <div class="confirm-item-content">
+            <div class="content-header">
+                <h2>Party Item Confirmation</h2>
+            </div>
+            <div class="content-body">
+                <h4>There's some information about our restaurant when you chose to order:</h4>
+                <p>— The maximum capacity of each table is eight persons.</p>
+                <p>— Champagne wine is the default beverage, but you can choose something else.</p>
+                <p>— Our restaurant serves 3 hours for every party/buffet. </p>
+                <p>— You can change the unit on customize order.</p>
+                <h4 style="margin-top: 20px; margin-bottom: 10px;">Food In Table:</h4>
+                <table class="table" th:object="${party}">
+                    <tr>
+                        <th>Name</th>
+                        <th>Description</th>
+                        <th>Unit</th>
+                        <th>Price</th>
+                        <th>Unit</th>
+                    </tr>
+                    <tr th:each="item: ${party.items}">
+                        <td th:text="${item.itemName}"></td>
+                        <td th:text="${item.itemDescription}"></td>
+                        <td th:text="${item.itemUnit}"></td>
+                        <td th:text="${item.itemPrice}"></td>
+                        <td style="text-align: center;">1</td>
+                    </tr>
+                </table>
+                <div style="display: flex; justify-content: flex-end;">
+                    <div class="total-price">
+                        <b>Total price per table: </b><span th:text="${totalPrice}"></span>
+                    </div>
+                </div>
+            </div>
+            <div class="content-footer">
+                <a href="/"><button><i class="fa fa-arrow-left"></i> Back</button></a>
+                <a href="/getTables"><button><i class="fa fa-arrow-right"></i> Accept & Continue</button></a>
+            </div>
+        </div>
+    </div>
+</th:block>
+</body>
+</html>

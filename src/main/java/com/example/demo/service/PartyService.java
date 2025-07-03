@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.model.Item;
 import com.example.demo.model.Party;
 import com.example.demo.repository.PartyRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,5 +16,17 @@ public class PartyService {
 
     public List<Party> getAllParties() {
         return partyRepository.findAll();
+    }
+
+    public Party findById(Integer partyId) {
+        return partyRepository.findAll().get(0);
+    }
+
+    public Integer totalPrice(Party party) {
+        int total = 0;
+        for (Item item : party.getItems()) {
+            total += item.getItemPrice();
+        }
+        return total;
     }
 }
