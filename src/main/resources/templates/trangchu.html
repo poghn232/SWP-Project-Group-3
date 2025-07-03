@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       th:replace="~{layouts/end_user_layout :: layout(~{::title},
        ~{::#extra_head_content}, ~{::#content}, ~{::#extra_scripts})}">
 <head>
@@ -273,7 +274,12 @@
 
                                         <div class="button-container">
                                             <button>Order with customizing items</button>
-                                            <button>Order now!</button>
+                                            <a sec:authorize="!isAuthenticated()" href="/login?loginToOrder=false">
+                                                <button type="button">Order now!</button>
+                                            </a>
+                                            <a sec:authorize="isAuthenticated()" href="/getItems">
+                                                <button type="button">Order now!</button>
+                                            </a>
                                             <button type="button" data-toggle="modal"
                                                     th:data-target="${'#partyModal_' + party.partyId}">
                                                 View details
@@ -288,7 +294,7 @@
 
                                         <div class="button-container">
                                             <button>Order with customizing items</button>
-                                            <button>Order now!</button>
+                                            <div></div>
                                             <button type="button" data-toggle="modal"
                                                     th:data-target="${'#partyModal_' + party.partyId}">
                                                 View details

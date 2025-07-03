@@ -1,101 +1,72 @@
 package com.example.demo.model;
 
-import java.math.BigDecimal;
-import java.util.Date;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
+import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
+
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Entity
+@Table(name = "orders")
 public class Order {
-    private int orderId;
-    private int customerId;
-    private Date orderTime;
-    private String deliveryAddress;
-    private String status;
-    private String paymentStatus;
-    private int shipperId;
-    private int tableId;
-    private BigDecimal totalAmount;
 
-    public Order(int orderId, int customerId, Date orderTime, String deliveryAddress, String status, String paymentStatus,
-            int shipperId, int tableId, BigDecimal totalAmount) {
-        this.orderId = orderId;
-        this.customerId = customerId;
-        this.orderTime = orderTime;
-        this.deliveryAddress = deliveryAddress;
-        this.status = status;
-        this.paymentStatus = paymentStatus;
-        this.shipperId = shipperId;
-        this.tableId = tableId;
-        this.totalAmount = totalAmount;
-    }
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "order_id")
+    private Integer orderId;
 
-    public int getOrderId() {
-        return orderId;
-    }
+    @Column(name = "order_date", nullable = false, updatable = false)
+    private LocalDateTime orderDate;
 
-    public void setOrderId(int orderId) {
-        this.orderId = orderId;
-    }
+    @Column(name = "total_price", nullable = false)
+    private Double totalPrice;
 
-    public int getCustomerId() {
-        return customerId;
-    }
+    @Column(name = "status", length = 50, nullable = false)
+    private String status; // e.g., DRAFT, PENDING, CONFIRMED, COMPLETED
 
-    public void setCustomerId(int customerId) {
-        this.customerId = customerId;
-    }
+    @Column(name = "notes", columnDefinition = "TEXT")
+    private String notes;
 
-    public Date getOrderTime() {
-        return orderTime;
-    }
+    @Column(name = "customer_name", length = 100, nullable = false)
+    private String customerName;
 
-    public void setOrderTime(Date orderTime) {
-        this.orderTime = orderTime;
-    }
+    @Column(name = "customer_phone", length = 20, nullable = false)
+    private String customerPhone;
 
-    public String getDeliveryAddress() {
-        return deliveryAddress;
-    }
+    @Column(name = "payment_method", length = 50)
+    private String paymentMethod;
 
-    public void setDeliveryAddress(String deliveryAddress) {
-        this.deliveryAddress = deliveryAddress;
-    }
+    @Column(name = "payment_status", length = 50, nullable = false)
+    private String paymentStatus; // e.g., UNPAID, PAID, REFUNDED
 
-    public String getStatus() {
-        return status;
-    }
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User user;
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<OrderItem> orderItems = new HashSet<>();
 
-    public String getPaymentStatus() {
-        return paymentStatus;
-    }
-
-    public void setPaymentStatus(String paymentStatus) {
-        this.paymentStatus = paymentStatus;
-    }
-
-    public int getShipperId() {
-        return shipperId;
-    }
-
-    public void setShipperId(int shipperId) {
-        this.shipperId = shipperId;
-    }
-
-    public int getTableId() {
-        return tableId;
-    }
-
-    public void setTableId(int tableId) {
-        this.tableId = tableId;
-    }
-
-    public BigDecimal getTotalAmount() {
-        return totalAmount;
-    }
-
-    public void setTotalAmount(BigDecimal totalAmount) {
-        this.totalAmount = totalAmount;
+    @PrePersist
+    protected void onCreate() {
+        if (orderDate == null) {
+            orderDate = LocalDateTime.now();
+        }
+        if (status == null) {
+            status = "DRAFT";
+        }
+        if (totalPrice == null) {
+            totalPrice = 0.0;
+        }
+        if (paymentStatus == null) {
+            paymentStatus = "UNPAID";
+        }
     }
 }
