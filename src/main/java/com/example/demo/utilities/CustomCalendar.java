@@ -5,11 +5,11 @@ import java.util.Calendar;
 
 public class CustomCalendar {
 
-    LocalDate today = LocalDate.now();
-    int year = today.getYear();
-    int month = today.getMonthValue(); // 1 = Jan, 12 = Dec
+    static LocalDate today = LocalDate.now();
+    static int year = today.getYear();
+    static int month = today.getMonthValue(); // 1 = Jan, 12 = Dec
 
-    public String[][][] getMonthlyCalendar() {
+    public static String[][][] getMonthlyCalendar() {
         String[][][] calendarOutput = new String[3][5][7];
 
         Calendar calendar = Calendar.getInstance();
