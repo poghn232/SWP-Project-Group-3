@@ -24,8 +24,11 @@
             }
             .time {
                 display: flex;
+                flex-direction: column;
                 justify-content: center;
-                align-items: center;
+            }
+            .time h3 {
+                padding-bottom: 4px;
             }
             .dropdown {
                 display: flex;
@@ -37,7 +40,6 @@
                 height: 500px;
             }
             .contain-header h2{
-                text-align: center;
                 font-size: 30px;
             }
             .day-night-container {
@@ -79,8 +81,8 @@
                 display: none;
                 background: white;
                 position: absolute;
-                width: 300px;
-                height: 200px;
+                width: 1000px;
+                height: 300px;
                 border: 1px solid black;
                 top: 50px;
                 bottom: 0;
@@ -90,6 +92,32 @@
             .show {
                 display: block;
             }
+            .calendar-content {
+                display: flex;
+                justify-content: center;
+            }
+            .month-display {
+                margin: auto;
+                padding: auto;
+            }
+             .month-display table {
+                border: 2px solid black;
+                min-width: 210px;
+            }
+            .calendar-content table td {
+                text-align: center;
+            }
+            .table button {
+                  background: #FE980F;
+                  border: medium none;
+                  border-radius: 0;
+                  color: #FFFFFF;
+                  font-family: 'Roboto', sans-serif;
+                  align-items: center;
+            }
+            .table button:hover {
+                transform: scale(1.4);
+            }
         </style>
     </th:block>
 </head>
@@ -98,40 +126,57 @@
     <div class="order-table-container">
         <div class="container">
             <div class="contain-header">
-                <h2>Table Order</h2>
+                <center><h2>Table Order</h2></center>
+                <h5 style="text-decoration: italic;">- You must order at least one week from now and three months back, we have to prepare for your party :)</h5>
             </div>
             <div class="contain-body">
                 <div class="time-container row">
-                    <div class="time"><h4>4/7/2025</h4></div>
+                    <div class="time"><h3>4/7/2025</h3></div>
                     <div class="dropdown" style="margin-left: 415px; margin-right: 20px">
                         <div id="dropdown-btn">
                             <span style="cursor: pointer; user-select: none;"><i class="fa fa-calendar"></i> Choose day <i
-                                id="arrow" class="fa fa-angle-down"></i></span>
+                                    id="arrow" class="fa fa-angle-down"></i></span>
                         </div>
                         <div id="calendar" class="calendar">
-                            <center>This is a calendar</center>
-                            <table>
-                                <tr>
-                                    <th>Su</th>
-                                </tr>
-                                <tr></tr>
-                                <tr></tr>
-                                <tr></tr>
-                                <tr></tr>
-                                <tr></tr>
-                            </table>
+                            <div class="calendar-content">
+                                <div class="month-display" th:each="month, iterStat : ${calendar}">
+                                    <span th:text="${months[iterStat.index]}"></span>
+                                    <table class="table">
+                                        <tr>
+                                            <th>Sun</th>
+                                            <th>Mon</th>
+                                            <th>Tue</th>
+                                            <th>Wed</th>
+                                            <th>Thu</th>
+                                            <th>Fri</th>
+                                            <th>Sat</th>
+                                        </tr>
+                                        <tr th:each="week : ${month}">
+                                            <td th:each="day : ${week}">
+                                                <a href="" th:if="${!#strings.isEmpty(day)}">
+                                                    <button>
+                                                        <span th:text="${day}"></span>
+                                                    </button>
+                                                </a>
+                                            </td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <div class="table-container row">
                     <div class="day-night-container col-sm-1" style="margin-bottom: 12px;">
                         <div class="day">
-                            Day
-                            (11.00AM–2.00PM)
+                            <h5>Day
+                                (11.00AM–2.00PM)</h5>
                         </div>
                         <div class="night">
-                            Night
-                            (4.00PM-7.00PM)
+                            <h5>
+                                Night
+                                (4.00PM-7.00PM)
+                            </h5>
                         </div>
                     </div>
                     <div class="choose-table-container col-sm-11">

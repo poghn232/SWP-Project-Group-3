@@ -29,7 +29,7 @@
             }
             .content-footer {
                 display: flex;
-                justify-content: space-around;
+                justify-content: space-between;
             }
             .content-footer button {
                   background: #FE980F;
@@ -45,6 +45,7 @@
                 padding: 10px;
                 width: fit-content;
                 border: 3px solid #ffa500;
+                margin-bottom: 10px;
             }
         </style>
     </th:block>
@@ -85,9 +86,9 @@
                     </div>
                 </div>
             </div>
-            <div class="content-footer">
+            <div class="content-footer" th:object="${party}">
                 <a href="/"><button><i class="fa fa-arrow-left"></i> Back</button></a>
-                <a href="/getTables"><button><i class="fa fa-arrow-right"></i> Accept & Continue</button></a>
+                <a th:href="@{/getTables?partyId={partyId}(partyId=${party.partyId})}"><button><i class="fa fa-arrow-right"></i> Accept & Continue</button></a>
             </div>
         </div>
     </div>

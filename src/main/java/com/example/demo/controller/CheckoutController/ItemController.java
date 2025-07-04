@@ -26,7 +26,8 @@ public class ItemController {
     }
 
     @PostMapping("/getItems")
-    public String createOrder(){
-        return "";
+    public String createOrder(@RequestParam Integer partyId){
+
+        return "redirect:/getItems?partyId=" + partyId;
     }
 }

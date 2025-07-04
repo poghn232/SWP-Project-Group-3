@@ -23,6 +23,9 @@ public class Order {
     @Column(name = "order_id")
     private Integer orderId;
 
+    @Column(name = "party_order_id")
+    private Integer partyId;
+
     @Column(name = "order_date", nullable = false, updatable = false)
     private LocalDateTime orderDate;
 

@@ -1,15 +1,19 @@
-package com.example.demo.utilities;
+package com.example.demo.service;
+
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.Calendar;
 
-public class CustomCalendar {
+@Service
+public class CalendarService {
 
-    static LocalDate today = LocalDate.now();
-    static int year = today.getYear();
-    static int month = today.getMonthValue(); // 1 = Jan, 12 = Dec
+    LocalDate today = LocalDate.now();
+    int year = today.getYear();
+    int month = today.getMonthValue(); // 1 = Jan, 12 = Dec
 
-    public static String[][][] getMonthlyCalendar() {
+    public String[][][] getMonthlyCalendar() {
         String[][][] calendarOutput = new String[3][5][7];
 
         Calendar calendar = Calendar.getInstance();
@@ -23,7 +27,7 @@ public class CustomCalendar {
             int week = 0;
             //create space before the first day start
             for (int day = 1; day < firstDayOfWeek; day++) {
-                calendarOutput[monthCount][week][day-1] = "";
+                calendarOutput[monthCount][week][day - 1] = "";
             }
 
             int dayPosition = firstDayOfWeek - 1;
@@ -34,11 +38,19 @@ public class CustomCalendar {
                 dayPosition++;
                 if ((day + firstDayOfWeek - 1) % 7 == 0) {
                     week++;
-                    dayPosition=0;
+                    dayPosition = 0;
                 }
             }
         }
 
         return calendarOutput;
+    }
+
+    public String[] getMonths() {
+        String[] months = new String[3];
+        for (int i = 0; i < 3; i++) {
+            months[i] = Month.of(month + i).name();
+        }
+        return months;
     }
 }

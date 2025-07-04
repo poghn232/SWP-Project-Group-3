@@ -297,7 +297,7 @@
                                             <a sec:authorize="!isAuthenticated()" href="/login?loginToOrder=false">
                                                 <button type="button">Order now!</button>
                                             </a>
-                                            <a sec:authorize="isAuthenticated()" href="/getItems">
+                                            <a sec:authorize="isAuthenticated()" th:href="@{/getItems?partyId={partyId}(partyId=${party.partyId})}">
                                                 <button type="button">Order now!</button>
                                             </a>
                                             <button type="button" data-toggle="modal"
