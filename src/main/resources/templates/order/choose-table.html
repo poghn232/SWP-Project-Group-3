@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/end_user_layout :: layout(~{::title},
+       ~{::#extra_head_content}, ~{::#content}, ~{::#extra_scripts})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <th:block id="extra_head_content">
+        <style>
+            body {
+                font-family: 'Roboto', sans-serif;
+                font-weight: 400px;
+            }
+            .time-container {
+                border-top: 5px solid #ffa500;
+                border-right: 5px solid #ffa500;
+                border-left: 5px solid #ffa500;
+                height: 50px;
+                display: flex;
+                justify-content: flex-end;;
+            }
+            .time-container p {
+                font-size: 20px;
+            }
+            .time {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            .dropdown {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+            .table-container {
+                border: 5px solid #ffa500;
+                height: 500px;
+            }
+            .contain-header h2{
+                text-align: center;
+                font-size: 30px;
+            }
+            .day-night-container {
+                border-right: 3px solid #ffa500;
+                height: 490px;
+                display: flex;
+                flex-direction: column;
+            }
+            .button-container {
+                margin: 20px;
+                display: flex;
+                justify-content: space-between;
+            }
+            .button-container button {
+              background: #FE980F;
+              border: medium none;
+              border-radius: 0;
+              color: #FFFFFF;
+              display: block;
+              font-family: 'Roboto', sans-serif;
+              padding: 6px 25px;
+              align-items: center;
+            }
+            .day {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 250px;
+                border-bottom: 1px solid #ffa500;
+            }
+            .night {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                height: 250px;
+                border-top: 1px solid #ffa500;
+            }
+            .calendar {
+                display: none;
+                background: white;
+                position: absolute;
+                width: 300px;
+                height: 200px;
+                border: 1px solid black;
+                top: 50px;
+                bottom: 0;
+                right: -20px;
+                z-index: 2;
+            }
+            .show {
+                display: block;
+            }
+        </style>
+    </th:block>
+</head>
+<body>
+<th:block id="content">
+    <div class="order-table-container">
+        <div class="container">
+            <div class="contain-header">
+                <h2>Table Order</h2>
+            </div>
+            <div class="contain-body">
+                <div class="time-container row">
+                    <div class="time"><h4>4/7/2025</h4></div>
+                    <div class="dropdown" style="margin-left: 415px; margin-right: 20px">
+                        <div id="dropdown-btn">
+                            <span style="cursor: pointer; user-select: none;"><i class="fa fa-calendar"></i> Choose day <i
+                                id="arrow" class="fa fa-angle-down"></i></span>
+                        </div>
+                        <div id="calendar" class="calendar">
+                            <center>This is a calendar</center>
+                            <table>
+                                <tr>
+                                    <th>Su</th>
+                                </tr>
+                                <tr></tr>
+                                <tr></tr>
+                                <tr></tr>
+                                <tr></tr>
+                                <tr></tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div class="table-container row">
+                    <div class="day-night-container col-sm-1" style="margin-bottom: 12px;">
+                        <div class="day">
+                            Day
+                            (11.00AM–2.00PM)
+                        </div>
+                        <div class="night">
+                            Night
+                            (4.00PM-7.00PM)
+                        </div>
+                    </div>
+                    <div class="choose-table-container col-sm-11">
+                        <div class="table-content">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="contain-footer">
+                <div class="button-container">
+                    <button><i class="fa fa-arrow-left"></i> Back</button>
+                    <button><i class="fa fa-arrow-right"></i> Accept & Continue</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+<th:block id="extra_scripts">
+    <script>
+        window.onload = function () {
+            document.getElementById("dropdown-btn").onclick = function () {
+                showCalendar();
+            };
+        };
+
+    function showCalendar() {
+    const calendar = document.getElementById("calendar");
+    const arrow = document.getElementById("arrow");
+        calendar.classList.toggle("show");
+        if (calendar.classList.contains("show")) {
+            arrow.classList.remove("fa-angle-down");
+            arrow.classList.add("fa-angle-up");
+        } else {
+            arrow.classList.remove("fa-angle-up");
+            arrow.classList.add("fa-angle-down");
+        }
+    }
+    </script>
+</th:block>
+</body>
+</html>
