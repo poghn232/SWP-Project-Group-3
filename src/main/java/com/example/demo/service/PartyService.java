@@ -19,7 +19,7 @@ public class PartyService {
     }
 
     public Party findById(Integer partyId) {
-        return partyRepository.findAll().get(0);
+        return partyRepository.findByPartyId(partyId);
     }
 
     public Integer totalPrice(Party party) {

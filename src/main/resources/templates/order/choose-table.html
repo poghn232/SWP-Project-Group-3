@@ -153,8 +153,13 @@
                                         </tr>
                                         <tr th:each="week : ${month}">
                                             <td th:each="day : ${week}">
-                                                <a href="" th:if="${!#strings.isEmpty(day)}">
+                                                <a href="" th:if="${!#strings.isEmpty(day) && (day != 'X')}">
                                                     <button>
+                                                        <span th:text="${day}"></span>
+                                                    </button>
+                                                </a>
+                                                <a href="" th:if="${day == 'X'}">
+                                                    <button disabled style="background: grey;">
                                                         <span th:text="${day}"></span>
                                                     </button>
                                                 </a>

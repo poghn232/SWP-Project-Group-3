@@ -16,17 +16,23 @@ public class ItemController {
     @Autowired
     private PartyService partyService;
 
+    private final String renderGetItemPage = "order/confirm-item";
+
     @GetMapping("/getItems")
     public String showConfirmItemPage(Model model,
                                       @RequestParam Integer partyId) {
         Party partyChosen = partyService.findById(partyId);
         model.addAttribute("party", partyChosen);
         model.addAttribute("totalPrice", partyService.totalPrice(partyChosen));
-        return "order/confirm-item";
+        return renderGetItemPage;
     }
 
     @PostMapping("/getItems")
     public String createOrder(@RequestParam Integer partyId){
+
+        if (partyId == null) {
+            return "redirect:/";
+        }
 
         return "redirect:/getItems?partyId=" + partyId;
     }
