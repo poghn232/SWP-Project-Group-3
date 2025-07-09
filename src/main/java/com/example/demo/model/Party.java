@@ -13,8 +13,7 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
-@Table(name = "parties")
+@Entity(name = "parties")
 public class Party {
 
     @Id

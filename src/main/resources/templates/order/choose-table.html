@@ -64,18 +64,37 @@
               align-items: center;
             }
             .day {
+                background: none;
+                border: none;
                 display: flex;
                 justify-content: center;
                 align-items: center;
+                text-align: center;
                 height: 250px;
                 border-bottom: 1px solid #ffa500;
+                transition: background ease-out 0.3s;
+                cursor: pointer;
+            }
+            .day:hover {
+                background: #FE980F;
             }
             .night {
+                background: none;
+                border: none;
                 display: flex;
                 justify-content: center;
                 align-items: center;
-                height: 250px;
+                text-align: center;
+                height: 240px;
                 border-top: 1px solid #ffa500;
+                transition: background ease-out 0.3s;
+                cursor: pointer;
+            }
+            .night:hover {
+                background: #FE980F;
+            }
+            .selected {
+                background: #FE980F;
             }
             .calendar {
                 display: none;
@@ -114,9 +133,34 @@
                   color: #FFFFFF;
                   font-family: 'Roboto', sans-serif;
                   align-items: center;
+                  transition: transform ease-out 0.3s;
             }
             .table button:hover {
                 transform: scale(1.4);
+            }
+            .hidden-checkbox {
+                display: none;
+            }
+            .table-option {
+                border: 1px solid black;
+                border-radius: 25px;
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                text-align: center;
+                transition: transform ease-out 0.3s;
+            }
+            .hidden-checkbox:checked + .table-option {
+                background-color: #FE980F; /* Nền cam khi được chọn */
+                border-color: #FE980F;
+                color: black;
+                box-shadow: 0 0 8px rgba(254, 152, 15, 0.5);
+                opacity: 0.7;
+            }
+            .table-option:hover {
+                box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+                transform: translateY(-2px);
             }
         </style>
     </th:block>
@@ -127,69 +171,101 @@
         <div class="container">
             <div class="contain-header">
                 <center><h2>Table Order</h2></center>
-                <h5 style="text-decoration: italic;">- You must order at least one week from now and three months back, we have to prepare for your party :)</h5>
+                <h5 style="text-decoration: italic;">- You must order at least one week from now and three months back,
+                    we have to prepare for your party :)</h5>
             </div>
-            <div class="contain-body">
-                <div class="time-container row">
-                    <div class="time"><h3>4/7/2025</h3></div>
-                    <div class="dropdown" style="margin-left: 415px; margin-right: 20px">
-                        <div id="dropdown-btn">
+            <div class="contain-body" th:object="${chosenDay}">
+                <form action="/getTables" th:object="${tables}" method="post">
+                    <div class="time-container row">
+                        <div class="time"><h3><span th:text="${chosenDay.get(0).orderDate}"></span></h3></div>
+                        <div class="dropdown" style="margin-left: 415px; margin-right: 20px">
+                            <div id="dropdown-btn">
                             <span style="cursor: pointer; user-select: none;"><i class="fa fa-calendar"></i> Choose day <i
                                     id="arrow" class="fa fa-angle-down"></i></span>
-                        </div>
-                        <div id="calendar" class="calendar">
-                            <div class="calendar-content">
-                                <div class="month-display" th:each="month, iterStat : ${calendar}">
-                                    <span th:text="${months[iterStat.index]}"></span>
-                                    <table class="table">
-                                        <tr>
-                                            <th>Sun</th>
-                                            <th>Mon</th>
-                                            <th>Tue</th>
-                                            <th>Wed</th>
-                                            <th>Thu</th>
-                                            <th>Fri</th>
-                                            <th>Sat</th>
-                                        </tr>
-                                        <tr th:each="week : ${month}">
-                                            <td th:each="day : ${week}">
-                                                <a href="" th:if="${!#strings.isEmpty(day) && (day != 'X')}">
-                                                    <button>
-                                                        <span th:text="${day}"></span>
-                                                    </button>
-                                                </a>
-                                                <a href="" th:if="${day == 'X'}">
-                                                    <button disabled style="background: grey;">
-                                                        <span th:text="${day}"></span>
-                                                    </button>
-                                                </a>
-                                            </td>
-                                        </tr>
-                                    </table>
+                            </div>
+                            <div id="calendar" class="calendar">
+                                <div class="calendar-content">
+                                    <div class="month-display" th:each="month, iterStat : ${calendar}">
+                                        <span th:text="${months[iterStat.index]}"></span>
+                                        <table class="table">
+                                            <tr>
+                                                <th>Sun</th>
+                                                <th>Mon</th>
+                                                <th>Tue</th>
+                                                <th>Wed</th>
+                                                <th>Thu</th>
+                                                <th>Fri</th>
+                                                <th>Sat</th>
+                                            </tr>
+                                            <tr th:each="week : ${month}">
+                                                <td th:each="day : ${week}">
+                                                    <form action="" method="get"
+                                                          th:if="${!#strings.isEmpty(day) && (day != 'X')}">
+                                                        <button type="submit">
+                                                            <span th:text="${day}"></span>
+                                                        </button>
+                                                    </form>
+                                                    <a href="" th:if="${day == 'X'}">
+                                                        <button disabled style="background: grey;">
+                                                            <span th:text="${day}"></span>
+                                                        </button>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <div class="table-container row">
-                    <div class="day-night-container col-sm-1" style="margin-bottom: 12px;">
-                        <div class="day">
-                            <h5>Day
-                                (11.00AM–2.00PM)</h5>
+                    <div class="table-container row">
+                        <div class="day-night-container col-sm-1" style="margin-bottom: 12px; padding: 0;">
+                            <form action="" method="get">
+                                <button type="submit" class="day selected">
+                                    <b>
+                                        Day
+                                        (11.00AM–2.00PM)
+                                    </b>
+                                </button>
+                            </form>
+                            <form action="" method="get">
+                                <form action="" method="get">
+                                    <button type="submit" class="night">
+                                        <b>
+                                            Night
+                                            (5.00PM-8.00PM)
+                                        </b>
+                                    </button>
+                                </form>
+                            </form>
                         </div>
-                        <div class="night">
-                            <h5>
-                                Night
-                                (4.00PM-7.00PM)
-                            </h5>
-                        </div>
-                    </div>
-                    <div class="choose-table-container col-sm-11">
-                        <div class="table-content">
+                        <div class="choose-table-container col-sm-11">
+                            <div class="table-content">
+                                <!--                                Display tables-->
+                                <div class="day-tables row">
+                                    <div th:each="table : ${chosenDay}" th:if="table.slot == 'DAY'" class="col-sm-2">
+                                        <input type="checkbox"
+                                               th:id="'table_' + ${table.tableNumber}"
+                                               th:name="selectedTables"
+                                               th:value="${table.tableNumber}"
+                                               class="hidden-checkbox"/>
+<!--                                        col-sm-2 for 36 table displaying-->
+                                        <label th:for="'table_' + ${table.tableNumber}" class="table-option">
+                                            <span th:text="${'Table ' + table.tableNumber}"></span>
+                                            <span class="table-status"
+                                                  th:if="${table.status == T(com.example.demo.model.TableStatus).AVAILABLE}">AVAILABLE</span>
+                                            <span class="table-status occupied"
+                                                  th:if="${table.status == T(com.example.demo.model.TableStatus).OCCUPIED}">OCCUPIED</span>
+                                        </label>
+                                    </div>
+                                </div>
+                                <div class="night-tables row">
 
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
+                </form>
             </div>
             <div class="contain-footer">
                 <div class="button-container">

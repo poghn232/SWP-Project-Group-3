@@ -10,18 +10,25 @@ import java.util.Calendar;
 @Service
 public class CalendarService {
 
-    LocalDate today = LocalDate.now();
-    int year = today.getYear();
-    int month = today.getMonthValue(); // 1 = Jan, 12 = Dec
+    LocalDate now = LocalDate.now();
+    int today = now.getDayOfMonth();
+    int year = now.getYear();
+    int month = now.getMonthValue();
 
     public String[][][] getMonthlyCalendar() {
+
         String[][][] calendarOutput = new String[3][6][7];
 
         Calendar calendar = Calendar.getInstance();
 
+        //display 3 months from now
         for (int monthCount = 0; monthCount < 3; monthCount++) {
 
-            calendar.set(year, month + monthCount, 1);
+            if (month + monthCount > 12) {
+                calendar.set(year + 1, month + monthCount - 12, 1);
+            } else {
+                calendar.set(year, month + monthCount, 1);
+            }
 
             LocalDate firstDayOfMonth = LocalDate.of(year, month + monthCount, 1);
             DayOfWeek firstDayOfFirstWeek = firstDayOfMonth.getDayOfWeek();
@@ -39,12 +46,18 @@ public class CalendarService {
             int dayPosition = firstDay;
 
             for (int day = 1; day < daysInMonth + 1; day++) {
-                if (monthCount == 0 && day < 8) {
+
+                //at least 1 week, need for preparation
+                if (monthCount == 0 && day < today + 8) {
                     calendarOutput[monthCount][week][dayPosition] = "X";
                 }
+
+                //get day value
                 else {
                     calendarOutput[monthCount][week][dayPosition] = String.valueOf(day);
                 }
+
+                //check if week passed
                 if ((day + firstDay) % 7 == 0) {
                     week++;
                     dayPosition = 0;

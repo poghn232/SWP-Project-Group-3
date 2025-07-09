@@ -9,22 +9,25 @@ import lombok.AllArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name = "orders")
+@Entity(name = "Orders")
 public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_id")
-    private Integer orderId;
+    private UUID orderId;
 
     @Column(name = "party_order_id")
     private Integer partyId;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    private Set<TableOrderDetails> tableOrderDetails;
 
     @Column(name = "order_date", nullable = false, updatable = false)
     private LocalDateTime orderDate;
