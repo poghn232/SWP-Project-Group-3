@@ -2,12 +2,14 @@ package com.example.demo.controller.CheckoutController;
 
 import com.example.demo.api.dto.party.TableDto;
 import com.example.demo.model.TableOrderDetails;
+import com.example.demo.model.TableSlot;
 import com.example.demo.model.User;
 import com.example.demo.service.CalendarService;
 import com.example.demo.service.OrderService;
 import com.example.demo.service.TableOrderDetailsService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -43,6 +45,12 @@ public class TableController {
     @GetMapping("/getDefaultTables")
     public String showTablePageByDefault(Model model, @AuthenticationPrincipal User user) {
 
+        List<TableOrderDetails> chosenDay = tableOrderDetailsService.getDefaultDay();
+        chosenDay.sort(Comparator.comparingInt(TableOrderDetails::getTableNumber));
+        model.addAttribute("chosenDay", chosenDay);
+        //default time chosen is day
+        model.addAttribute("timeChosen", "day");
+
         //catch user tries to enter page without choosing party
         if (orderService.findDraftOrderByUsername(user.getUsername()) == null) {
             return "redirect:/";
@@ -55,13 +63,6 @@ public class TableController {
         //delete old order details
         tableOrderDetailsService.deleteOrdersDetailBefore(LocalDate.now());
 
-        //default day to display
-        List<TableOrderDetails> chosenDay = tableOrderDetailsService.getDefaultDay();
-        chosenDay.sort(Comparator.comparingInt(TableOrderDetails::getTableNumber));
-
-        if (!model.containsAttribute("chosenDay")) {
-            model.addAttribute("chosenDay", chosenDay);
-        }
 
         //create empty orders, first time (can delete)
         tableOrderDetailsService.manageOrders();
@@ -69,28 +70,60 @@ public class TableController {
         return renderChooseTablePage;
     }
 
+    //case: user want to change order date
     @GetMapping("/getTables")
     public String showTablePage(Model model,
-                                @RequestParam(name = "day") String dayChosen,
-                                @RequestParam(name = "month") String monthChosen) {
+                                @RequestParam(name = "day", required = false) String dayChosen,
+                                @RequestParam(name = "month", required = false) String monthChosen,
+                                @RequestParam(name = "time", required = false) String timeChosen) {
 
-        //insert order of the user's chosen date to model and display
+        //case: user tries to modify url
+        if (timeChosen == null || dayChosen == null || monthChosen == null) {
+            return "redirect:/getDefaultTables";
+        }
+        if (timeChosen.isEmpty()|| dayChosen.isEmpty() || monthChosen.isEmpty()) {
+            return "redirect:/getDefaultTables";
+        }
         LocalDate chosenDate = calendarService.getCustomizedDate(dayChosen, monthChosen);
         List<TableOrderDetails> chosenDay = tableOrderDetailsService.findAllOrderDetailsByDate(chosenDate);
+        chosenDay.sort(Comparator.comparingInt(TableOrderDetails::getTableNumber));
+        model.addAttribute("calendar", calendarService.getMonthlyCalendar());
+        model.addAttribute("months", calendarService.getMonths());
         model.addAttribute("chosenDay", chosenDay);
+        model.addAttribute("timeChosen", timeChosen);
+        return renderChooseTablePage;
+    }
+
+    //case: user want to change slot date
+    @GetMapping("/getTableSlot")
+    public String showTableSlot(Model model,
+                                @RequestParam(name = "time", required = false) String timeChosen,
+                                @RequestParam(name = "date", required = false) LocalDate dateOfSlot) {
+        if (timeChosen == null || dateOfSlot == null) {
+            return "redirect:/getDefaultTables";
+        }
+        if (timeChosen.isEmpty()) {
+            return "redirect:/getDefaultTables";
+        }
+        List<TableOrderDetails> chosenDay = tableOrderDetailsService.findAllOrderDetailsByDate(dateOfSlot);
+        chosenDay.sort(Comparator.comparingInt(TableOrderDetails::getTableNumber));
+        model.addAttribute("calendar", calendarService.getMonthlyCalendar());
+        model.addAttribute("months", calendarService.getMonths());
+        model.addAttribute("chosenDay", chosenDay);
+        model.addAttribute("timeChosen", timeChosen);
         return renderChooseTablePage;
     }
 
     @PostMapping("/getTables")
-    public String getTables(@ModelAttribute("tables") @Valid TableDto tableDto,
-                            BindingResult bindingResult,
+    public String getTables(@RequestParam(name = "selectedTables", required = false) List<Integer> selectedTables,
+                            @RequestParam(name = "selectedDate", required = false) LocalDate selectedDate,
+                            @RequestParam(name = "selectedTime", required = false) String selectedTime,
+                            @AuthenticationPrincipal User user,
                             RedirectAttributes redirectAttributes) {
-        // if Dto has any error (usually no), render table page again
-        if (bindingResult.hasErrors()) {
-            return renderChooseTablePage;
-        }
 
-        return "";
+        orderService.addTablesToOrder(selectedTables, selectedDate, selectedTime, user);
+
+        return "redirect:/checkout";
 
     }
 }

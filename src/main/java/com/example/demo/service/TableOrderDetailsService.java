@@ -3,9 +3,12 @@ package com.example.demo.service;
 import com.example.demo.model.TableOrderDetails;
 import com.example.demo.model.TableSlot;
 import com.example.demo.model.TableStatus;
+import com.example.demo.model.User;
 import com.example.demo.repository.TableOrderDetailsRepository;
 import jakarta.persistence.EntityManager;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -126,7 +129,7 @@ public class TableOrderDetailsService {
     //---------------------------------------->
 
     public List<TableOrderDetails> getDefaultDay() {
-        return tableOrderDetailsRepository.findAllByOrderDate(LocalDate.now());
+        return tableOrderDetailsRepository.findAllByOrderDate(LocalDate.now().plusDays(8));
     }
 
     public List<TableOrderDetails> findAllOrderDetailsByDate(LocalDate date) {
@@ -137,5 +140,14 @@ public class TableOrderDetailsService {
     @Transactional
     public void deleteOrdersDetailBefore(LocalDate date) {
         tableOrderDetailsRepository.deleteOrdersBefore(date);
+    }
+
+    public List<TableOrderDetails> addTableOrders(List<Integer> selectedTables, LocalDate selectedDate, String selectedTime) {
+        List<TableOrderDetails> orderFiltered = tableOrderDetailsRepository.findAllByOrderDate(selectedDate);
+        orderFiltered = tableOrderDetailsRepository.findAllBySlot(TableSlot.valueOf(selectedTime.toUpperCase()));
+        List<TableOrderDetails> result = new ArrayList<>();
+
+        //TODO: filter order by table number
+        return result;
     }
 }

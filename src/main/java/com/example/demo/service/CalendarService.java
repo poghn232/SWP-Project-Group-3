@@ -89,7 +89,12 @@ public class CalendarService {
         String[] monthFromMyCalendar = getMonths();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM", Locale.ENGLISH);
         for (int i = 0; i < 3; i++) {
-            Month newMonth = Month.from(formatter.parse(monthFromMyCalendar[i]));
+
+            String currentMonthName = monthFromMyCalendar[i];
+            //ex: change JULY -> July for the DateTimeFormatter month format
+            currentMonthName = currentMonthName.substring(0, 1).toUpperCase() + currentMonthName.substring(1).toLowerCase();
+
+            Month newMonth = Month.from(formatter.parse(currentMonthName));
             monthValues[i] = newMonth.getValue();;
         }
         //check if 3 months displayed get to next year

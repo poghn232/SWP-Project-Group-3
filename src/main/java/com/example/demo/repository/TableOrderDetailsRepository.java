@@ -1,6 +1,7 @@
 package com.example.demo.repository;
 
 import com.example.demo.model.TableOrderDetails;
+import com.example.demo.model.TableSlot;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -16,6 +17,10 @@ public interface TableOrderDetailsRepository extends JpaRepository<TableOrderDet
     List<TableOrderDetails> findAllByOrderDateBetween(LocalDate startDate, LocalDate endDate);
 
     List<TableOrderDetails> findAllByOrderDate(LocalDate date);
+
+    List<TableOrderDetails> findAllBySlot(TableSlot slot);
+
+    TableOrderDetails findByTableNumber(Integer tableNumber);
 
     @Modifying
     @Transactional
