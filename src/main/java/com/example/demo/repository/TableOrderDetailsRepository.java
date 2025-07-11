@@ -1,7 +1,11 @@
 package com.example.demo.repository;
 
 import com.example.demo.model.TableOrderDetails;
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -12,4 +16,9 @@ public interface TableOrderDetailsRepository extends JpaRepository<TableOrderDet
     List<TableOrderDetails> findAllByOrderDateBetween(LocalDate startDate, LocalDate endDate);
 
     List<TableOrderDetails> findAllByOrderDate(LocalDate date);
+
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM TableOrderDetails tod WHERE tod.orderDate < :cutoffDate")
+    int deleteOrdersBefore(@Param("cutoffDate") LocalDate cutoffDate);
 }

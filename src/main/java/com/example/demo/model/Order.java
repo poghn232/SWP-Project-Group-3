@@ -17,9 +17,7 @@ import java.util.UUID;
 @AllArgsConstructor
 @Entity(name = "Orders")
 public class Order {
-
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "order_id")
     private UUID orderId;
 
@@ -62,6 +60,9 @@ public class Order {
 
     @PrePersist
     protected void onCreate() {
+        if (this.orderId == null) {
+            this.orderId = UUID.randomUUID();
+        }
         if (orderDate == null) {
             orderDate = LocalDateTime.now();
         }

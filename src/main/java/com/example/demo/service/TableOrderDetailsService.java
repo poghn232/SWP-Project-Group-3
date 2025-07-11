@@ -21,11 +21,13 @@ public class TableOrderDetailsService {
     private final TableOrderDetailsRepository tableOrderDetailsRepository;
     private final EntityManager entityManager;
 
+    //constructor
     public TableOrderDetailsService (TableOrderDetailsRepository tableOrderDetailsRepository, EntityManager entityManager, CalendarService calendarService) {
         this.tableOrderDetailsRepository = tableOrderDetailsRepository;
         this.entityManager = entityManager;
     }
 
+    //create new orders first time
     @Transactional
     public void manageOrders() {
         LocalDate firstOrderDay = getFirstDayOfMonth(LocalDate.now().getYear(), LocalDate.now().getMonthValue());
@@ -40,6 +42,7 @@ public class TableOrderDetailsService {
 
     //auto-run, 0sec 0min 2hours 1st everymonth everydayofweek
     //delete the orders last month and create new month orders
+    //used for creating new month orders <---
     @Scheduled(cron = "0 0 2 1 * ?")
     @Transactional
     public void monthlyOrderMaintenance() {
@@ -99,7 +102,6 @@ public class TableOrderDetailsService {
             entityManager.clear();
         }
     }
-
     private List<TableOrderDetails> findAllByMonth(int year, int month) {
 
         // Lấy ngày đầu tiên của tháng
@@ -121,8 +123,19 @@ public class TableOrderDetailsService {
         YearMonth yearMonth = YearMonth.of(year, month);
         return yearMonth.atEndOfMonth();
     }
+    //---------------------------------------->
 
     public List<TableOrderDetails> getDefaultDay() {
         return tableOrderDetailsRepository.findAllByOrderDate(LocalDate.now());
+    }
+
+    public List<TableOrderDetails> findAllOrderDetailsByDate(LocalDate date) {
+        return tableOrderDetailsRepository.findAllByOrderDate(date);
+    }
+
+    //delete old order details, before 1 week from now
+    @Transactional
+    public void deleteOrdersDetailBefore(LocalDate date) {
+        tableOrderDetailsRepository.deleteOrdersBefore(date);
     }
 }

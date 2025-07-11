@@ -5,7 +5,9 @@ import org.springframework.stereotype.Service;
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.Month;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
+import java.util.Locale;
 
 @Service
 public class CalendarService {
@@ -77,5 +79,39 @@ public class CalendarService {
             months[i] = Month.of(month + i).name();
         }
         return months;
+    }
+
+    public LocalDate getCustomizedDate(String dayChosen, String monthChosen) {
+        boolean nextYear[] = {false, false, false};
+
+        //change 3 months from string to int value
+        Integer[] monthValues = new Integer[3];
+        String[] monthFromMyCalendar = getMonths();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM", Locale.ENGLISH);
+        for (int i = 0; i < 3; i++) {
+            Month newMonth = Month.from(formatter.parse(monthFromMyCalendar[i]));
+            monthValues[i] = newMonth.getValue();;
+        }
+        //check if 3 months displayed get to next year
+        for (int i = 0; i < 2; i++) {
+            if (monthValues[i] > monthValues[i+1]) {
+                nextYear[i+1] = true;
+            }
+        }
+        //check if mid month displayed next year, if so change boolean nextYear to true for the rest
+        if (nextYear[1]) {
+            nextYear[2] = true;
+        }
+        LocalDate chosenDate = LocalDate.now();
+        for (int i = 0; i < 3; i++) {
+            if (monthFromMyCalendar[i].equals(monthChosen)) {
+                if (nextYear[i]) {
+                    chosenDate = LocalDate.of(LocalDate.now().getYear() + 1, monthValues[i], Integer.parseInt(dayChosen));
+                } else {
+                    chosenDate = LocalDate.of(LocalDate.now().getYear(), monthValues[i], Integer.parseInt(dayChosen));
+                }
+            }
+        }
+        return chosenDate;
     }
 }

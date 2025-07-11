@@ -95,6 +95,7 @@
             }
             .selected {
                 background: #FE980F;
+                opacity: 0.7;
             }
             .calendar {
                 display: none;
@@ -141,6 +142,8 @@
             .hidden-checkbox {
                 display: none;
             }
+            .table-content {
+            }
             .table-option {
                 border: 1px solid black;
                 border-radius: 25px;
@@ -150,6 +153,11 @@
                 align-items: center;
                 text-align: center;
                 transition: transform ease-out 0.3s;
+                margin: 13px 0px;
+                width: 120px;
+                margin-top: 25px;
+                cursor: pointer;
+                user-select: none;
             }
             .hidden-checkbox:checked + .table-option {
                 background-color: #FE980F; /* Nền cam khi được chọn */
@@ -199,17 +207,17 @@
                                             </tr>
                                             <tr th:each="week : ${month}">
                                                 <td th:each="day : ${week}">
-                                                    <form action="" method="get"
+                                                    <form th:action="@{/getTables(day=${day}, month=${months[iterStat.index]}, time='day')}" method="get"
                                                           th:if="${!#strings.isEmpty(day) && (day != 'X')}">
                                                         <button type="submit">
                                                             <span th:text="${day}"></span>
                                                         </button>
                                                     </form>
-                                                    <a href="" th:if="${day == 'X'}">
+                                                    <div th:if="${day == 'X'}">
                                                         <button disabled style="background: grey;">
                                                             <span th:text="${day}"></span>
                                                         </button>
-                                                    </a>
+                                                    </div>
                                                 </td>
                                             </tr>
                                         </table>
@@ -219,8 +227,8 @@
                         </div>
                     </div>
                     <div class="table-container row">
-                        <div class="day-night-container col-sm-1" style="margin-bottom: 12px; padding: 0;">
-                            <form action="" method="get">
+                        <div class="day-night-container col-sm-1" style="margin-bottom: 12px; padding: 0;"  th:object="${chosenDay}">
+                            <form th:action="@{/getTables(date=${chosenDay.get(0).orderDate}, time='day')}" method="get">
                                 <button type="submit" class="day selected">
                                     <b>
                                         Day
@@ -228,35 +236,37 @@
                                     </b>
                                 </button>
                             </form>
-                            <form action="" method="get">
-                                <form action="" method="get">
-                                    <button type="submit" class="night">
-                                        <b>
-                                            Night
-                                            (5.00PM-8.00PM)
-                                        </b>
-                                    </button>
-                                </form>
+                            <form th:action="@{/getTables(date=${chosenDay.get(0).orderDate}, time='night')}" method="get">
+                                <button type="submit" class="night">
+                                    <b>
+                                        Night
+                                        (5.00PM-8.00PM)
+                                    </b>
+                                </button>
                             </form>
                         </div>
                         <div class="choose-table-container col-sm-11">
-                            <div class="table-content">
+                            <div class="table-content container" style="width: 1063px;">
                                 <!--                                Display tables-->
                                 <div class="day-tables row">
-                                    <div th:each="table : ${chosenDay}" th:if="table.slot == 'DAY'" class="col-sm-2">
-                                        <input type="checkbox"
-                                               th:id="'table_' + ${table.tableNumber}"
-                                               th:name="selectedTables"
-                                               th:value="${table.tableNumber}"
-                                               class="hidden-checkbox"/>
-<!--                                        col-sm-2 for 36 table displaying-->
-                                        <label th:for="'table_' + ${table.tableNumber}" class="table-option">
-                                            <span th:text="${'Table ' + table.tableNumber}"></span>
-                                            <span class="table-status"
-                                                  th:if="${table.status == T(com.example.demo.model.TableStatus).AVAILABLE}">AVAILABLE</span>
-                                            <span class="table-status occupied"
-                                                  th:if="${table.status == T(com.example.demo.model.TableStatus).OCCUPIED}">OCCUPIED</span>
-                                        </label>
+                                    <div th:each="table : ${chosenDay}">
+                                        <div th:if="${table.slot == T(com.example.demo.model.TableSlot).DAY}"
+                                             class="col-sm-2">
+                                            <input type="checkbox"
+                                                   th:id="'table_' + ${table.tableNumber}"
+                                                   th:name="selectedTables"
+                                                   th:value="${table.tableNumber}"
+                                                   class="hidden-checkbox"/>
+                                            <!--                                        col-sm-2 for 36 table displaying-->
+                                            <label th:for="'table_' + ${table.tableNumber}" class="table-option">
+                                                <span th:text="${'Table ' + table.tableNumber}"></span>
+                                                <span class="table-status"
+                                                      th:if="${table.tableStatus == T(com.example.demo.model.TableStatus).AVAILABLE}"
+                                                        style="color: green;">AVAILABLE</span>
+                                                <span class="table-status occupied"
+                                                      th:if="${table.tableStatus == T(com.example.demo.model.TableStatus).OCCUPIED}">OCCUPIED</span>
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="night-tables row">

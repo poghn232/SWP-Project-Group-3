@@ -31,7 +31,7 @@ public class Item {
     private String itemUnit;
 
     @Column(name = "price")
-    private Integer itemPrice;
+    private Double itemPrice;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "party_id", nullable = false)

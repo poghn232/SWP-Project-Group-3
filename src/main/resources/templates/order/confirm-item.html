@@ -69,49 +69,55 @@
 <th:block id="content">
     <div class="confirm-item-form">
         <div class="confirm-item-content">
-            <div class="content-header" th:object="${party}">
-                <h2> <span th:text="${party.partyType}"></span> Item Confirmation</h2>
-            </div>
-            <div class="content-body">
-                <center><img th:src="${party.imageUrl}" alt=""></center>
-                <h4>There's some information about our restaurant when you chose to order:</h4>
-                <p>— The maximum capacity of each table is eight persons.</p>
-                <p>— Champagne wine is the default beverage, but you can choose something else.</p>
-                <p>— Our restaurant serves 3 hours for every party/buffet. </p>
-                <p>— You can change the unit on customize order.</p>
-                <h4 style="margin-top: 20px; margin-bottom: 10px;">Food In Table:</h4>
-                <table class="table" th:object="${party}">
-                    <tr>
-                        <th>Name</th>
-                        <th>Description</th>
-                        <th>Unit</th>
-                        <th>Price per Unit</th>
-                        <th>Amount per Table</th>
-                    </tr>
-                    <tr th:each="item: ${party.items}">
-                        <td th:text="${item.itemName}"></td>
-                        <td th:text="${item.itemDescription}"></td>
-                        <td th:text="${item.itemUnit}"></td>
-                        <td th:text="${item.itemPrice}"></td>
-                        <td style="text-align: center;">1</td>
-                    </tr>
-                </table>
-
-                <div class="notes">
-                    <label for="note-input">Note:</label>
-                    <input id="note-input" type="text" placeholder="No spicy, etc...">
+            <form action="/getItems" method="post">
+                <div class="content-header" th:object="${party}">
+                    <h2><span th:text="${party.partyType}"></span> Item Confirmation</h2>
                 </div>
+                <div class="content-body">
+                    <center><img th:src="${party.imageUrl}" alt=""></center>
+                    <h4>There's some information about our restaurant when you chose to order:</h4>
+                    <p>— The maximum capacity of each table is eight persons.</p>
+                    <p>— Champagne wine is the default beverage, but you can choose something else.</p>
+                    <p>— Our restaurant serves 3 hours for every party/buffet. </p>
+                    <p>— You can change the unit on customize order.</p>
+                    <h4 style="margin-top: 20px; margin-bottom: 10px;">Food In Table:</h4>
+                    <table class="table" th:object="${party}">
+                        <tr>
+                            <th>Name</th>
+                            <th>Description</th>
+                            <th>Unit</th>
+                            <th>Price per Unit</th>
+                            <th>Amount per Table</th>
+                        </tr>
+                        <tr th:each="item: ${party.items}">
+                            <td th:text="${item.itemName}"></td>
+                            <td th:text="${item.itemDescription}"></td>
+                            <td th:text="${item.itemUnit}"></td>
+                            <td th:text="${item.itemPrice}"></td>
+                            <td style="text-align: center;">1</td>
+                        </tr>
+                    </table>
 
-                <div style="display: flex; justify-content: flex-end;">
-                    <div class="total-price">
-                        <b>Total price per table: </b><span th:text="${totalPrice}"></span>
+                    <div class="notes">
+                        <label for="note-input">Note:</label>
+                        <input name="orderNote" id="note-input" type="text" placeholder="No spicy, etc...">
+
+                        <input type="hidden" name="partyId" th:value="${partyId}" />
+                    </div>
+
+                    <div style="display: flex; justify-content: flex-end;">
+                        <div class="total-price">
+                            <b>Total price per table: </b><span th:text="${totalPrice}"></span>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="content-footer" th:object="${party}">
-                <a href="/"><button><i class="fa fa-arrow-left"></i> Back</button></a>
-                <a th:href="@{/getTables?partyId={partyId}(partyId=${party.partyId})}"><button><i class="fa fa-arrow-right"></i> Accept & Continue</button></a>
-            </div>
+                <div class="content-footer" th:object="${party}">
+                    <a href="/">
+                        <button><i class="fa fa-arrow-left"></i> Back</button>
+                    </a>
+                    <button type="submit"><i class="fa fa-arrow-right"></i> Accept & Continue</button>
+                </div>
+            </form>
         </div>
     </div>
 </th:block>
