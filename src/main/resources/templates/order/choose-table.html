@@ -151,7 +151,12 @@
                 justify-content: center;
                 align-items: center;
                 text-align: center;
-                transition: transform ease-out 0.3s;
+                transition: transform ease-out 1.5s;
+                transition: box-shadow 0.7s ease-out,
+                            background-color 0.3s ease-out,
+                            border-color 0.7s ease-out,
+                            color 0.7s ease-out,
+                            opacity 0.7s ease-out;
                 margin: 13px 0px;
                 width: 120px;
                 margin-top: 25px;
@@ -162,15 +167,17 @@
                 background-color: #FE980F; /* Nền cam khi được chọn */
                 border-color: #FE980F;
                 color: black;
-                box-shadow: 0 0 8px rgba(254, 152, 15, 0.5);
+                box-shadow: 0 5px 10px rgba(254, 152, 15, 0.5);
                 opacity: 0.7;
+            }
+            .hidden-checkbox-disabled {
+                display: none;
             }
             .table-option:hover {
                 box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
                 transform: translateY(-2px);
             }
             .occupied {
-                cursor: none;
                 user-select: none;
                 background: grey;
                 opacity: 0.7;
@@ -283,41 +290,60 @@
                                 <div th:each="table : ${chosenDay}">
                                     <div th:if="${table.slot == T(com.example.demo.model.TableSlot).DAY}"
                                          class="col-sm-2">
-                                        <input type="checkbox"
-                                               th:id="'table_' + ${table.tableNumber}"
-                                               th:name="selectedTables"
-                                               th:value="${table.tableNumber}"
-                                               class="hidden-checkbox"/>
-                                        <!--                                        col-sm-2 for 36 table displaying-->
-                                        <label th:for="'table_' + ${table.tableNumber}" class="table-option">
-                                            <span th:text="${'Table ' + table.tableNumber}"></span>
-                                            <span class="table-status"
-                                                  th:if="${table.tableStatus == T(com.example.demo.model.TableStatus).AVAILABLE}"
-                                                  style="color: green;">AVAILABLE</span>
-                                            <span class="table-status occupied"
-                                                  th:if="${table.tableStatus == T(com.example.demo.model.TableStatus).OCCUPIED}">OCCUPIED</span>
-                                        </label>
+
+<!--                                        available -->
+                                        <div th:if="${table.tableStatus == T(com.example.demo.model.TableStatus).AVAILABLE}">
+                                            <input type="checkbox"
+                                                   th:id="'table_' + ${table.tableNumber}"
+                                                   th:name="selectedTables"
+                                                   th:value="${table.tableNumber}"
+                                                   class="hidden-checkbox"/>
+                                            <label th:for="'table_' + ${table.tableNumber}" class="table-option">
+                                                <span th:text="${'Table ' + table.tableNumber}"></span>
+                                                <span class="table-status" style="color: green;">AVAILABLE</span>
+                                            </label>
+                                        </div>
+                                        <div th:if="${table.tableStatus == T(com.example.demo.model.TableStatus).OCCUPIED}">
+                                            <input type="checkbox"
+                                                   th:id="'table_' + ${table.tableNumber}"
+                                                   th:name="selectedTables"
+                                                   th:value="${table.tableNumber}"
+                                                   class="hidden-checkbox-disabled"/>
+                                            <label th:for="'table_' + ${table.tableNumber}" class="table-option occupied">
+                                                <span th:text="${'Table ' + table.tableNumber}"></span>
+                                                <span class="table-status" style="color: #FE980F;">OCCUPIED</span>
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                             <div class="night-tables row" th:if="${timeChosen == 'night'}">
                                 <div th:each="table : ${chosenDay}">
-                                    <div th:if="${table.slot == T(com.example.demo.model.TableSlot).NIGHT}"
+                                    <div th:if="${table.slot == T(com.example.demo.model.TableSlot).DAY}"
                                          class="col-sm-2">
-                                        <input type="checkbox"
-                                               th:id="'table_' + ${table.tableNumber}"
-                                               th:name="selectedTables"
-                                               th:value="${table.tableNumber}"
-                                               class="hidden-checkbox"/>
-                                        <!--                                        col-sm-2 for 36 table displaying-->
-                                        <label th:for="'table_' + ${table.tableNumber}" class="table-option">
-                                            <span th:text="${'Table ' + table.tableNumber}"></span>
-                                            <span class="table-status"
-                                                  th:if="${table.tableStatus == T(com.example.demo.model.TableStatus).AVAILABLE}"
-                                                  style="color: green;">AVAILABLE</span>
-                                            <span class="table-status occupied"
-                                                  th:if="${table.tableStatus == T(com.example.demo.model.TableStatus).OCCUPIED}">OCCUPIED</span>
-                                        </label>
+                                        <!--                                        available -->
+                                        <div th:if="${table.tableStatus == T(com.example.demo.model.TableStatus).AVAILABLE}">
+                                            <input type="checkbox"
+                                                   th:id="'table_' + ${table.tableNumber}"
+                                                   th:name="selectedTables"
+                                                   th:value="${table.tableNumber}"
+                                                   class="hidden-checkbox"/>
+                                            <label th:for="'table_' + ${table.tableNumber}" class="table-option">
+                                                <span th:text="${'Table ' + table.tableNumber}"></span>
+                                                <span class="table-status" style="color: green;">AVAILABLE</span>
+                                            </label>
+                                        </div>
+                                        <div th:if="${table.tableStatus == T(com.example.demo.model.TableStatus).OCCUPIED}">
+                                            <input type="checkbox"
+                                                   th:id="'table_' + ${table.tableNumber}"
+                                                   th:name="selectedTables"
+                                                   th:value="${table.tableNumber}"
+                                                   class="hidden-checkbox-disabled"/>
+                                            <label th:for="'table_' + ${table.tableNumber}" class="table-option occupied">
+                                                <span th:text="${'Table ' + table.tableNumber}"></span>
+                                                <span class="table-status" style="color: #FE980F;">OCCUPIED</span>
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

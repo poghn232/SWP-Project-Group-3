@@ -1,14 +1,18 @@
 package com.example.demo.controller.CheckoutController;
 
+import com.example.demo.api.dto.party.OrderDto;
 import com.example.demo.api.dto.party.TableDto;
+import com.example.demo.model.Order;
 import com.example.demo.model.TableOrderDetails;
 import com.example.demo.model.TableSlot;
 import com.example.demo.model.User;
 import com.example.demo.service.CalendarService;
 import com.example.demo.service.OrderService;
+import com.example.demo.service.PartyService;
 import com.example.demo.service.TableOrderDetailsService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.Banner;
 import org.springframework.cglib.core.Local;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -33,6 +37,9 @@ public class TableController {
 
     @Autowired
     private CalendarService calendarService;
+
+    @Autowired
+    private PartyService partyService;
 
     @Autowired
     private OrderService orderService;
@@ -62,10 +69,6 @@ public class TableController {
 
         //delete old order details
         tableOrderDetailsService.deleteOrdersDetailBefore(LocalDate.now());
-
-
-        //create empty orders, first time (can delete)
-        tableOrderDetailsService.manageOrders();
 
         return renderChooseTablePage;
     }
@@ -123,7 +126,29 @@ public class TableController {
 
         orderService.addTablesToOrder(selectedTables, selectedDate, selectedTime, user);
 
-        return "redirect:/checkout";
+        //display order details from user that newly ordered
+        Order order = orderService.findPendingOrderByUsername(user.getUsername());
 
+        OrderDto orderDto = new OrderDto(order.getOrderId(),
+                                        partyService.findById(order.getPartyId()).getPartyName(),
+                                        order.getOrderDate(),
+                                        order.getTotalPrice(),
+                                        order.getPaymentStatus());
+
+        redirectAttributes.addFlashAttribute("newOrder", orderDto);
+        redirectAttributes.addFlashAttribute("successMessage", "Your order has been successfully registered. You have 5 minutes to complete checkout!");
+
+        return "redirect:/order-success";
+
+    }
+    @GetMapping("/order-success")
+    public String showSuccessOrderPage(Model model) {
+
+        //user reload page || user previous page
+        if (!model.containsAttribute("newOrder")) {
+            return "redirect:/checkout";
+        }
+
+        return "order/order-success";
     }
 }

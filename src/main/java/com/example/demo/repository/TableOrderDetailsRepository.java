@@ -20,8 +20,6 @@ public interface TableOrderDetailsRepository extends JpaRepository<TableOrderDet
 
     List<TableOrderDetails> findAllBySlot(TableSlot slot);
 
-    TableOrderDetails findByTableNumber(Integer tableNumber);
-
     @Modifying
     @Transactional
     @Query("DELETE FROM TableOrderDetails tod WHERE tod.orderDate < :cutoffDate")

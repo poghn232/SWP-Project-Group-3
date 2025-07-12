@@ -1,5 +1,5 @@
-package com.example.demo.model;
+    package com.example.demo.model;
 
-public enum TableSlot {
-    DAY, NIGHT;
-}
+    public enum TableSlot {
+        DAY, NIGHT;
+    }

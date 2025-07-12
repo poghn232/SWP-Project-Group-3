@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/minimal_layout :: layout(~{::title},
+       ~{::#extra_head_content}, ~{::#content}, ~{::#extra_scripts})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <th:block th:id="extra_head_content">
+        <style>
+            .order-success-container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                margin: 100px;
+                width: 1200px;
+                height: 600px;
+            }
+            .order-success-footer button {
+                  background: #FE980F;
+                  border: medium none;
+                  border-radius: 0;
+                  color: #FFFFFF;
+                  display: block;
+                  font-family: 'Roboto', sans-serif;
+                  padding: 6px 25px;
+                  align-items: center;
+            }
+        </style>
+    </th:block>
+</head>
+<body>
+<th:block id="content">
+    <div class="order-success-container container">
+        <div class="order-success-header">
+            <h2 style="color: green">Order Accepted!</h2>
+            <h4 th:if="${successMessage}" class="alert alert-success"></h4>
+        </div>
+        <div class="order-success-body" th:object="${newOrder}">
+            <div class="order-detail-heading"> Order Details </div>
+            <div class="order-table">
+                <table class="table">
+                    <tr>
+                        <th>Order ID</th>
+                        <th>Party Name</th>
+                        <th>Order Date</th>
+                        <th>Price</th>
+                        <th>Payment Status</th>
+                    </tr>
+                    <tr>
+                        <td th:text="${newOrder.orderId}"></td>
+                        <td th:text="${newOrder.partyName}"></td>
+                        <td th:text="${newOrder.orderDate}"></td>
+                        <td th:text="${newOrder.totalPrice}"></td>
+                        <td th:text="${newOrder.paymentStatus}"></td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+        <div class="order-success-footer">
+            <a href="/checkout">
+                <button type="button">To Checkout Page</button>
+            </a>
+        </div>
+    </div>
+</th:block>
+</body>
+</html>

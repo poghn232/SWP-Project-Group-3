@@ -17,6 +17,7 @@ import java.time.YearMonth;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class TableOrderDetailsService {
@@ -142,12 +143,21 @@ public class TableOrderDetailsService {
         tableOrderDetailsRepository.deleteOrdersBefore(date);
     }
 
-    public List<TableOrderDetails> addTableOrders(List<Integer> selectedTables, LocalDate selectedDate, String selectedTime) {
-        List<TableOrderDetails> orderFiltered = tableOrderDetailsRepository.findAllByOrderDate(selectedDate);
-        orderFiltered = tableOrderDetailsRepository.findAllBySlot(TableSlot.valueOf(selectedTime.toUpperCase()));
-        List<TableOrderDetails> result = new ArrayList<>();
+    public List<TableOrderDetails> filterTableOrders(List<Integer> selectedTables, LocalDate selectedDate, String selectedTime) {
 
-        //TODO: filter order by table number
-        return result;
+        //date filter
+        List<TableOrderDetails> orderFilteredByDate = tableOrderDetailsRepository.findAllByOrderDate(selectedDate);
+
+        //slot filter after date filter
+        List<TableOrderDetails> orderFilteredBySlot = orderFilteredByDate.stream()
+                .filter(order -> order.getSlot() == TableSlot.valueOf(selectedTime.toUpperCase()))
+                .toList();
+
+
+        //table number filter after slot filter
+        //stream API, new to me, wanted to learn this but maybe too lazy :/
+        return orderFilteredBySlot.stream()
+                .filter(order -> selectedTables.contains(order.getTableNumber()))
+                .toList();
     }
 }
