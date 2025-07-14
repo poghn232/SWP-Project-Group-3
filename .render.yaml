@@ -1,0 +1,8 @@
+services:
+  - type: web
+    name: swp-project
+    env: docker
+    plan: free
+    branch: main
+    dockerfilePath: ./Dockerfile
+    autoDeploy: true

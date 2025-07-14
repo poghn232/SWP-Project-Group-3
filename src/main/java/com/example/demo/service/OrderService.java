@@ -5,12 +5,15 @@ import com.example.demo.repository.OrderRepository;
 import com.example.demo.repository.TableOrderDetailsRepository;
 import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.swing.plaf.SliderUI;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Comparator;
 import java.util.List;
 
@@ -80,6 +83,10 @@ public class OrderService {
         for (TableOrderDetails orderDetail : orderDetailsFiltered) {
             orderDetail.setOrder(currentOrder);
             orderDetail.setTableStatus(TableStatus.PENDING);
+            currentOrder.setOrderDate(LocalDateTime.now());
+
+            //set expiration date from the time user order table plus 5 minutes
+            currentOrder.setExpirationDate(LocalDateTime.now().plusMinutes(5));
         }
 
         currentOrder.setStatus("PENDING");
@@ -89,5 +96,28 @@ public class OrderService {
         orderRepository.save(currentOrder);
 
         tableOrderDetailsRepository.saveAll(orderDetailsFiltered);
+    }
+
+    @Scheduled(cron = "0 * * * * *")
+    @Transactional
+    public void orderCleanupScheduler() {
+
+        //set orders from PENDING to CANCELLED if user didnt checkout
+        // the scheduler will find order with expiration date past the current time real-timely, then change the order status + delete them
+        List<Order> orderStatusModifier = orderRepository.findAllByExpirationDateBefore(LocalDateTime.now());
+
+        //change status
+        for (Order order : orderStatusModifier) {
+            order.setStatus("CANCELLED");
+            orderRepository.save(order);
+        }
+
+        //find orders with cancelled status and expirated date
+        List<Order> orderGarbageCollector = orderRepository.findAllByStatusAndExpirationDateBefore("CANCELLED", LocalDateTime.now());
+
+        //delete them
+        for (Order order : orderGarbageCollector) {
+            orderRepository.delete(order);
+        }
     }
 }

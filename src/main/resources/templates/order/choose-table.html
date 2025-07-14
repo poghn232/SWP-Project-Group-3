@@ -194,6 +194,9 @@
                 <h5 style="text-decoration: italic;">- You must order at least one week from now and three months
                     back,
                     we have to prepare for your party :)</h5>
+
+<!--                Alert message-->
+                <center><h4 th:if="${alertMessage}" th:text="${alertMessage}" class="alert alert-warning"></h4></center>
             </div>
             <div class="contain-body" th:object="${chosenDay}">
                 <div class="time-container row">
@@ -303,6 +306,7 @@
                                                 <span class="table-status" style="color: green;">AVAILABLE</span>
                                             </label>
                                         </div>
+
                                         <div th:if="${table.tableStatus == T(com.example.demo.model.TableStatus).OCCUPIED}">
                                             <input type="checkbox"
                                                    th:id="'table_' + ${table.tableNumber}"
@@ -314,9 +318,22 @@
                                                 <span class="table-status" style="color: #FE980F;">OCCUPIED</span>
                                             </label>
                                         </div>
+
+                                        <div th:if="${table.tableStatus == T(com.example.demo.model.TableStatus).PENDING}">
+                                            <input type="checkbox"
+                                                   th:id="'table_' + ${table.tableNumber}"
+                                                   th:name="selectedTables"
+                                                   th:value="${table.tableNumber}"
+                                                   class="hidden-checkbox-disabled"/>
+                                            <label th:for="'table_' + ${table.tableNumber}" class="table-option occupied">
+                                                <span th:text="${'Table ' + table.tableNumber}"></span>
+                                                <span class="table-status" style="color: #FE980F;">PENDING</span>
+                                            </label>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+
                             <div class="night-tables row" th:if="${timeChosen == 'night'}">
                                 <div th:each="table : ${chosenDay}">
                                     <div th:if="${table.slot == T(com.example.demo.model.TableSlot).DAY}"
@@ -341,7 +358,18 @@
                                                    class="hidden-checkbox-disabled"/>
                                             <label th:for="'table_' + ${table.tableNumber}" class="table-option occupied">
                                                 <span th:text="${'Table ' + table.tableNumber}"></span>
-                                                <span class="table-status" style="color: #FE980F;">OCCUPIED</span>
+                                                <span class="table-status" style="color: black;">OCCUPIED</span>
+                                            </label>
+                                        </div>
+                                        <div th:if="${table.tableStatus == T(com.example.demo.model.TableStatus).PENDING}">
+                                            <input type="checkbox"
+                                                   th:id="'table_' + ${table.tableNumber}"
+                                                   th:name="selectedTables"
+                                                   th:value="${table.tableNumber}"
+                                                   class="hidden-checkbox-disabled"/>
+                                            <label th:for="'table_' + ${table.tableNumber}" class="table-option occupied">
+                                                <span th:text="${'Table ' + table.tableNumber}"></span>
+                                                <span class="table-status" style="color: #FE980F;">PENDING</span>
                                             </label>
                                         </div>
                                     </div>

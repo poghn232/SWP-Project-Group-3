@@ -6,7 +6,9 @@ import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 import java.util.Locale;
 
 @Service
@@ -73,10 +75,10 @@ public class CalendarService {
         return calendarOutput;
     }
 
-    public String[] getMonths() {
-        String[] months = new String[3];
+    public List<String> getMonths() {
+        List<String> months = new ArrayList<>(3);
         for (int i = 0; i < 3; i++) {
-            months[i] = Month.of(month + i).name();
+            months.add( Month.of(month + i).name());
         }
         return months;
     }
@@ -86,30 +88,32 @@ public class CalendarService {
 
         //change 3 months from string to int value
         Integer[] monthValues = new Integer[3];
-        String[] monthFromMyCalendar = getMonths();
+        List<String> monthFromMyCalendar = getMonths();
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM", Locale.ENGLISH);
         for (int i = 0; i < 3; i++) {
 
-            String currentMonthName = monthFromMyCalendar[i];
+            String currentMonthName = monthFromMyCalendar.get(i);
             //ex: change JULY -> July for the DateTimeFormatter month format
             currentMonthName = currentMonthName.substring(0, 1).toUpperCase() + currentMonthName.substring(1).toLowerCase();
 
             Month newMonth = Month.from(formatter.parse(currentMonthName));
             monthValues[i] = newMonth.getValue();;
         }
+
         //check if 3 months displayed get to next year
         for (int i = 0; i < 2; i++) {
             if (monthValues[i] > monthValues[i+1]) {
                 nextYear[i+1] = true;
             }
         }
+
         //check if mid month displayed next year, if so change boolean nextYear to true for the rest
         if (nextYear[1]) {
             nextYear[2] = true;
         }
         LocalDate chosenDate = LocalDate.now();
         for (int i = 0; i < 3; i++) {
-            if (monthFromMyCalendar[i].equals(monthChosen)) {
+            if (monthFromMyCalendar.get(i).equals(monthChosen)) {
                 if (nextYear[i]) {
                     chosenDate = LocalDate.of(LocalDate.now().getYear() + 1, monthValues[i], Integer.parseInt(dayChosen));
                 } else {

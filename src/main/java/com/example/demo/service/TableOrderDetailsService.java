@@ -79,7 +79,6 @@ public class TableOrderDetailsService {
                 for (int i = 1; i < 37; i++) {
                     TableOrderDetails newOrder = new TableOrderDetails();
                     newOrder.setTableOrderId(UUID.randomUUID());
-                    newOrder.setOrderDate(startDate);
                     newOrder.setSlot(slot);
                     newOrder.setTableStatus(TableStatus.AVAILABLE);
                     newOrder.setTableNumber(i);

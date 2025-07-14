@@ -30,11 +30,13 @@ public class Order {
     @Column(name = "order_date", nullable = false, updatable = false)
     private LocalDateTime orderDate;
 
+    private LocalDateTime expirationDate;
+
     @Column(name = "total_price", nullable = false)
     private Double totalPrice;
 
     @Column(name = "status", length = 50, nullable = false)
-    private String status; // e.g., DRAFT, PENDING, CONFIRMED, COMPLETED
+    private String status; // e.g., DRAFT, PENDING, CONFIRMED, COMPLETED, CANCELLED
 
     @Column(name = "notes", columnDefinition = "TEXT")
     private String notes;

@@ -23,11 +23,11 @@ public class TableOrderDetails {
     @Column(name = "table_number")
     private Integer tableNumber;
 
-    @Enumerated(EnumType.STRING)
-    private TableSlot slot;
-
     @Column(name = "table_order_date")
     private LocalDate orderDate;
+
+    @Enumerated(EnumType.STRING)
+    private TableSlot slot;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "order_id", nullable = true)

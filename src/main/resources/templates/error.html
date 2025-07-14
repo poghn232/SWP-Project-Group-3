@@ -7,16 +7,64 @@
     <title>Title</title>
     <th:block id="extra_head_content">
         <style>
+            .background-with-overlay {
+                position: fixed; /* Hoặc absolute nếu chỉ cho một phần */
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+
+                /* 1. Đặt ảnh nền */
+                background-image: url('/images/fixbug.gif');
+                background-size: cover;
+                background-position: center;
+                background-repeat: no-repeat;
+                background-attachment: fixed; /* Giữ ảnh cố định khi cuộn */
+
+                /* 2. Tạo lớp phủ màu trong suốt */
+                /* Màu đen với độ trong suốt 50% */
+                background-color: rgba(0, 0, 0, 0.4);
+                /* Hoặc màu trắng trong suốt: background-color: rgba(255, 255, 255, 0.3); */
+
+                /* Quan trọng: Khi cả background-image và background-color được đặt cùng lúc,
+                   background-color sẽ nằm trên background-image.
+                   Nếu bạn muốn ngược lại, cần một div overlay riêng.
+                   Cách này là cách đơn giản nhất khi chỉ muốn làm mờ ảnh nền một chút.
+                */
+            }
+            body {
+                font-family: 'Roboto', sans-serif;
+                font-weight: 400px;
+            }
             .error-form {
                 display: flex;
                 justify-content: center;
+            }
+            .content-wrapper {
+                position: relative; /* Quan trọng: Đặt position để z-index hoạt động */
+                z-index: 1; /* Đảm bảo nội dung nằm trên lớp phủ và ảnh nền */
+
+                /* Đảm bảo nội dung chiếm đủ không gian */
+                min-height: 100vh;
+                display: flex;
+                flex-direction: column;
+                justify-content: center; /* Căn giữa nội dung nếu muốn */
+                align-items: center; /* Căn giữa nội dung nếu muốn */
+
+                padding: 20px;
+                text-align: center;
+                color: white; /* Đặt màu chữ phù hợp với nền tối */
+            }
+            .error-form {
+                background : none;
             }
         </style>
     </th:block>
 </head>
 <body>
 <th:block id="content">
-        <div class="login-form" style="width: 1300px;">
+    <div class="background-with-overlay">
+        <div class="login-form content-wrapper" style="width: 1300px;">
             <h1>Oops! Error...</h1>
             <h2 th:text="${status} ?: 'Unexpected Error'"></h2>
             <p th:text="${error} ?: 'Unexpected error occurred'"></p>
@@ -33,6 +81,7 @@
                 </div>
             </div>
         </div>
+    </div>
 </th:block>
 </body>
 </html>

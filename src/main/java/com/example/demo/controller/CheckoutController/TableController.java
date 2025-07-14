@@ -1,36 +1,25 @@
 package com.example.demo.controller.CheckoutController;
 
 import com.example.demo.api.dto.party.OrderDto;
-import com.example.demo.api.dto.party.TableDto;
 import com.example.demo.model.Order;
 import com.example.demo.model.TableOrderDetails;
-import com.example.demo.model.TableSlot;
 import com.example.demo.model.User;
 import com.example.demo.service.CalendarService;
 import com.example.demo.service.OrderService;
 import com.example.demo.service.PartyService;
 import com.example.demo.service.TableOrderDetailsService;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.Banner;
-import org.springframework.cglib.core.Local;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
-import java.time.Month;
-import java.time.MonthDay;
-import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
 
 @Controller
 public class TableController {
@@ -78,13 +67,26 @@ public class TableController {
     public String showTablePage(Model model,
                                 @RequestParam(name = "day", required = false) String dayChosen,
                                 @RequestParam(name = "month", required = false) String monthChosen,
-                                @RequestParam(name = "time", required = false) String timeChosen) {
+                                @RequestParam(name = "time", required = false) String timeChosen,
+                                RedirectAttributes redirectAttributes) {
 
         //case: user tries to modify url
         if (timeChosen == null || dayChosen == null || monthChosen == null) {
             return "redirect:/getDefaultTables";
         }
         if (timeChosen.isEmpty()|| dayChosen.isEmpty() || monthChosen.isEmpty()) {
+            return "redirect:/getDefaultTables";
+        }
+
+        //case: user tries to change url with different permitted months
+        if (!calendarService.getMonths().contains(monthChosen)) {
+            redirectAttributes.addFlashAttribute("alertMessage", "The month that you searched isn't allowed");
+            return "redirect:/getDefaultTables";
+        }
+
+        //case: user tries to change url with day passed permitted day of
+        if (LocalDate.now().getDayOfMonth() >= Integer.parseInt(dayChosen)) {
+            redirectAttributes.addFlashAttribute("alertMessage", "The day that you searched isn't allowed");
             return "redirect:/getDefaultTables";
         }
         LocalDate chosenDate = calendarService.getCustomizedDate(dayChosen, monthChosen);
@@ -136,7 +138,9 @@ public class TableController {
                                         order.getPaymentStatus());
 
         redirectAttributes.addFlashAttribute("newOrder", orderDto);
-        redirectAttributes.addFlashAttribute("successMessage", "Your order has been successfully registered. You have 5 minutes to complete checkout!");
+        redirectAttributes.addFlashAttribute("successMessage", "Your order has been successfully registered!");
+        redirectAttributes.addFlashAttribute("alertMessage", "You have 5 minutes to checkout your order.");
+
 
         return "redirect:/order-success";
 

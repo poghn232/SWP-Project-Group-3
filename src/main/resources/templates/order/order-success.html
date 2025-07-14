@@ -7,6 +7,11 @@
     <title>Title</title>
     <th:block th:id="extra_head_content">
         <style>
+            .order-success-header {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
             .order-success-container {
                 display: flex;
                 flex-direction: column;
@@ -34,6 +39,7 @@
         <div class="order-success-header">
             <h2 style="color: green">Order Accepted!</h2>
             <h4 th:if="${successMessage}" class="alert alert-success"></h4>
+            <h4 th:if="${alertMessage}" class="alert alert-warning"></h4>
         </div>
         <div class="order-success-body" th:object="${newOrder}">
             <div class="order-detail-heading"> Order Details </div>
