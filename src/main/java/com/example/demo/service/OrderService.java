@@ -42,9 +42,9 @@ public class OrderService {
         return null;
     }
 
+    //find pending order
     public Order findPendingOrderByUsername(String username) {
         List<Order> orders = orderRepository.findAllByCustomerName(username);
-        orders.sort(Comparator.comparing(Order::getOrderDate).reversed());
         for (Order order : orders) {
             if (order.getStatus().equals("PENDING")) {
                 return order;
@@ -102,22 +102,14 @@ public class OrderService {
     @Transactional
     public void orderCleanupScheduler() {
 
-        //set orders from PENDING to CANCELLED if user didnt checkout
-        // the scheduler will find order with expiration date past the current time real-timely, then change the order status + delete them
+        //set orders from PENDING to AVAILABLE if user didnt checkout
+        // the scheduler will find order with expiration date past the current time real-timely, then change the order status
         List<Order> orderStatusModifier = orderRepository.findAllByExpirationDateBefore(LocalDateTime.now());
 
         //change status
         for (Order order : orderStatusModifier) {
-            order.setStatus("CANCELLED");
+            order.setStatus("AVAILABLE");
             orderRepository.save(order);
-        }
-
-        //find orders with cancelled status and expirated date
-        List<Order> orderGarbageCollector = orderRepository.findAllByStatusAndExpirationDateBefore("CANCELLED", LocalDateTime.now());
-
-        //delete them
-        for (Order order : orderGarbageCollector) {
-            orderRepository.delete(order);
         }
     }
 }

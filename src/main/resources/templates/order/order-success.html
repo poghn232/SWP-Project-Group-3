@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="vi" xmlns:th="http://www.thymeleaf.org"
-      th:replace="~{layouts/minimal_layout :: layout(~{::title},
+      th:replace="~{layouts/end_user_layout :: layout(~{::title},
        ~{::#extra_head_content}, ~{::#content}, ~{::#extra_scripts})}">
 <head>
     <meta charset="UTF-8">
@@ -35,11 +35,11 @@
 </head>
 <body>
 <th:block id="content">
-    <div class="order-success-container container">
+    <div class="order-success-container">
         <div class="order-success-header">
             <h2 style="color: green">Order Accepted!</h2>
-            <h4 th:if="${successMessage}" class="alert alert-success"></h4>
-            <h4 th:if="${alertMessage}" class="alert alert-warning"></h4>
+            <h4 th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></h4>
+            <h4 th:if="${alertMessage}" class="alert alert-warning" th:text="${alertMessage}"></h4>
         </div>
         <div class="order-success-body" th:object="${newOrder}">
             <div class="order-detail-heading"> Order Details </div>
@@ -64,7 +64,7 @@
         </div>
         <div class="order-success-footer">
             <a href="/checkout">
-                <button type="button">To Checkout Page</button>
+                <button>To Checkout Page</button>
             </a>
         </div>
     </div>
