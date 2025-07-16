@@ -30,6 +30,9 @@ public class Party {
     @Column(name = "image_url", length = 255)
     private String imageUrl;
 
+    @OneToMany(mappedBy = "partyOrder")
+    private Set<Order> orders = new HashSet<>();
+
     @OneToMany(mappedBy = "party", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private Set<Item> items = new HashSet<>();
 }

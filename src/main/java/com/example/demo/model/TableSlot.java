@@ -2,4 +2,5 @@
 
     public enum TableSlot {
         DAY, NIGHT;
+
     }

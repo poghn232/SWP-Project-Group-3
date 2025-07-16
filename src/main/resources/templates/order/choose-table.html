@@ -195,7 +195,7 @@
                     back,
                     we have to prepare for your party :)</h5>
 
-<!--                Alert message-->
+                <!--                Alert message-->
                 <center><h4 th:if="${alertMessage}" th:text="${alertMessage}" class="alert alert-warning"></h4></center>
             </div>
             <div class="contain-body" th:object="${chosenDay}">
@@ -274,8 +274,8 @@
                            th:href="@{/getTableSlot(date=${chosenDay.get(0).orderDate}, time='night')}">
                             <button th:if="${timeChosen == 'night'}" type="submit" class="night selected">
                                 <b>
-                                    Day
-                                    (11.00AM–2.00PM)
+                                    Night
+                                    (5.00PM-8.00PM)
                                 </b>
                             </button>
                             <button th:unless="${timeChosen == 'night'}" type="submit" class="night">
@@ -291,11 +291,11 @@
                             <!--                                Display tables-->
                             <div class="day-tables row" th:if="${timeChosen == 'day'}">
                                 <div th:each="table : ${chosenDay}">
-                                    <div th:if="${table.slot == T(com.example.demo.model.TableSlot).DAY}"
+                                    <div th:if="${table.slot.name() == 'DAY'}"
                                          class="col-sm-2">
 
-<!--                                        available -->
-                                        <div th:if="${table.tableStatus == T(com.example.demo.model.TableStatus).AVAILABLE}">
+                                        <!--                                        available -->
+                                        <div th:if="${table.tableStatus.name() == 'AVAILABLE'}">
                                             <input type="checkbox"
                                                    th:id="'table_' + ${table.tableNumber}"
                                                    th:name="selectedTables"
@@ -307,25 +307,27 @@
                                             </label>
                                         </div>
 
-                                        <div th:if="${table.tableStatus == T(com.example.demo.model.TableStatus).OCCUPIED}">
+                                        <div th:if="${table.tableStatus.name() == 'OCCUPIED'}">
                                             <input type="checkbox"
                                                    th:id="'table_' + ${table.tableNumber}"
                                                    th:name="selectedTables"
                                                    th:value="${table.tableNumber}"
                                                    class="hidden-checkbox-disabled"/>
-                                            <label th:for="'table_' + ${table.tableNumber}" class="table-option occupied">
+                                            <label th:for="'table_' + ${table.tableNumber}"
+                                                   class="table-option occupied">
                                                 <span th:text="${'Table ' + table.tableNumber}"></span>
                                                 <span class="table-status" style="color: #FE980F;">OCCUPIED</span>
                                             </label>
                                         </div>
 
-                                        <div th:if="${table.tableStatus == T(com.example.demo.model.TableStatus).PENDING}">
+                                        <div th:if="${table.tableStatus.name() == 'PENDING'}">
                                             <input type="checkbox"
                                                    th:id="'table_' + ${table.tableNumber}"
                                                    th:name="selectedTables"
                                                    th:value="${table.tableNumber}"
                                                    class="hidden-checkbox-disabled"/>
-                                            <label th:for="'table_' + ${table.tableNumber}" class="table-option occupied">
+                                            <label th:for="'table_' + ${table.tableNumber}"
+                                                   class="table-option occupied">
                                                 <span th:text="${'Table ' + table.tableNumber}"></span>
                                                 <span class="table-status" style="color: #FE980F;">PENDING</span>
                                             </label>
@@ -336,10 +338,10 @@
 
                             <div class="night-tables row" th:if="${timeChosen == 'night'}">
                                 <div th:each="table : ${chosenDay}">
-                                    <div th:if="${table.slot == T(com.example.demo.model.TableSlot).DAY}"
+                                    <div th:if="${table.slot.name() == 'NIGHT'}"
                                          class="col-sm-2">
                                         <!--                                        available -->
-                                        <div th:if="${table.tableStatus == T(com.example.demo.model.TableStatus).AVAILABLE}">
+                                        <div th:if="${table.tableStatus.name() == 'AVAILABLE'}">
                                             <input type="checkbox"
                                                    th:id="'table_' + ${table.tableNumber}"
                                                    th:name="selectedTables"
@@ -350,24 +352,28 @@
                                                 <span class="table-status" style="color: green;">AVAILABLE</span>
                                             </label>
                                         </div>
-                                        <div th:if="${table.tableStatus == T(com.example.demo.model.TableStatus).OCCUPIED}">
+
+                                        <div th:if="${table.tableStatus.name() == 'OCCUPIED'}">
                                             <input type="checkbox"
                                                    th:id="'table_' + ${table.tableNumber}"
                                                    th:name="selectedTables"
                                                    th:value="${table.tableNumber}"
                                                    class="hidden-checkbox-disabled"/>
-                                            <label th:for="'table_' + ${table.tableNumber}" class="table-option occupied">
+                                            <label th:for="'table_' + ${table.tableNumber}"
+                                                   class="table-option occupied">
                                                 <span th:text="${'Table ' + table.tableNumber}"></span>
-                                                <span class="table-status" style="color: black;">OCCUPIED</span>
+                                                <span class="table-status" style="color: #FE980F;">OCCUPIED</span>
                                             </label>
                                         </div>
-                                        <div th:if="${table.tableStatus == T(com.example.demo.model.TableStatus).PENDING}">
+
+                                        <div th:if="${table.tableStatus.name() == 'PENDING'}">
                                             <input type="checkbox"
                                                    th:id="'table_' + ${table.tableNumber}"
                                                    th:name="selectedTables"
                                                    th:value="${table.tableNumber}"
                                                    class="hidden-checkbox-disabled"/>
-                                            <label th:for="'table_' + ${table.tableNumber}" class="table-option occupied">
+                                            <label th:for="'table_' + ${table.tableNumber}"
+                                                   class="table-option occupied">
                                                 <span th:text="${'Table ' + table.tableNumber}"></span>
                                                 <span class="table-status" style="color: #FE980F;">PENDING</span>
                                             </label>
@@ -381,7 +387,9 @@
             </div>
             <div class="contain-footer">
                 <div class="button-container">
-                    <button><i class="fa fa-arrow-left"></i> Back</button>
+                    <form action="/return" method="post">
+                        <button type="submit"><i class="fa fa-arrow-left"></i> Return to Home Page</button>
+                    </form>
                     <form id="mainSubmitForm" action="/getTables" method="post">
                         <input type="hidden" name="selectedDate" th:value="${chosenDay.get(0).orderDate}"/>
                         <input type="hidden" name="selectedTime" th:value="${timeChosen}"/>

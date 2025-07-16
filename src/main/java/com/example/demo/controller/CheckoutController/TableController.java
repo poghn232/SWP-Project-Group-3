@@ -8,6 +8,7 @@ import com.example.demo.service.CalendarService;
 import com.example.demo.service.OrderService;
 import com.example.demo.service.PartyService;
 import com.example.demo.service.TableOrderDetailsService;
+import org.aspectj.weaver.ast.Or;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -40,6 +41,8 @@ public class TableController {
 
     @GetMapping("/getDefaultTables")
     public String showTablePageByDefault(Model model, @AuthenticationPrincipal User user) {
+
+        //create orders first time
 
         List<TableOrderDetails> chosenDay = tableOrderDetailsService.getDefaultDay();
         chosenDay.sort(Comparator.comparingInt(TableOrderDetails::getTableNumber));
@@ -126,17 +129,23 @@ public class TableController {
                             @AuthenticationPrincipal User user,
                             RedirectAttributes redirectAttributes) {
 
+        if (selectedTables.isEmpty()) {
+            redirectAttributes.addFlashAttribute("alertMessage", "You must order at least 1 tables to checkout");
+            return "redirect:/getDefaultTables";
+        }
+
+        //add tables to current order
         orderService.addTablesToOrder(selectedTables, selectedDate, selectedTime, user);
 
         //display order details from user that newly ordered
-        Order order = orderService.findPendingOrderByUsername(user.getUsername());
+
+        Order order = orderService.findLatestPendingOrderByUsername(user.getUsername());
 
         OrderDto orderDto = new OrderDto(order.getOrderId(),
-                                        partyService.findById(order.getPartyId()).getPartyName(),
+                                        order.getPartyOrder().getPartyName(),
                                         order.getOrderDate(),
                                         order.getTotalPrice(),
                                         order.getPaymentStatus());
-
         redirectAttributes.addFlashAttribute("newOrder", orderDto);
         redirectAttributes.addFlashAttribute("successMessage", "Your order has been successfully registered!");
         redirectAttributes.addFlashAttribute("alertMessage", "You have 5 minutes to checkout your order.");
@@ -154,5 +163,12 @@ public class TableController {
         }
 
         return "order/order-success";
+    }
+
+    @PostMapping("/return")
+    public String returnPage(@AuthenticationPrincipal User user) {
+        orderService.deleteDraftOrder(user.getUsername());
+
+        return "redirect:/";
     }
 }

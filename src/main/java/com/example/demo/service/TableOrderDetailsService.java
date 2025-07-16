@@ -77,12 +77,13 @@ public class TableOrderDetailsService {
         for (; !startDate.isAfter(endDate); startDate = startDate.plusDays(1)) {
             for (TableSlot slot : TableSlot.values()) {
                 for (int i = 1; i < 37; i++) {
-                    TableOrderDetails newOrder = new TableOrderDetails();
-                    newOrder.setTableOrderId(UUID.randomUUID());
-                    newOrder.setSlot(slot);
-                    newOrder.setTableStatus(TableStatus.AVAILABLE);
-                    newOrder.setTableNumber(i);
-                    batchToSave.add(newOrder);
+                    TableOrderDetails newOrderDetails = new TableOrderDetails();
+                    newOrderDetails.setTableOrderId(UUID.randomUUID());
+                    newOrderDetails.setSlot(slot);
+                    newOrderDetails.setTableStatus(TableStatus.AVAILABLE);
+                    newOrderDetails.setTableNumber(i);
+                    newOrderDetails.setOrderDate(startDate);
+                    batchToSave.add(newOrderDetails);
 
                     if (batchToSave.size() % BATCH_SIZE == 0) {
                         tableOrderDetailsRepository.saveAll(batchToSave);

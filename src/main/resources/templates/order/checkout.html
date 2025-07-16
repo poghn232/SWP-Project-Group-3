@@ -1,10 +1,128 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/end_user_layout :: layout(~{::title},
+       ~{::#extra_head_content}, ~{::#content}, ~{::#extra_scripts})}">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <title>Checkout | E-Shopper</title>
+        <th:block id="extra_head_content">
+            <style>
+                .payment-options button {
+                  background: #FE980F;
+                  border: medium none;
+                  border-radius: 0;
+                  color: #FFFFFF;
+                  display: block;
+                  font-family: 'Roboto', sans-serif;
+                  padding: 6px 25px;
+                  margin-left: 500px;
+                  align-items: center;
+                }
+            </style>
+        </th:block>
+    </head><!--/head-->
 <body>
+<th:block id="content">
+    <section id="cart_items">
+        <div class="container">
+            <div class="breadcrumbs">
+                <ol class="breadcrumb">
+                    <li><a href="/">Home</a></li>
+                    <li class="active">Check out</li>
+                </ol>
+            </div><!--/breadcrums-->
 
+            <div class="review-payment">
+                <h2>Review & Payment</h2>
+            </div>
+
+            <div class="table-responsive cart_info" th:object="${pendingOrder}">
+                <table class="table table-condensed">
+                    <thead>
+                    <tr class="cart_menu">
+                        <td class="image">Party</td>
+                        <td class="description">Description</td>
+                        <td class="price">Price</td>
+                        <td></td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="order : ${pendingOrder}" style="height: 300px;">
+                        <td class="cart_product">
+                            <img th:src=${order.partyOrder.imageUrl} alt="" style="width: 500px;">
+                        </td>
+                        <td class="cart_description">
+                            <h4 th:text="${order.partyOrder.partyName}"></h4>
+                            <p>Order ID: <span th:text="${order.orderId}"></span></p>
+                            <p>Tables: <span th:text="${order.tableOrderDetails.size()}"></span></p>
+                            <table class="table partyItems" style="font-size: 10px;">
+                                <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Unit</th>
+                                    <th>Price</th>
+                                    <th>Amount</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="item : ${order.partyOrder.items}">
+                                    <td th:text="${item.itemName}"></td>
+                                    <td th:text="${item.itemUnit}"></td>
+                                    <td th:text="${item.itemPrice}"></td>
+                                    <td style="text-align: center;">1</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                        <td class="cart_price">
+                            <p class="order-total" th:text="${order.totalPrice}"></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">&nbsp;</td>
+                        <td colspan="2">
+                            <table class="table table-condensed total-result">
+                                <tr>
+                                    <td>Total</td>
+                                    <td><span id="totalAmount">$61</span></td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="payment-options">
+                <p> Payment method: Pay in cash</p>
+
+                <button id="checkoutButton" type="button">Checkout</button>
+            </div>
+        </div>
+    </section> <!--/#cart_items-->
+</th:block>
+<th:block id="extra_scripts">
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            // Lấy tất cả các phần tử có class "order-total"
+            const totalElements = document.querySelectorAll(".order-total");
+
+            let grandTotal = 0;
+
+            totalElements.forEach(el => {
+                const value = parseFloat(el.textContent.trim());
+                if (!isNaN(value)) {
+                    grandTotal += value;
+                }
+            });
+
+            // Hiển thị tổng cộng vào #totalAmount (thêm ký hiệu $ nếu muốn)
+            document.getElementById("totalAmount").textContent = grandTotal.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
+        });
+    </script>
+</th:block>
 </body>
 </html>

@@ -21,13 +21,14 @@ public class Order {
     @Column(name = "order_id")
     private UUID orderId;
 
-    @Column(name = "party_order_id")
-    private Integer partyId;
+    @ManyToOne
+    @JoinColumn(name = "party_id")
+    private Party partyOrder;
 
-    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
     private Set<TableOrderDetails> tableOrderDetails;
 
-    @Column(name = "order_date", nullable = false, updatable = false)
+    @Column(name = "order_date", nullable = false)
     private LocalDateTime orderDate;
 
     private LocalDateTime expirationDate;
@@ -62,6 +63,7 @@ public class Order {
 
     @PrePersist
     protected void onCreate() {
+
         if (this.orderId == null) {
             this.orderId = UUID.randomUUID();
         }

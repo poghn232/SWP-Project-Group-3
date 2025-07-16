@@ -11,9 +11,10 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import javax.swing.plaf.SliderUI;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.chrono.ChronoLocalDateTime;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -42,15 +43,30 @@ public class OrderService {
         return null;
     }
 
-    //find pending order
-    public Order findPendingOrderByUsername(String username) {
-        List<Order> orders = orderRepository.findAllByCustomerName(username);
-        for (Order order : orders) {
+    public List<Order> findPendingOrdersByUsername(String username) {
+        List<Order> pendingOrders = new ArrayList<>();
+        for (Order order : orderRepository.findAllByCustomerName(username)) {
             if (order.getStatus().equals("PENDING")) {
-                return order;
+                pendingOrders.add(order);
             }
         }
-        return null;
+        return pendingOrders;
+    }
+
+    public Order findLatestPendingOrderByUsername(String username) {
+        if (orderRepository.findAllByCustomerName(username).isEmpty()) {
+            return null;
+        }
+        else {
+            List<Order> pendingOrdersWithDescendingOrderDate = orderRepository.findAllByCustomerName(username).stream()
+                    .filter(order -> "PENDING".equals(order.getStatus()))
+                    .sorted(Comparator.comparing(Order::getOrderDate).reversed()).toList();
+            return pendingOrdersWithDescendingOrderDate.get(0);
+        }
+    }
+
+    public void deleteDraftOrder(String username) {
+        orderRepository.delete(findDraftOrderByUsername(username));
     }
 
     @Transactional
@@ -58,12 +74,12 @@ public class OrderService {
         Party partyOrder = partyService.findById(partyId);
 
         double totalPrice = 0;
-        for (Item item: partyOrder.getItems()) {
+        for (Item item : partyOrder.getItems()) {
             totalPrice += item.getItemPrice();
         }
 
         Order newOrder = new Order();
-        newOrder.setPartyId(partyId);
+        newOrder.setPartyOrder(partyOrder);
         newOrder.setTotalPrice(totalPrice);
         newOrder.setNotes(notes);
         newOrder.setCustomerName(username);
@@ -102,14 +118,34 @@ public class OrderService {
     @Transactional
     public void orderCleanupScheduler() {
 
+        List<Order> cancelledOrderBatch = new ArrayList<>();
+        for (Order pendingOrder : orderRepository.findAll()) {
+            if (pendingOrder.getStatus().equals("PENDING")) {
+                if (pendingOrder.getExpirationDate().isBefore(LocalDateTime.now())) {
+                    pendingOrder.setStatus("CANCELLED");
+                    cancelledOrderBatch.add(pendingOrder);
+                }
+            }
+        }
+        orderRepository.saveAll(cancelledOrderBatch);
+
         //set orders from PENDING to AVAILABLE if user didnt checkout
         // the scheduler will find order with expiration date past the current time real-timely, then change the order status
-        List<Order> orderStatusModifier = orderRepository.findAllByExpirationDateBefore(LocalDateTime.now());
+        List<Order> cancelledOrders = orderRepository.findAllByStatusAndExpirationDateBefore("CANCELLED", LocalDateTime.now());
 
-        //change status
-        for (Order order : orderStatusModifier) {
-            order.setStatus("AVAILABLE");
-            orderRepository.save(order);
+        //change status, delete order
+        for (Order cancelledOrder : cancelledOrders) {
+            List<TableOrderDetails> newBatch = new ArrayList<>();
+            for (TableOrderDetails cancelledOrderTable : cancelledOrder.getTableOrderDetails()) {
+
+                //reset tables
+                cancelledOrderTable.setTableStatus(TableStatus.AVAILABLE);
+                cancelledOrderTable.setOrder(null);
+                newBatch.add(cancelledOrderTable);
+            }
+            tableOrderDetailsRepository.saveAll(newBatch);
         }
+
+        orderRepository.deleteAll(cancelledOrders);
     }
 }
