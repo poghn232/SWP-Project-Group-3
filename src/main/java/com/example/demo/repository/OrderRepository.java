@@ -16,4 +16,6 @@ public interface OrderRepository extends JpaRepository<Order, UUID> {
     List<Order> findAllByExpirationDateBefore(LocalDateTime date);
 
     List<Order> findByCustomerNameAndStatus(String customerName, String status);
+
+    Order findByOrderId(UUID orderId);
 }

@@ -36,12 +36,21 @@
                 </ol>
             </div><!--/breadcrums-->
 
+            <center>
+                <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+                <div th:if="${errorMessage}" class="alert alert-danger" th:text="${errorMessage}"></div>
+            </center>
+
             <div class="review-payment">
                 <h2>Review & Payment</h2>
             </div>
 
-            <div class="table-responsive cart_info" th:object="${pendingOrder}">
-                <table class="table table-condensed">
+            <div class="no-info" th:if="${pendingOrders.isEmpty() && pendingOrder == null}">
+                <center><h2>There's currently no order.</h2></center>
+            </div>
+
+            <div class="table-responsive cart_info" th:if="${!pendingOrders.isEmpty() && pendingOrder == null}">
+                <table class="table table-condensed" th:object="${pendingOrders}">
                     <thead>
                     <tr class="cart_menu">
                         <td class="image">Party</td>
@@ -51,7 +60,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr th:each="order : ${pendingOrder}" style="height: 300px;">
+                    <tr th:each="order : ${pendingOrders}" style="height: 300px;">
                         <td class="cart_product">
                             <img th:src=${order.partyOrder.imageUrl} alt="" style="width: 500px;">
                         </td>
@@ -95,11 +104,74 @@
                     </tr>
                     </tbody>
                 </table>
+                <div class="payment-options">
+                    <form action="/checkout" method="post">
+                        <button type="submit">Checkout All</button>
+                    </form>
+                </div>
             </div>
-            <div class="payment-options">
-                <p> Payment method: Pay in cash</p>
 
-                <button id="checkoutButton" type="button">Checkout</button>
+<!--            if user from Orders page-->
+            <div class="table-responsive cart_info" th:if="${pendingOrders.isEmpty() && pendingOrder != null}">
+                <table class="table table-condensed" th:object="${pendingOrder}">
+                    <thead>
+                    <tr class="cart_menu">
+                        <td class="image">Party</td>
+                        <td class="description">Description</td>
+                        <td class="price">Price</td>
+                        <td></td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr style="height: 300px;">
+                        <td class="cart_product">
+                            <img th:src=${pendingOrder.partyOrder.imageUrl} alt="" style="width: 500px;">
+                        </td>
+                        <td class="cart_description">
+                            <h4 th:text="${pendingOrder.partyOrder.partyName}"></h4>
+                            <p>Order ID: <span th:text="${pendingOrder.orderId}"></span></p>
+                            <p>Tables: <span th:text="${pendingOrder.tableOrderDetails.size()}"></span></p>
+                            <table class="table partyItems" style="font-size: 10px;">
+                                <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Unit</th>
+                                    <th>Price</th>
+                                    <th>Amount</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                <tr th:each="item : ${pendingOrder.partyOrder.items}">
+                                    <td th:text="${item.itemName}"></td>
+                                    <td th:text="${item.itemUnit}"></td>
+                                    <td th:text="${item.itemPrice}"></td>
+                                    <td style="text-align: center;">1</td>
+                                </tr>
+                                </tbody>
+                            </table>
+                        </td>
+                        <td class="cart_price">
+                            <p class="order-total" th:text="${pendingOrder.totalPrice}"></p>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">&nbsp;</td>
+                        <td colspan="2">
+                            <table class="table table-condensed total-result">
+                                <tr>
+                                    <td>Total</td>
+                                    <td><span th:text="${item.itemPrice}"></span></td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+                <div class="payment-options">
+                    <form action="/checkout" method="post">
+                        <button type="submit">Checkout</button>
+                    </form>
+                </div>
             </div>
         </div>
     </section> <!--/#cart_items-->

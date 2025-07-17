@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/end_user_layout :: layout(~{::title},
+       ~{::#extra_head_content}, ~{::#content}, ~{::#extra_scripts})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+  <th:block id="extra_head_content">
+    <style>
+      button {
+        background: #FE980F;
+        border: medium none;
+        border-radius: 0;
+        color: #FFFFFF;
+        display: block;
+        font-family: 'Roboto', sans-serif;
+        padding: 6px 25px;
+        align-items: center;
+      }
+    </style>
+  </th:block>
+</head>
+<body>
+<th:block id="content">
+  <div class="container no-orders" th:if="${orders.isEmpty()}">
+    <center>
+      <h2>There's currently no orders.</h2>
+    </center>
+  </div>
+  <div class="container order-container" th:unless="${orders.isEmpty()}">
+    <h2> Your Orders Detail</h2>
+    <table class="table order-table">
+      <thead>
+        <tr>
+          <th>Party</th>
+          <th>Order ID</th>
+          <th>Party Name</th>
+          <th>Order Date</th>
+          <th>Price</th>
+          <th>Payment Status</th>
+          <th>Order Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr th:each="order : ${orders}">
+          <td><img th:src="${order.partyOrder.imageUrl}" alt="" style="width: 500px;"></td>
+          <td th:text="${order.orderId}"></td>
+          <td th:text="${order.partyOrder.partyName}"></td>
+          <td th:text="${order.orderDate}"></td>
+          <td th:text="${order.totalPrice}"></td>
+          <td th:text="${order.paymentStatus}"></td>
+          <td th:if="${order.status == 'PENDING'}" th:text="${order.status}" style="color: #FE980F;"></td>
+          <td th:if="${order.status == 'CONFIRMED'}" th:text="${order.status}" style="color: green;"></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</th:block>
+</body>
+</html>

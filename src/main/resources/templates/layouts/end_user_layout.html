@@ -79,6 +79,7 @@
                 <div class="col-sm-8">
                     <div class="shop-menu pull-right">
                         <ul class="nav navbar-nav">
+                            <li><a href="/order"><i class="fa fa-bars"></i> Orders</a></li>
                             <li><a href="/checkout"><i class="fa fa-crosshairs"></i> Checkout</a></li>
                             <li sec:authorize="!isAuthenticated()">
                                 <a href="/login"><i class="fa fa-lock"></i> Login</a>
@@ -88,6 +89,9 @@
                                     <li><a href="/profile"><i class="fa fa-cog"></i>  Manage Account</a></li> <!-- TODO -->
                                     <li><a href="/change-password"><i class="fa fa-key"></i>  Change Password</a></li>
                                     <li><a href="/logout"><i class="fa fa-sign-out"></i> Logout</a></li>
+                                    <li sec:authorize="hasRole('ROLE_ADMIN')">
+                                        <a href="/admin/dashboard"><i class="fa fa-dashboard"></i> To Dashboard</a>
+                                    </li>
                                 </ul>
                             </li>
                         </ul>
@@ -137,7 +141,7 @@
                 <div class="col-sm-2">
                     <div class="companyinfo">
                         <h2><span>F</span>ABS</h2>
-                        <p>We focus on bringing to the customers the best quality meal .Enjoy with the pre-order system!</p>
+                        <p>We focus on bringing to the customers the best quality meal .Enjoy with the order system!</p>
                     </div>
                 </div>
                 <div class="col-sm-7">

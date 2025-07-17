@@ -17,6 +17,7 @@ import java.time.chrono.ChronoLocalDateTime;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.UUID;
 
 @Service
 public class OrderService {
@@ -33,6 +34,14 @@ public class OrderService {
     @Autowired
     private PartyService partyService;
 
+    public List<Order> findAllOrders(@AuthenticationPrincipal User user) {
+        return orderRepository.findAllByCustomerName(user.getUsername());
+    }
+
+    public Order findOrderByOrderId(UUID orderId) {
+        return orderRepository.findByOrderId(orderId);
+    }
+
     public Order findDraftOrderByUsername(String username) {
         List<Order> orders = orderRepository.findAllByCustomerName(username);
         for (Order order : orders) {
@@ -47,6 +56,17 @@ public class OrderService {
         List<Order> pendingOrders = new ArrayList<>();
         for (Order order : orderRepository.findAllByCustomerName(username)) {
             if (order.getStatus().equals("PENDING")) {
+                pendingOrders.add(order);
+            }
+        }
+        return pendingOrders;
+    }
+
+    //as a result of wrong status knowledge
+    public List<Order> findUnpaidPendingOrdersByUsername(String username) {
+        List<Order> pendingOrders = new ArrayList<>();
+        for (Order order : orderRepository.findAllByCustomerName(username)) {
+            if (order.getStatus().equals("PENDING") && order.getPaymentStatus().equals("UNPAID")) {
                 pendingOrders.add(order);
             }
         }
@@ -147,5 +167,25 @@ public class OrderService {
         }
 
         orderRepository.deleteAll(cancelledOrders);
+    }
+
+
+    //because of
+    @Transactional
+    public void successOrder(@AuthenticationPrincipal User user) {
+        List<Order> pendingOrders = findPendingOrdersByUsername(user.getUsername());
+
+        if (!pendingOrders.isEmpty()) {
+            for (Order order : pendingOrders) {
+
+                //set tables to be occupied
+                for (TableOrderDetails tableOrderDetails : order.getTableOrderDetails()) {
+                    tableOrderDetails.setTableStatus(TableStatus.OCCUPIED);
+                }
+                order.setExpirationDate(null);
+                order.setPaymentStatus("PAID");
+            }
+        }
+        orderRepository.saveAll(pendingOrders);
     }
 }
