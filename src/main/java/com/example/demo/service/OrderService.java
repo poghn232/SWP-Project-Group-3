@@ -140,7 +140,7 @@ public class OrderService {
 
         List<Order> cancelledOrderBatch = new ArrayList<>();
         for (Order pendingOrder : orderRepository.findAll()) {
-            if (pendingOrder.getStatus().equals("PENDING")) {
+            if (pendingOrder.getStatus().equals("PENDING") && pendingOrder.getExpirationDate() != null) {
                 if (pendingOrder.getExpirationDate().isBefore(LocalDateTime.now())) {
                     pendingOrder.setStatus("CANCELLED");
                     cancelledOrderBatch.add(pendingOrder);

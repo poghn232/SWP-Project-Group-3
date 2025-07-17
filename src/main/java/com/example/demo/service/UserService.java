@@ -7,13 +7,16 @@ import com.example.demo.api.dto.authentication.UserRegisterDto;
 import com.example.demo.model.User;
 import com.example.demo.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -31,8 +34,25 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public User getUserInfo(String username) {
+    public List<User> findAllUsersWithoutAdmin() {
+        return userRepository.findAllByRoleNot("admin");
+    }
+
+    public User findUserByUsername(String username) {
         return userRepository.findByUsername(username);
+    }
+
+    @Transactional
+    public void modifyUserByAdmin (User updatedUser) {
+        User originalUser = userRepository.findById(updatedUser.getUserId())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+
+        originalUser.setUsername(updatedUser.getUsername());
+        originalUser.setEmail(updatedUser.getEmail());
+        originalUser.setPhone(updatedUser.getPhone());
+        originalUser.setRole(updatedUser.getRole());
+
+        userRepository.save(originalUser);
     }
 
     public void doLogin(UserLoginDto userLoginDto) {

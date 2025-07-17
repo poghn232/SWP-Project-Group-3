@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/end_user_layout :: layout(~{::title},
+       ~{::#extra_head_content}, ~{::#content}, ~{::#extra_scripts})}">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <th:block id="extra_head_content">
+        <style>
+            button {
+               background: #FE980F;
+               border: medium none;
+               border-radius: 0;
+               color: #FFFFFF;
+               display: block;
+               font-family: 'Roboto', sans-serif;
+               padding: 6px 25px;
+               align-items: center;
+             }
+            .manage-profile {
+                margin: 20px;
+            }
+        </style>
+    </th:block>
+</head>
+<body>
+<th:block id="content">
+    <div class="container dashboard-container">
+        <div class="modal fade" id="allUsersModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+             aria-hidden="true">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <center>
+                            <h1 class="modal-title">
+                                All Account Details
+                            </h1>
+                        </center>
+                    </div>
+                    <div class="modal-body">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>User ID</th>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="user : ${users}">
+                                <td th:text="${user.userId}"></td>
+                                <td th:text="${user.username}"></td>
+                                <td th:text="${user.email}"></td>
+                                <td th:text="${user.role}"></td>
+                                <td>
+                                    <a th:href="@{/admin/manageProfile(customerName=${user.username})}" target="_blank">
+                                        <button>Modify</button>
+                                    </a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="modal-footer">
+                        <center>
+                            <button type="button" data-dismiss="modal">OK</button>
+                        </center>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <center>
+            <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+        </center>
+        <div class="manage-profile">
+            <button type="button" data-toggle="modal" data-target="#allUsersModal">
+                View All Users
+            </button>
+        </div>
+    </div>
+</th:block>
+</body>
+</html>

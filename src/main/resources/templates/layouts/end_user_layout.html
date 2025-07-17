@@ -90,7 +90,10 @@
                                     <li><a href="/change-password"><i class="fa fa-key"></i>  Change Password</a></li>
                                     <li><a href="/logout"><i class="fa fa-sign-out"></i> Logout</a></li>
                                     <li sec:authorize="hasRole('ROLE_ADMIN')">
-                                        <a href="/admin/dashboard"><i class="fa fa-dashboard"></i> To Dashboard</a>
+                                        <a href="/admin/dashboard"><i class="fa fa-dashboard"></i>To Dashboard</a>
+                                    </li>
+                                    <li sec:authorize="hasRole('ROLE_STAFF')">
+                                        <a href="/staff/dashboard"><i class="fa fa-dashboard"></i>To Dashboard</a>
                                     </li>
                                 </ul>
                             </li>
