@@ -95,6 +95,9 @@
                                     <li sec:authorize="hasRole('ROLE_STAFF')">
                                         <a href="/staff/dashboard"><i class="fa fa-dashboard"></i>To Dashboard</a>
                                     </li>
+                                    <li sec:authorize="hasRole('ROLE_MANAGER')">
+                                        <a href="/manager/dashboard"><i class="fa fa-dashboard"></i>To Dashboard</a>
+                                    </li>
                                 </ul>
                             </li>
                         </ul>

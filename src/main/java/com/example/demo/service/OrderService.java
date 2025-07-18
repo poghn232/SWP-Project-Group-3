@@ -34,7 +34,11 @@ public class OrderService {
     @Autowired
     private PartyService partyService;
 
-    public List<Order> findAllOrders(@AuthenticationPrincipal User user) {
+    public List<Order> findAllPaidPendingOrders() {
+        return orderRepository.findAllByStatusAndPaymentStatus("PENDING", "PAID");
+    }
+
+    public List<Order> findAllOrdersByUsername(@AuthenticationPrincipal User user) {
         return orderRepository.findAllByCustomerName(user.getUsername());
     }
 
@@ -187,5 +191,13 @@ public class OrderService {
             }
         }
         orderRepository.saveAll(pendingOrders);
+    }
+
+    @Transactional
+    public void updateOrderStatusByStaff(UUID orderId, String status) {
+        Order originalOrder = findOrderByOrderId(orderId);
+
+        originalOrder.setStatus(status);
+        orderRepository.save(originalOrder);
     }
 }

@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/end_user_layout :: layout(~{::title},
+       ~{::#extra_head_content}, ~{::#content}, ~{::#extra_scripts})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Staff Dashboard</title>
+    <th:block id="extra_head_content">
+        <style>
+            body {
+            }
+            .staff-dashboard-container {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+            }
+            .staff-dashboard-container button {
+                width: 300px;
+                height: 150px;
+               background: #FE980F;
+               border: medium none;
+               border-radius: 15px;
+               color: #FFFFFF;
+               display: block;
+               font-family: 'Roboto', sans-serif;
+               align-items: center;
+               margin: 30px;
+               font-size: 40px;
+               padding: none;
+             }
+            .staff-dashboard-container a {
+                max-width: fit-content;
+                max-height: fit-content;
+            }
+        </style>
+    </th:block>
+</head>
+<body>
+<th:block id="content">
+    <div class="staff-dashboard-container container">
+        <center><h2>Staff Dashboard</h2></center>
+        <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+        <a href="/staff/confirm-paid-orders">
+            <button>Confirm Paid Orders</button>
+        </a>
+        <a href="/staff/check-in">
+            <button>Check-in</button>
+        </a>
+    </div>
+</th:block>
+</body>
+</html>

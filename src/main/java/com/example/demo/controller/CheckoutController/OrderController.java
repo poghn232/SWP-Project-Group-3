@@ -18,7 +18,7 @@ public class OrderController {
     public String showOrdersPage(Model model, @AuthenticationPrincipal User user) {
 
         if (!model.containsAttribute("orders")) {
-            model.addAttribute("orders", orderService.findAllOrders(user));
+            model.addAttribute("orders", orderService.findAllOrdersByUsername(user));
         }
         return "order/orders";
     }
