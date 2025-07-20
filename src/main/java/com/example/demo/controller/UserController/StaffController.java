@@ -3,6 +3,7 @@ package com.example.demo.controller.UserController;
 import com.example.demo.model.Order;
 import com.example.demo.service.OrderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.Banner;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,6 +45,26 @@ public class StaffController {
 
         orderService.updateOrderStatusByStaff(orderId, status);
         redirectAttributes.addFlashAttribute("successMessage", "Order: " + orderId + " successfully updated!" );
+        return "redirect:/staff/dashboard";
+    }
+    @GetMapping("/staff/check-in")
+    public String showCheckinPage(Model model) {
+        if (!model.containsAttribute("orders")) {
+            model.addAttribute("orders", orderService.findAllPaidConfirmedOrders());
+        }
+        if (!model.containsAttribute("allStatus")) {
+            List<String> allOrderStatus = Arrays.asList("CONFIRMED", "CANCELLED", "COMPLETED");
+            model.addAttribute("allStatus", allOrderStatus);
+        }
+        return "staff/check_in";
+    }
+    @PostMapping("/staff/check-in")
+    public String changeCheckinStatus(@RequestParam(name = "orderId") UUID orderId,
+                               @RequestParam(name = "status") String status,
+                               RedirectAttributes redirectAttributes) {
+
+        orderService.updateOrderStatusByStaff(orderId, status);
+        redirectAttributes.addFlashAttribute("successMessage", "Order: " + orderId + " completed!" );
         return "redirect:/staff/dashboard";
     }
 }

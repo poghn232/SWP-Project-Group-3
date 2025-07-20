@@ -200,4 +200,8 @@ public class OrderService {
         originalOrder.setStatus(status);
         orderRepository.save(originalOrder);
     }
+
+    public List<Order> findAllPaidConfirmedOrders() {
+        return orderRepository.findAllByStatusAndPaymentStatus("CONFIRMED", "PAID");
+    }
 }

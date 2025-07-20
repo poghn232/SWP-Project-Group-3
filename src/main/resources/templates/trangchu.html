@@ -266,14 +266,14 @@
                     <div class="features_items"><!--features_items-->
                         <h2 class="title text-center">Content</h2>
                         <div class="food-content">
-                            <div th:each="party: ${partyDto.parties}">
+                            <div th:each="party : ${partyDto.parties}">
+<!--                                Party Content-->
                                 <div th:if="${party.partyType == 'Party'}">
                                     <div class="partyContent exit"
-                                         th:id="${party.partyName == 'Standard' ? 'standard' : (party.partyName == 'Seafood' ? 'seafood' : 'sweets')}">
+                                         th:id="${party.partyName.toLowerCase()}">
                                         <img th:src="${party.imageUrl}" th:alt="${party.partyName + ' Party Image'}">
 
                                         <div class="button-container">
-                                            <button>Order with customizing items</button>
                                             <a sec:authorize="!isAuthenticated()" href="/login?loginToOrder=false">
                                                 <button type="button">Order now!</button>
                                             </a>
@@ -287,13 +287,13 @@
                                         </div>
                                     </div>
                                 </div>
+<!--                                Buffet Content-->
                                 <div th:unless="${party.partyType == 'Party'}">
                                     <div class="partyContent exit"
-                                         th:id="${party.partyName == 'Standard' ? 'buffet-standard' : 'buffet-sweets'}">
+                                         th:id="${'buffet-' + party.partyName.toLowerCase()}">
                                         <img th:src="${party.imageUrl}" th:alt="${party.partyName + ' Buffet Image'}">
 
                                         <div class="button-container">
-                                            <button>Order with customizing items</button>
                                             <a sec:authorize="!isAuthenticated()" href="/login?loginToOrder=false">
                                                 <button type="button">Order now!</button>
                                             </a>

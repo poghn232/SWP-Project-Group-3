@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/end_user_layout :: layout(~{::title},
+       ~{::#extra_head_content}, ~{::#content}, ~{::#extra_scripts})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>CRUD Party</title>
+    <th:block id="extra_head_content">
+        <style>
+            button {
+               background: #FE980F;
+               border: medium none;
+               border-radius: 0;
+               color: #FFFFFF;
+               display: block;
+               font-family: 'Roboto', sans-serif;
+               padding: 6px 25px;
+               align-items: center;
+             }
+            .create-party-container {
+                margin-left: 570px;
+            }
+        </style>
+    </th:block>
+</head>
+<body>
+<th:block id="content">
+    <div class="create-party-container login-form">
+        <a href="/manager/dashboard">To Dashboard</a>
+        <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+
+        <h2>Create New Party</h2>
+
+        <form action="/manager/manage-party" th:object="${party}" method="post" enctype="multipart/form-data">
+
+            <label for="partyName">Party Name</label>
+            <input type="text" th:field="*{partyName}" id="partyName" min="4" max="16" required>
+
+            <label for="partyType">Party Type</label>
+            <select id="partyType" th:field="*{partyType}" class="form-control">
+                <option value="" disabled>-- Select a Party Type</option>
+                <option th:each="type : ${partyTypes}"
+                        th:value="${type}"
+                        th:text="${type}">
+                </option>
+            </select>
+
+            <label for="partyImage" style="margin-top: 10px;">Party Image</label>
+            <input type="file" name="partyImageFile" id="partyImage" style="background: none;" required>
+            <center>
+                <button type="submit">Create New Party</button>
+            </center>
+        </form>
+
+        <h2>Party Lists</h2>
+
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Image</th>
+                <th>Party Name</th>
+                <th>Party Type</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="party : ${parties}">
+                <td><img th:src="${party.imageUrl}" alt="" style="width: 400px;"></td>
+                <td th:text="${party.partyName}"></td>
+                <td th:text="${party.partyType}"></td>
+                <td>
+                    <form action="/manager/modify-party" method="get">
+                        <input type="hidden" name="partyId" th:value="${party.partyId}">
+                        <button type="submit">Modify</button>
+                    </form>
+                </td>
+                <td>
+                    <form action="/manager/delete-party" method="post">
+                        <input type="hidden" name="partyId" th:value="${party.partyId}">
+                        <button type="submit">DELETE</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</th:block>
+</body>
+</html>

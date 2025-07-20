@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/end_user_layout :: layout(~{::title},
+       ~{::#extra_head_content}, ~{::#content}, ~{::#extra_scripts})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Modify Party</title>
+    <th:block id="extra_head_content">
+        <style>
+            button {
+               background: #FE980F;
+               border: medium none;
+               border-radius: 0;
+               color: #FFFFFF;
+               display: block;
+               font-family: 'Roboto', sans-serif;
+               padding: 6px 25px;
+               align-items: center;
+             }
+            .create-party-container {
+                margin-left: 570px;
+            }
+        </style>
+    </th:block>
+</head>
+<body>
+<th:block id="content">
+    <div class="create-party-container login-form">
+        <a href="/manager/manage-party">To Manage Party</a>
+        <div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div>
+
+
+        <h2>Create New Party</h2>
+        <form action="/manager/modify-party" th:object="${party}" method="post" enctype="multipart/form-data">
+
+            <input type="hidden" th:field="*{partyId}" th:value="${party.partyId}">
+
+            <input type="hidden" th:value="${party.partyName}" name="oldPartyName">
+
+            <label for="partyName">Party Name</label>
+            <input type="text" th:field="*{partyName}" id="partyName" min="4" max="16" required>
+
+            <label for="partyType">Party Type</label>
+            <select id="partyType" th:field="*{partyType}" class="form-control">
+                <option value="" disabled>-- Select a Party Type</option>
+                <option th:each="type : ${partyTypes}"
+                        th:value="${type}"
+                        th:text="${type}">
+                </option>
+            </select>
+
+            <label for="partyImage" style="margin-top: 10px;">Party Image</label>
+            <img th:src="${party.imageUrl}" alt="">
+            <input type="file" name="partyImageFile" id="partyImage" style="background: none;" required>
+            <center>
+                <button type="submit">Save Changes</button>
+            </center>
+        </form>
+    </div>
+</th:block>
+</body>
+</html>

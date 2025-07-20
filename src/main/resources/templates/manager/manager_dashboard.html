@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/end_user_layout :: layout(~{::title},
+       ~{::#extra_head_content}, ~{::#content}, ~{::#extra_scripts})}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Manager Dashboard</title>
+  <th:block id="extra_head_content">
+    <style>
+      body {
+      }
+      .manager-dashboard-container {
+          display: flex;
+          align-items: center;
+          justify-content: space-around;
+      }
+      .manager-dashboard-container button {
+          width: 200px;
+          height: 100px;
+         background: #FE980F;
+         border: medium none;
+         border-radius: 15px;
+         color: #FFFFFF;
+         display: block;
+         font-family: 'Roboto', sans-serif;
+         align-items: center;
+         margin: 30px;
+         font-size: 20px;
+         padding: none;
+       }
+    </style>
+  </th:block>
+</head>
+<body>
+<th:block id="content">
+  <center><h2>Manager Dashboard</h2></center>
+  <center><div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div></center>
+  <div class="manager-dashboard-container container">
+    <a href="/manager/manage-party">
+      <button>Manage Party</button>
+    </a>
+
+    <a href="/manager/manage-party-food">
+      <button>Manage Party Food</button>
+    </a>
+  </div>
+</th:block>
+</body>
+</html>

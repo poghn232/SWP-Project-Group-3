@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDate;
+import java.time.Month;
 import java.util.Comparator;
 import java.util.List;
 
@@ -88,7 +89,7 @@ public class TableController {
         }
 
         //case: user tries to change url with day passed permitted day of
-        if (LocalDate.now().getDayOfMonth() >= Integer.parseInt(dayChosen)) {
+        if (Month.valueOf(monthChosen).length(LocalDate.now().getYear() % 4 == 0) < Integer.parseInt(dayChosen)) {
             redirectAttributes.addFlashAttribute("alertMessage", "The day that you searched isn't allowed");
             return "redirect:/getDefaultTables";
         }

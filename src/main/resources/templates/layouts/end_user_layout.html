@@ -88,7 +88,6 @@
                                 <ul role="menu" class="sub-menu">
                                     <li><a href="/profile"><i class="fa fa-cog"></i>  Manage Account</a></li> <!-- TODO -->
                                     <li><a href="/change-password"><i class="fa fa-key"></i>  Change Password</a></li>
-                                    <li><a href="/logout"><i class="fa fa-sign-out"></i> Logout</a></li>
                                     <li sec:authorize="hasRole('ROLE_ADMIN')">
                                         <a href="/admin/dashboard"><i class="fa fa-dashboard"></i>To Dashboard</a>
                                     </li>
@@ -98,6 +97,7 @@
                                     <li sec:authorize="hasRole('ROLE_MANAGER')">
                                         <a href="/manager/dashboard"><i class="fa fa-dashboard"></i>To Dashboard</a>
                                     </li>
+                                    <li><a href="/logout"><i class="fa fa-sign-out"></i> Logout</a></li>
                                 </ul>
                             </li>
                         </ul>

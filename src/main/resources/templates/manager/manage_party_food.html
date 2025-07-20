@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/end_user_layout :: layout(~{::title},
+       ~{::#extra_head_content}, ~{::#content}, ~{::#extra_scripts})}">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Choose Party for Item CRUD</title>
+    <th:block id="extra_head_content">
+        <style>
+            button {
+               background: #FE980F;
+               border: medium none;
+               border-radius: 0;
+               color: #FFFFFF;
+               display: block;
+               font-family: 'Roboto', sans-serif;
+               padding: 6px 25px;
+               align-items: center;
+             }
+            .manage-party-container {
+                margin-left: 570px;
+            }
+        </style>
+    </th:block>
+</head>
+<body>
+<th:block id="content">
+    <div class="manage-party-container login-form">
+        <a href="/manager/dashboard">To Dashboard</a>
+        <h2>Choose Party To CRUD Its Items</h2>
+        <table class="table">
+            <thead>
+            <tr>
+                <th>Image</th>
+                <th>Party Name</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="party : ${parties}">
+                <td><img th:src="${party.imageUrl}" alt="" style="width: 400px;"></td>
+                <td th:text="${party.partyName}"></td>
+                <td>
+                    <form action="/manager/manage-party-items" method="get">
+                        <input type="hidden" name="partyId" th:value="${party.partyId}">
+                        <button type="submit">Manage Items</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</th:block>
+</body>
+</html>

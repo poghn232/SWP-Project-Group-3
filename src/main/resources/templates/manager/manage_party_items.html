@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="vi" xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layouts/end_user_layout :: layout(~{::title},
+       ~{::#extra_head_content}, ~{::#content}, ~{::#extra_scripts})}">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>CRUD Items</title>
+  <th:block id="extra_head_content">
+    <style>
+      button {
+         background: #FE980F;
+         border: medium none;
+         border-radius: 0;
+         color: #FFFFFF;
+         display: block;
+         font-family: 'Roboto', sans-serif;
+         padding: 6px 25px;
+         align-items: center;
+       }
+      .manage-party-container {
+          margin-left: 570px;
+      }
+    </style>
+  </th:block>
+</head>
+<body>
+<th:block id="content">
+  <div class="manage-party-container login-form">
+    <a href="/manager/manage-party-food">To Parties</a>
+    <center><div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div></center>
+    <h2>Party : <span th:text="${partyName}"></span></h2>
+
+    <h3>Create New Party</h3>
+    <form action="/manager/create-item" method="post" th:object="${item}">
+
+      <input type="hidden" th:value="${partyId}" name="partyId">
+
+      <label for="itemName">Item Name</label>
+      <input type="text" id="itemName" th:field="*{itemName}" min="4" max="20" required>
+
+      <label for="itemDescription">Item Description</label>
+      <input type="text" id="itemDescription" th:field="*{itemDescription}" min="10" size="20" required>
+
+      <label for="itemUnit">Unit per Table</label>
+      <input type="number" id="itemUnit" th:field="*{itemUnit}" required>
+
+      <label for="itemPrice">Price</label>
+      <input type="number" id="itemPrice" th:field="*{itemPrice}" required>
+
+      <center><button type="submit">Create New Item</button></center>
+    </form>
+    <h2>Item List</h2>
+    <table class="table">
+      <thead>
+      <tr>
+        <th>Item Name</th>
+        <th>Description</th>
+        <th>Unit per Table</th>
+        <th>Item Price</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="item : ${items}">
+        <td th:text="${item.itemName}"></td>
+        <td th:text="${item.itemDescription}" style="width: 400px;"></td>
+        <td th:text="${item.itemUnit}"></td>
+        <td th:text="${item.itemPrice}"></td>
+        <td>
+          <form action="/manager/modify-item" method="get">
+            <input type="hidden" name="partyId" th:value="${partyId}">
+            <input type="hidden" name="itemId" th:value="${item.itemId}">
+            <button type="submit">Manage Item</button>
+          </form>
+        </td>
+        <td>
+          <form action="/manager/delete-item" method="post">
+            <input type="hidden" name="partyId" th:value="${partyId}">
+            <input type="hidden" name="itemId" th:value="${item.itemId}">
+            <button type="submit">Delete Item</button>
+          </form>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+</th:block>
+</body>
+</html>
