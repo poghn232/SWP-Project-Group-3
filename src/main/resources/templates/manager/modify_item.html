@@ -32,6 +32,9 @@
         <center><div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div></center>
         <h2>Party : <span th:text="${partyName}"></span></h2>
         <form action="/manager/modify-item" method="post" th:object="${item}">
+
+            <input type="hidden" th:value="${itemId}" name="itemId">
+
             <input type="hidden" name="partyId" th:value="${partyId}">
 
             <label for="itemName">Item Name</label>

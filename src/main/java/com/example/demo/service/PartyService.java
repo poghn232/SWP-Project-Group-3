@@ -39,7 +39,18 @@ public class PartyService {
     }
 
     @Transactional
-    public void addNewPartyByManager(Party party, MultipartFile partyImageFile) throws IOException {
+    public boolean addNewPartyByManager(Party party, MultipartFile partyImageFile) throws IOException {
+
+        //check if file is existed
+        List<Party> parties = partyRepository.findAll();
+
+        for (Party duplicatedParty : parties) {
+            String duplicatedFileName = Paths.get(duplicatedParty.getImageUrl()).getFileName().toString();
+            if (duplicatedFileName.equals(partyImageFile.getOriginalFilename())) {
+                return false;
+            }
+        }
+
 
         Thumbnails.of(partyImageFile.getInputStream())
                 .forceSize(735, 429)
@@ -48,6 +59,8 @@ public class PartyService {
 
         party.setImageUrl("/images/home/party-imgs/" + partyImageFile.getOriginalFilename());
         partyRepository.save(party);
+
+        return true;
     }
 
     @Transactional

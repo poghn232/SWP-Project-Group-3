@@ -31,6 +31,15 @@ public class ItemController {
     public String showConfirmItemPage(Model model,
                                       @RequestParam Integer partyId,
                                       @AuthenticationPrincipal User user) {
+
+        if (!user.getRole().equals("customer")) {
+            return "redirect:/";
+        }
+
+        if (partyService.findById(partyId).getItems().isEmpty()) {
+            return "redirect:/";
+        }
+
         // If user somehow discontinued their order and then start again at Order now button on the home page,
         // redirect them to the table order page.
         // This wont make user have multiples draft orders.

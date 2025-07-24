@@ -37,6 +37,7 @@
 <th:block id="content">
   <center><h2>Manager Dashboard</h2></center>
   <center><div th:if="${successMessage}" class="alert alert-success" th:text="${successMessage}"></div></center>
+  <center><div th:if="${errorMessage}" class="alert alert-warning" th:text="${errorMessage}"></div></center>
   <div class="manager-dashboard-container container">
     <a href="/manager/manage-party">
       <button>Manage Party</button>

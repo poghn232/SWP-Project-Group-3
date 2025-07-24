@@ -152,7 +152,7 @@ public class UserService {
     public void changePassword(String username, ChangePasswordDto changePasswordDto) {
         User user = userRepository.findByUsername(username);
 
-        if (!user.getPassword().equals(changePasswordDto.getOldPassword())) {
+        if (!passwordEncoder.matches(changePasswordDto.getOldPassword(), user.getPassword())) {
             throw new IllegalArgumentException("Old password isn't correct. Try again");
         }
 

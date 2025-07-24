@@ -115,12 +115,4 @@ public class ProfileController {
             return renderChangePasswordPage;
         }
     }
-
-    @PostMapping("/delete-account") //TODO
-    public String deleteAccount(Authentication authentication, RedirectAttributes redirectAttributes) {
-        userService.deleteAccount(authentication.getName());
-
-        redirectAttributes.addFlashAttribute("successMessage", "Account deleted successfully!");
-        return "redirect:/logout";
-    }
 }

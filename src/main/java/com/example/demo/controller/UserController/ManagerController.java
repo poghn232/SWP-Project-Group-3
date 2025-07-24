@@ -57,11 +57,15 @@ public class ManagerController {
                                        @RequestParam("partyImageFile") MultipartFile partyImageFile,
                                        RedirectAttributes redirectAttributes) throws IOException {
 
-        partyService.addNewPartyByManager(party, partyImageFile);
+        if (partyService.addNewPartyByManager(party, partyImageFile)) {
+            redirectAttributes.addFlashAttribute("successMessage", "Your party was created. Now you have to create items");
 
-        redirectAttributes.addFlashAttribute("successMessage", "Your party was created. Now you have to create items");
+            return "redirect:/manager/dashboard";
+        } else {
+            redirectAttributes.addFlashAttribute("errorMessage", "The party image existed. Try again!");
 
-        return "redirect:/manager/dashboard";
+            return "redirect:/manager/dashboard";
+        }
     }
 
     @GetMapping("/manager/manage-party-food")
@@ -77,7 +81,7 @@ public class ManagerController {
 
     @PostMapping("/manager/delete-party")
     public String deletePartyByManager(@RequestParam(name = "partyId") Integer partyId,
-                                       RedirectAttributes redirectAttributes){
+                                       RedirectAttributes redirectAttributes) {
 
         String partyName = partyService.deleteParty(partyId);
 
@@ -156,8 +160,12 @@ public class ManagerController {
 
         Item item = itemService.findById(itemId);
 
-        if(!model.containsAttribute("item")) {
+        if (!model.containsAttribute("item")) {
             model.addAttribute("item", item);
+        }
+
+        if (!model.containsAttribute("itemId")) {
+            model.addAttribute("itemId", itemId);
         }
 
         if (!model.containsAttribute("partyId")) {
@@ -169,9 +177,10 @@ public class ManagerController {
 
     @PostMapping("/manager/modify-item")
     public String modifyItemByManager(@ModelAttribute("item") Item item,
+                                      @RequestParam("itemId") Integer itemId,
                                       @RequestParam("partyId") Integer partyId,
                                       RedirectAttributes redirectAttributes) {
-        itemService.modifyItem(item, partyId);
+        itemService.modifyItem(itemId, partyId, item);
 
         redirectAttributes.addFlashAttribute("successMessage", "Item : " + item.getItemName() + " was modified!");
         return "redirect:/manager/manage-party-items?partyId=" + partyId;

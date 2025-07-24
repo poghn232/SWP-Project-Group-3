@@ -42,7 +42,9 @@ public class ItemService {
     }
 
     @Transactional
-    public void modifyItem(Item modifiedItem, Integer partyId) {
+    public void modifyItem(Integer itemId, Integer partyId, Item modifiedItem) {
+
+        modifiedItem.setItemId(itemId);
 
         modifiedItem.setParty(partyService.findById(partyId));
 

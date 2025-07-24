@@ -14,24 +14,12 @@
               crossorigin="anonymous">
     </th:block>
     <style>
-        body {
-            background-color: #f8f9fa; /* light gray background */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-            padding: 1rem;
-            box-sizing: border-box;
-        }
         .otp-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             background-color: #ffffff;
-            padding: 2.5rem;
-            border-radius: 0.75rem; /* rounded corners */
-            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15); /* shadow */
-            width: 100%;
-            max-width: 600px;
-            box-sizing: border-box;
             text-align: center;
         }
         .otp-input-group input {
@@ -57,15 +45,22 @@
             background-color: #e9ecef; /* Light gray background for disabled */
             cursor: not-allowed;
         }
-        #verifyOtpButton {
-            max-width: 300px;
+        button {
+          background: #FE980F;
+          border: medium none;
+          border-radius: 0;
+          color: #FFFFFF;
+          display: block;
+          font-family: 'Roboto', sans-serif;
+          padding: 6px 25px;
+          align-items: center;
         }
     </style>
 </head>
-<body class="bg-gray-100 flex items-center justify-center min-h-screen p-4">
+<body>
 <th:block id="content">
-    <div class="otp-card">
-        <center>
+    <center>
+        <div class="otp-card">
             <div>
                 <a href="/"><img src="/images/home/logo.png" alt=""></a>
             </div>
@@ -83,7 +78,7 @@
                 <!-- Hidden field for email (assuming it's passed from previous step) -->
                 <input type="hidden" th:field="*{email}"/>
 
-                <div class="d-flex justify-content-center space-x-2 mb-2 otp-input-group">
+                <div class="d-flex justify-content-center space-x-2 mb-2 otp-input-group" style="width: 400px;">
                     <input type="text" id="otp-1" name="otp1" maxlength="1" pattern="[0-9]" inputmode="numeric"
                            autocomplete="one-time-code" data-index="0" class="form-control text-center me-2" required>
                     <input type="text" id="otp-2" name="otp2" maxlength="1" pattern="[0-9]" inputmode="numeric"
@@ -105,7 +100,7 @@
                 <div class="text-danger mb-4" th:if="${#fields.hasErrors('otp')}" th:errors="*{otp}"></div>
 
 
-                <button type="submit" class="btn btn-primary w-100 mb-3" id="verifyOtpButton">Xác Nhận Mã OTP</button>
+                <button type="submit" id="verifyOtpButton">Confirm OTP</button>
             </form>
 
             <div class="text-center">
@@ -117,8 +112,8 @@
                     <button type="submit" class="btn btn-link link-text p-0" id="resendOtpLink">Resend OTP</button>
                 </form>
             </div>
-        </center>
-    </div>
+        </div>
+    </center>
 </th:block>
 
 <!-- Bootstrap Bundle with Popper -->
